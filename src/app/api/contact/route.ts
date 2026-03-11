@@ -12,8 +12,14 @@ function isValidEmail(email: string): boolean {
 }
 
 export async function POST(request: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not configured");
+      return NextResponse.json({ error: "Contact form is not configured." }, { status: 503 });
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const body = (await request.json()) as ContactPayload;
     const { name, email, message } = body;
 

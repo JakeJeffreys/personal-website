@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Send, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -142,7 +142,6 @@ export default function Contact() {
   const [form, setForm] = useState<FormData>({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const formRef = useRef<HTMLFormElement>(null);
 
   const isSubmitting = status === "submitting";
   const isSuccess = status === "success";
@@ -247,7 +246,7 @@ export default function Contact() {
                 </button>
               </motion.div>
             ) : (
-              <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
                 {/* Name + Email row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <InputField
