@@ -386,7 +386,7 @@ export default async function GitHubActivity() {
                 @{user.login}
               </Link>
             </div>
-            <div className="flex items-center gap-6 sm:ml-auto">
+            <div className="flex items-center gap-4 sm:gap-6 sm:ml-auto">
               <div className="flex flex-col items-center">
                 <div className="flex items-center gap-1.5 text-slate-300 font-semibold text-base">
                   <Users className="w-4 h-4 text-slate-500" />
