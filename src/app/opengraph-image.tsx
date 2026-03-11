@@ -18,7 +18,6 @@ export default function OGImage() {
           padding: "80px",
           background: "linear-gradient(135deg, #0a0f1e 0%, #0f1629 50%, #0d1f3c 100%)",
           position: "relative",
-          fontFamily: "monospace",
           overflow: "hidden",
         }}
       >
@@ -80,7 +79,7 @@ export default function OGImage() {
             bottom: "48px",
             left: "80px",
             fontSize: "22px",
-            color: "#1e3a5f",
+            color: "#2d4a6e",
           }}
         >
           jakejeffreys.dev
