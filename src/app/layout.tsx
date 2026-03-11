@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://jakejeffreys.dev"),
   title: "Jake Jeffreys — Senior Platform Engineer",
   description:
     "Senior Platform Engineer based in Denver, Colorado. Designing and scaling cloud-native backend systems on AWS.",
@@ -45,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>

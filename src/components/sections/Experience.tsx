@@ -295,7 +295,7 @@ export default function Experience() {
           />
 
           {jobs.map((job, index) => (
-            <TimelineItem key={job.company} job={job} index={index} />
+            <TimelineItem key={`${job.company}-${index}`} job={job} index={index} />
           ))}
         </div>
 

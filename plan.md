@@ -106,28 +106,28 @@ public/
 - [x] Experience section — vertical timeline + skills grid
 - [x] ~~Projects section~~ — removed per preference
 - [x] GitHub Activity section — heatmap + recent event feed
-- [ ] Instagram Feed section
-- [x] Contact section with form (Resend stub wired, needs API key)
+- [x] Instagram Feed section — Behold.so embed (needs `NEXT_PUBLIC_BEHOLD_WIDGET_ID` in `.env.local`)
+- [x] Contact section with form (Resend wired, needs `RESEND_API_KEY` in `.env.local`)
 
 ### Integrations
 - [x] GitHub REST API integration (repos, user, activity)
-- [ ] Instagram / Behold.so integration
-- [ ] Resend contact form integration (stub ready in `src/app/api/contact/route.ts`)
+- [x] Instagram / Behold.so integration
+- [x] Resend contact form integration (sends to njjeffreys@gmail.com via onboarding@resend.dev)
 - [ ] Vercel Analytics
 
 ### Content (needs real data)
 - [x] Update `src/content/resume.ts` with real job history and skills
 - [x] Review and update bio paragraphs in `src/components/sections/About.tsx`
 - [x] Add real LinkedIn URL in `src/components/sections/Contact.tsx`
-- [ ] Add Twitter/X URL in `src/components/sections/Contact.tsx`
+- [x] ~~Add Twitter/X URL~~ — removed, no Twitter account
 - [ ] Add a downloadable resume PDF to `/public/resume.pdf`
 
 ### Design & Polish
 - [ ] Dark mode default + light mode toggle
-- [ ] Responsive layout review (mobile, tablet, desktop)
+- [x] Responsive layout review (mobile, tablet, desktop)
 - [x] Entrance animations (Framer Motion — scroll-triggered on all sections)
 - [x] Typography and color palette finalized (Geist fonts, sky-blue accent, navy base)
-- [ ] Favicon and Open Graph meta tags / social preview image
+- [x] Favicon (`public/favicon.svg`) and Open Graph meta tags / social preview image
 
 ### Launch
 - [x] Run locally and review (`bun dev`)
