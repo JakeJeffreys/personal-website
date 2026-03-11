@@ -31,7 +31,7 @@ export default function Instagram() {
 
     const script = document.createElement("script");
     script.type = "module";
-    script.src = `https://w.behold.so/widget.js`;
+    script.src = "https://w.behold.so/widget.js";
     document.head.appendChild(script);
   }, []);
 
@@ -55,7 +55,7 @@ export default function Instagram() {
           </p>
         </motion.div>
 
-        <motion.div {...fadeUpProps(0.1)}>
+        <motion.div className="min-h-[300px]" {...fadeUpProps(0.1)}>
           <behold-widget feed-id={WIDGET_ID} />
         </motion.div>
       </div>
