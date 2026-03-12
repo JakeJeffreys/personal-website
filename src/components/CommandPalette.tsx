@@ -9,8 +9,9 @@ import { useKonamiCode, triggerKonamiEffect } from "@/hooks/useKonamiCode";
 const NAV_COMMANDS = [
   { label: "Go to About", href: "#about" },
   { label: "Go to Experience", href: "#experience" },
-  { label: "Go to Projects", href: "#projects" },
-  { label: "Go to GitHub Activity", href: "#github-activity" },
+  { label: "Go to Tech Stack", href: "#tech-stack" },
+  { label: "Go to GitHub Activity", href: "#github" },
+  { label: "Go to Photo Feed", href: "#instagram" },
   { label: "Go to Contact", href: "#contact" },
 ];
 
