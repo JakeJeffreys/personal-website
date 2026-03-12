@@ -4,7 +4,7 @@ import { useEffect, useCallback } from "react";
 import { Command } from "cmdk";
 import { useTheme } from "next-themes";
 import { useCommandPalette } from "./CommandPaletteProvider";
-import { triggerKonamiEffect } from "@/hooks/useKonamiCode";
+import { useKonamiCode, triggerKonamiEffect } from "@/hooks/useKonamiCode";
 
 const NAV_COMMANDS = [
   { label: "Go to About", href: "#about" },
@@ -22,6 +22,9 @@ function scrollTo(href: string) {
 export default function CommandPalette() {
   const { open, setOpen } = useCommandPalette();
   const { theme, setTheme } = useTheme();
+
+  // Listen for physical Konami sequence (↑↑↓↓←→←→BA)
+  useKonamiCode(triggerKonamiEffect);
 
   // Open on ⌘K / Ctrl+K
   useEffect(() => {
