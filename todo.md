@@ -1,11 +1,11 @@
 # jakejeffreys.dev — Todo
 
 ## Future Features
-- [ ] Command palette (cmd+k) — VS Code-style navigation with easter egg terminal commands
+- [x] Command palette (cmd+k) — VS Code-style navigation with easter egg terminal commands
 - [ ] AI chat widget — Claude API chatbot trained on resume/bio, visitors can ask questions about you
 - [ ] Spotify Now Playing — show current/last played track via Spotify API
-- [ ] 3D hero element — React Three Fiber scene (rotating globe with Denver pin, or abstract mesh)
-- [ ] Interactive tech stack grid — hoverable, grouped by category
+- [x] 3D hero element — React Three Fiber globe with Denver pin and continent outlines
+- [x] Interactive tech stack grid — hoverable, grouped by category with Simple Icons
 - [ ] Console message easter egg — styled greeting for visitors who open devtools
 - [ ] Custom 404 page — interactive or humorous
-- [ ] Konami code easter egg
+- [x] Konami code easter egg — matrix rain effect, also triggerable via command palette
