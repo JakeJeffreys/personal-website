@@ -184,14 +184,14 @@ export default function Hero() {
         >
           {/* Primary CTA */}
           <motion.button
-            onClick={() => scrollToSection("#projects")}
+            onClick={() => scrollToSection("#experience")}
             className={cn(
               "relative px-7 py-3 rounded-lg font-mono font-medium text-sm",
               "overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             )}
             style={{
               backgroundColor: "var(--color-accent)",
-              color: "#0a0f1e",
+              color: "var(--color-background)",
             }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
