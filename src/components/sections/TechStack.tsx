@@ -99,39 +99,36 @@ export default function TechStack() {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          {skills.map((category, catIndex) => {
-            const isAI = category.category === "AI & Agents";
-            return (
-              <div key={category.category}>
-                {/* Category label */}
-                <motion.div
-                  custom={catIndex * 3}
-                  variants={fadeUp}
-                  className="mb-4 pb-2 border-b"
-                  style={{ borderColor: isAI ? "rgba(56,189,248,0.3)" : "var(--color-border)" }}
+          {skills.map((category, catIndex) => (
+            <div key={category.category}>
+              {/* Category label */}
+              <motion.div
+                custom={catIndex * 3}
+                variants={fadeUp}
+                className="mb-4 pb-2 border-b"
+                style={{ borderColor: "var(--color-border)" }}
+              >
+                <span
+                  className="text-xs font-mono font-semibold tracking-widest uppercase"
+                  style={{ color: "var(--color-text-dim)" }}
                 >
-                  <span
-                    className="text-xs font-mono font-semibold tracking-widest uppercase"
-                    style={{ color: isAI ? "var(--color-accent)" : "var(--color-text-dim)" }}
-                  >
-                    {category.category}
-                  </span>
-                </motion.div>
+                  {category.category}
+                </span>
+              </motion.div>
 
-                {/* Pills */}
-                <div className="flex flex-wrap gap-2">
-                  {category.items.map((item, itemIndex) => (
-                    <SkillPill
-                      key={item}
-                      name={item}
-                      index={catIndex * 3 + itemIndex + 1}
-                      isAI={isAI}
-                    />
-                  ))}
-                </div>
+              {/* Pills */}
+              <div className="flex flex-wrap gap-2">
+                {category.items.map((item, itemIndex) => (
+                  <SkillPill
+                    key={item}
+                    name={item}
+                    index={catIndex * 3 + itemIndex + 1}
+                    isAI={false}
+                  />
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>

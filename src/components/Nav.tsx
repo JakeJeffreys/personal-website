@@ -114,13 +114,13 @@ export default function Nav() {
         {/* ⌘K hint */}
         <motion.button
           onClick={() => setOpen(true)}
-          className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-mono transition-colors focus:outline-none"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none"
           style={{
-            borderColor: "var(--color-border)",
-            color: "var(--color-text-dim)",
-            backgroundColor: "transparent",
+            borderColor: "var(--color-accent)",
+            color: "var(--color-accent)",
+            backgroundColor: "rgba(56,189,248,0.06)",
           }}
-          whileHover={{ borderColor: "var(--color-accent)", color: "var(--color-accent)" }}
+          whileHover={{ backgroundColor: "rgba(56,189,248,0.14)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
@@ -133,17 +133,21 @@ export default function Nav() {
         {mounted && (
           <motion.button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="flex items-center justify-center w-8 h-8 rounded-md transition-colors focus:outline-none"
-            style={{ color: "var(--color-text-muted)" }}
-            whileHover={{ color: "var(--color-accent)" }}
+            className="flex items-center justify-center w-9 h-9 rounded-md border transition-colors focus:outline-none"
+            style={{
+              color: "var(--color-text-muted)",
+              borderColor: "var(--color-border)",
+              backgroundColor: "var(--color-surface)",
+            }}
+            whileHover={{ color: "var(--color-accent)", borderColor: "var(--color-accent)" }}
             aria-label="Toggle theme"
           >
             {theme === "dark" ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
               </svg>
             )}

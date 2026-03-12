@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, Suspense } from "react";
+import { useRef, useEffect, useState, useMemo, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -39,18 +39,30 @@ function ContinentLines() {
 
 function DenverPin() {
   const pinPos = latLonToVec3(DENVER_LAT, DENVER_LON, GLOBE_RADIUS + 0.05);
+  const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
+  const [labelVisible, setLabelVisible] = useState(true);
+  const tmpVec = useMemo(() => new THREE.Vector3(), []);
+  const wasVisible = useRef(true);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     if (ringRef.current) {
       ringRef.current.scale.setScalar(
         1 + 0.3 * Math.sin(Date.now() * 0.003)
       );
     }
+    if (groupRef.current) {
+      groupRef.current.getWorldPosition(tmpVec);
+      const nowVisible = tmpVec.dot(camera.position) > 0;
+      if (nowVisible !== wasVisible.current) {
+        wasVisible.current = nowVisible;
+        setLabelVisible(nowVisible);
+      }
+    }
   });
 
   return (
-    <group position={pinPos}>
+    <group ref={groupRef} position={pinPos}>
       {/* Pin dot */}
       <mesh>
         <sphereGeometry args={[0.04, 16, 16]} />
@@ -61,24 +73,26 @@ function DenverPin() {
         <ringGeometry args={[0.06, 0.075, 32]} />
         <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} side={THREE.DoubleSide} />
       </mesh>
-      {/* Label */}
-      <Html
-        position={[0.1, 0.15, 0]}
-        style={{ pointerEvents: "none" }}
-        distanceFactor={4}
-      >
-        <span
-          style={{
-            fontFamily: "monospace",
-            fontSize: "10px",
-            color: "#38bdf8",
-            whiteSpace: "nowrap",
-            textShadow: "0 0 8px rgba(56,189,248,0.8)",
-          }}
+      {/* Label — hidden when pin faces away from camera */}
+      {labelVisible && (
+        <Html
+          position={[0.1, 0.15, 0]}
+          style={{ pointerEvents: "none" }}
+          distanceFactor={4}
         >
-          Denver
-        </span>
-      </Html>
+          <span
+            style={{
+              fontFamily: "monospace",
+              fontSize: "10px",
+              color: "#38bdf8",
+              whiteSpace: "nowrap",
+              textShadow: "0 0 8px rgba(56,189,248,0.8)",
+            }}
+          >
+            Denver
+          </span>
+        </Html>
+      )}
     </group>
   );
 }
