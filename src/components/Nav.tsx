@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useCommandPalette } from "./CommandPaletteProvider";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
@@ -16,6 +17,7 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { setOpen } = useCommandPalette();
 
   useEffect(() => {
     setMounted(true);
@@ -108,6 +110,24 @@ export default function Nav() {
             </li>
           ))}
         </ul>
+
+        {/* ⌘K hint */}
+        <motion.button
+          onClick={() => setOpen(true)}
+          className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-mono transition-colors focus:outline-none"
+          style={{
+            borderColor: "var(--color-border)",
+            color: "var(--color-text-dim)",
+            backgroundColor: "transparent",
+          }}
+          whileHover={{ borderColor: "var(--color-accent)", color: "var(--color-accent)" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          aria-label="Open command palette"
+        >
+          <span>⌘K</span>
+        </motion.button>
 
         {/* Theme Toggle */}
         {mounted && (
