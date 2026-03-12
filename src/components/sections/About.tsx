@@ -165,7 +165,7 @@ export default function About() {
               <ul className="space-y-2">
                 {[
                   "Leading platform engineering at Ibotta",
-                  "Building this personal website",
+                  "Trying to keep up with the rate of change in AI tooling",
                   "Exploring the Colorado 14ers",
                   "Managing my Airbnb investment property",
                 ].map((item) => (

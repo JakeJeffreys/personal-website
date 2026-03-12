@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { jobs, skills } from "@/content/resume";
+import { jobs } from "@/content/resume";
 
 // Animation variants
 const fadeUp = {
@@ -166,79 +166,6 @@ function TimelineItem({ job, index }: { job: (typeof jobs)[0]; index: number }) 
   );
 }
 
-// ---------- Skills Grid ----------
-function SkillsSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
-
-  return (
-    <div ref={ref} className="mt-20">
-      <motion.div
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        variants={fadeIn}
-        className="mb-8"
-      >
-        <h3
-          className="text-2xl font-bold tracking-tight"
-          style={{ color: "var(--color-text)" }}
-        >
-          Skills
-        </h3>
-        <div className="mt-2 flex items-center gap-3">
-          <div
-            className="h-px w-8 rounded-full"
-            style={{ background: "var(--color-accent)" }}
-          />
-          <div
-            className="h-px flex-1 rounded-full"
-            style={{ background: "var(--color-border)" }}
-          />
-        </div>
-      </motion.div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {skills.map((group, i) => (
-          <motion.div
-            key={group.category}
-            custom={i}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            variants={fadeUp}
-            className="rounded-2xl border p-5"
-            style={{
-              background: "var(--color-surface)",
-              borderColor: "var(--color-border)",
-            }}
-          >
-            <p
-              className="mb-3 text-xs font-semibold uppercase tracking-widest"
-              style={{ color: "var(--color-accent)" }}
-            >
-              {group.category}
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {group.items.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-md px-2.5 py-1 text-xs font-medium"
-                  style={{
-                    background: "var(--color-surface-2)",
-                    color: "var(--color-text-muted)",
-                    border: "1px solid var(--color-border)",
-                  }}
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ---------- Section ----------
 export default function Experience() {
   const headingRef = useRef<HTMLDivElement>(null);
@@ -299,8 +226,6 @@ export default function Experience() {
           ))}
         </div>
 
-        {/* Skills subsection */}
-        <SkillsSection />
       </div>
     </section>
   );

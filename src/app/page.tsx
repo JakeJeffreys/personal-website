@@ -5,6 +5,7 @@ import Experience from "@/components/sections/Experience";
 import GitHubActivity from "@/components/sections/GitHubActivity";
 import Instagram from "@/components/sections/Instagram";
 import Contact from "@/components/sections/Contact";
+import TechStack from "@/components/sections/TechStack";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <main>
         <Hero />
         <About />
+        <TechStack />
         <Experience />
         <GitHubActivity />
         <Instagram />

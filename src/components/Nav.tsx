@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useCommandPalette } from "./CommandPaletteProvider";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
@@ -13,6 +15,13 @@ const NAV_LINKS = [
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const { setOpen } = useCommandPalette();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +48,7 @@ export default function Nav() {
           : "border-b border-transparent"
       )}
       style={{
-        backgroundColor: scrolled ? "rgba(10, 15, 30, 0.85)" : "transparent",
+        backgroundColor: scrolled ? "color-mix(in srgb, var(--color-background) 85%, transparent)" : "transparent",
         borderColor: scrolled ? "var(--color-border)" : "transparent",
       }}
       initial={{ y: -80, opacity: 0 }}
@@ -102,6 +111,49 @@ export default function Nav() {
           ))}
         </ul>
 
+        {/* ⌘K hint */}
+        <motion.button
+          onClick={() => setOpen(true)}
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none"
+          style={{
+            borderColor: "var(--color-accent)",
+            color: "var(--color-accent)",
+            backgroundColor: "rgba(56,189,248,0.06)",
+          }}
+          whileHover={{ backgroundColor: "rgba(56,189,248,0.14)" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          aria-label="Open command palette"
+        >
+          <span>⌘K</span>
+        </motion.button>
+
+        {/* Theme Toggle */}
+        {mounted && (
+          <motion.button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="flex items-center justify-center w-9 h-9 rounded-md border transition-colors focus:outline-none"
+            style={{
+              color: "var(--color-text-muted)",
+              borderColor: "var(--color-border)",
+              backgroundColor: "var(--color-surface)",
+            }}
+            whileHover={{ color: "var(--color-accent)", borderColor: "var(--color-accent)" }}
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            )}
+          </motion.button>
+        )}
+
         {/* Mobile Hamburger */}
         <button
           className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5 focus:outline-none"
@@ -141,7 +193,7 @@ export default function Nav() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden overflow-hidden border-t"
             style={{
-              backgroundColor: "rgba(10, 15, 30, 0.97)",
+              backgroundColor: "color-mix(in srgb, var(--color-background) 97%, transparent)",
               borderColor: "var(--color-border)",
             }}
           >
