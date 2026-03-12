@@ -14,18 +14,25 @@ Live at **[jakejeffreys.dev](https://jakejeffreys.dev)**
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 |
 | Animations | Framer Motion |
+| 3D | React Three Fiber + Drei |
 | Package Manager | Bun |
 | Hosting | Vercel |
 | Analytics | Vercel Analytics |
 
 ## Sections
 
-- **Hero** — Animated background, cycling taglines, CTAs
+- **Hero** — Animated background, cycling taglines, CTAs, rotating 3D globe with Denver pin
 - **About** — Bio, quick stats, interests
-- **Experience** — Vertical timeline + skills grid (data in `src/content/resume.ts`)
+- **Experience** — Vertical timeline (data in `src/content/resume.ts`)
+- **Tech Stack** — Hoverable skill pills with brand icons, grouped by category
 - **GitHub Activity** — Contribution heatmap + recent events via GitHub REST API
 - **Instagram Feed** — Embedded via Behold.so
 - **Contact** — GitHub and LinkedIn links
+
+### Easter eggs
+
+- **⌘K** — Command palette for site navigation, resume, and theme toggle
+- **Konami code** (`↑↑↓↓←→←→BA`) — Matrix rain effect (also triggerable via command palette)
 
 ---
 
@@ -80,9 +87,17 @@ src/
   components/
     Nav.tsx               # Sticky nav with mobile menu + theme toggle
     ThemeProvider.tsx     # next-themes wrapper
-    sections/             # Hero, About, Experience, GitHubActivity, Instagram, Contact
+    CommandPalette.tsx    # ⌘K command palette (cmdk)
+    CommandPaletteProvider.tsx  # Open/close context
+    Globe.tsx             # SSR-safe dynamic wrapper for GlobeScene
+    GlobeScene.tsx        # React Three Fiber globe scene
+    sections/             # Hero, About, Experience, TechStack, GitHubActivity, Instagram, Contact
+  hooks/
+    useKonamiCode.ts      # Konami sequence listener + matrix rain effect
   lib/
     github.ts             # GitHub REST API helpers
+    globe-geometry.ts     # TopoJSON → Three.js BufferGeometry for continent lines
+    icons.ts              # simple-icons lookup for TechStack pills
     utils.ts              # cn() utility
   content/
     resume.ts             # Job history and skills data
@@ -93,6 +108,7 @@ public/
 
 ## Updating Content
 
-- **Job history / skills** — edit `src/content/resume.ts`
+- **Job history / tech stack** — edit `src/content/resume.ts`
 - **Bio / Currently / Interests** — edit `src/components/sections/About.tsx`
 - **Resume PDF** — replace `public/resume.pdf`
+- **Command palette commands** — edit `src/components/CommandPalette.tsx`
