@@ -9,6 +9,9 @@ import { useCommandPalette } from "./CommandPaletteProvider";
 const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
+  { label: "Tech Stack", href: "#tech-stack" },
+  { label: "GitHub", href: "#github" },
+  { label: "Photo Feed", href: "#instagram" },
   { label: "Contact", href: "#contact" },
 ];
 

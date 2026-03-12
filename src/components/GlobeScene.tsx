@@ -143,7 +143,7 @@ function Globe() {
 
 export default function GlobeScene() {
   return (
-    <div className="w-[220px] h-[220px] relative">
+    <div className="w-[260px] h-[260px] relative">
       {/* Ambient glow behind canvas */}
       <div
         className="absolute inset-0 rounded-full pointer-events-none"
