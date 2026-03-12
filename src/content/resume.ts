@@ -86,22 +86,22 @@ export const jobs: Job[] = [
 export const skills: Skill[] = [
   {
     category: "Languages",
-    items: ["TypeScript", "JavaScript", "Python", "Java", "SQL", "Bash"],
-  },
-  {
-    category: "Frontend",
-    items: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "Split.io"],
+    items: ["TypeScript", "JavaScript", "Java", "SQL", "Bash"],
   },
   {
     category: "Backend",
-    items: ["Node.js", "Java Spring", "REST APIs", "DynamoDB", "SQL"],
+    items: ["Node.js", "Java Spring", "REST APIs", "Docker", "Kubernetes"],
   },
   {
     category: "Infrastructure",
-    items: ["AWS", "Lambda", "S3", "CloudFront", "API Gateway", "SNS", "SQS", "Terraform", "Jenkins"],
+    items: ["AWS", "Lambda", "DynamoDB", "S3", "CloudFront", "API Gateway", "SNS", "SQS", "EventBridge", "Terraform"],
   },
   {
     category: "Observability",
     items: ["Datadog", "Runscope", "BlazeMeter"],
+  },
+  {
+    category: "AI & Agents",
+    items: ["Claude Code", "Claude API", "MCP", "Agent SDK", "Skills"],
   },
 ];
