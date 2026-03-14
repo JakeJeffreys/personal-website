@@ -240,8 +240,8 @@ export default function Hero() {
         {/* Globe — hidden on mobile */}
         <motion.div
           className="hidden md:flex flex-shrink-0 items-center justify-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
         >
           <Globe />

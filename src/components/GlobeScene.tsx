@@ -115,19 +115,19 @@ function Globe({ isLight }: { isLight: boolean }) {
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
     >
-      {/* Globe sphere (ocean blue) */}
+      {/* Globe sphere — meshStandardMaterial gives real 3D shading */}
       <mesh>
-        <sphereGeometry args={[GLOBE_RADIUS, 36, 18]} />
-        <meshBasicMaterial
-          color={isLight ? "#0ea5e9" : "#0a0f1e"}
-          transparent
-          opacity={isLight ? 0.9 : 0.95}
+        <sphereGeometry args={[GLOBE_RADIUS, 64, 32]} />
+        <meshStandardMaterial
+          color={isLight ? "#0ea5e9" : "#0d2147"}
+          roughness={0.75}
+          metalness={0}
         />
       </mesh>
       {/* Lat/lon grid */}
       <mesh>
         <sphereGeometry args={[GLOBE_RADIUS, 18, 9]} />
-        <meshBasicMaterial color={isLight ? "#ffffff" : "#1e2a45"} wireframe transparent opacity={isLight ? 0.2 : 0.35} />
+        <meshBasicMaterial color={isLight ? "#ffffff" : "#1e2a45"} wireframe transparent opacity={isLight ? 0 : 0.35} />
       </mesh>
       {/* Continent outlines */}
       <ContinentLines isLight={isLight} />
@@ -136,7 +136,7 @@ function Globe({ isLight }: { isLight: boolean }) {
       {/* Rim glow */}
       <mesh>
         <sphereGeometry args={[GLOBE_RADIUS + 0.02, 36, 18]} />
-        <meshBasicMaterial color={isLight ? "#38bdf8" : "#1e3a5f"} wireframe={false} transparent opacity={isLight ? 0.12 : 0.08} side={THREE.BackSide} />
+        <meshBasicMaterial color={isLight ? "#38bdf8" : "#38bdf8"} wireframe={false} transparent opacity={isLight ? 0.15 : 0.18} side={THREE.BackSide} />
       </mesh>
     </group>
   );
@@ -166,6 +166,8 @@ export default function GlobeScene() {
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
       >
+        <ambientLight intensity={isLight ? 0.5 : 0.35} color={isLight ? "#ffffff" : "#7dd3fc"} />
+        <directionalLight position={[4, 4, 4]} intensity={isLight ? 1.4 : 1.6} color={isLight ? "#ffffff" : "#93c5fd"} />
         <Suspense fallback={null}>
           <Globe isLight={isLight} />
           <OrbitControls
