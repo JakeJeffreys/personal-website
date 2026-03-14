@@ -117,7 +117,7 @@ export default function Nav() {
         {/* ⌘K hint */}
         <motion.button
           onClick={() => setOpen(true)}
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none group relative"
           style={{
             borderColor: "var(--color-accent)",
             color: "var(--color-accent)",
@@ -128,8 +128,21 @@ export default function Nav() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           aria-label="Open command palette"
+          title="Open command palette"
         >
           <span>⌘K</span>
+          <span className="text-xs opacity-60">· Command</span>
+          {/* Tooltip */}
+          <span
+            className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-xs font-mono whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            style={{
+              background: "var(--color-surface)",
+              color: "var(--color-text-muted)",
+              border: "1px solid var(--color-border)",
+            }}
+          >
+            Open command palette
+          </span>
         </motion.button>
 
         {/* Theme Toggle */}
