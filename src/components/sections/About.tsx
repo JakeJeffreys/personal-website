@@ -47,7 +47,7 @@ export default function About() {
         }}
       />
 
-      <div className="relative max-w-4xl">
+      <div className="relative mx-auto max-w-4xl">
         {/* Section heading */}
         <motion.div
           custom={0}

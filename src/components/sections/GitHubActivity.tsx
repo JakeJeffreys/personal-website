@@ -337,7 +337,7 @@ export default async function GitHubActivity() {
 
   return (
     <section id="github" className="py-20 px-4">
-      <div className="max-w-4xl">
+      <div className="max-w-4xl mx-auto">
         {/* Heading */}
         <div className="mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>

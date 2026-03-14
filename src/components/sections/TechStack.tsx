@@ -70,7 +70,7 @@ export default function TechStack() {
       className="py-24 px-4"
       style={{ backgroundColor: "var(--color-background)" }}
     >
-      <div className="max-w-4xl">
+      <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <motion.div
           className="mb-12"
