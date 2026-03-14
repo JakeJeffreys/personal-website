@@ -37,7 +37,7 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="about" ref={ref} className="relative py-24 px-4 sm:px-6 lg:px-8">
+    <section id="about" ref={ref} className="relative py-24 px-4">
       {/* subtle background gradient */}
       <div
         className="pointer-events-none absolute inset-0 opacity-30"

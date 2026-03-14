@@ -336,7 +336,7 @@ export default async function GitHubActivity() {
   const recentEvents = events.slice(0, 10);
 
   return (
-    <section id="github" className="py-20 px-4 sm:px-6 lg:px-8">
+    <section id="github" className="py-20 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Heading */}
         <div className="mb-12">

@@ -183,7 +183,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-24 px-4 sm:px-6 lg:px-8"
+      className="relative py-24 px-4"
       style={{ background: "var(--color-surface)" }}
     >
       {/* Subtle top gradient */}

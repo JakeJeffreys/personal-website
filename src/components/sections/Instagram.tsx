@@ -154,7 +154,7 @@ export default function Instagram() {
 
   return (
     <section id="instagram" className="py-20 overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4">
         <motion.div className="mb-12" {...fadeUpProps(0)}>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
             Photo Feed
