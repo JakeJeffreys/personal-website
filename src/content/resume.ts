@@ -27,12 +27,12 @@ export const companies: Company[] = [
         startDate: "Jan 2024",
         endDate: null,
         description: [
-          "Led backend architecture and API development — Lambda handlers, messaging layers, and scalable database design — supporting a partner network with millions of daily customers.",
-          "Designed and deployed extensible AWS infrastructure with Terraform, enabling seamless onboarding of new grocery partners including DoorDash and Instacart.",
-          "Architected an image storage and delivery system using API Gateway, Lambda, S3, and CloudFront to serve thousands of low-latency, high-fidelity product images to partners per day.",
-          "Enhanced reliability through Datadog monitoring, Runscope testing suites, and BlazeMeter performance tests; participated in 24/7 on-call rotations.",
-          "Led the winning internal Hackathon project — an image resizing and compression solution that reduced data transfer costs by over $100,000 annually.",
-          "Mentored multiple new engineers, accelerating ramp-up time and fostering adoption of best practices.",
+          "Led backend architecture, API development, and scalable database design for a partner network with millions of daily customers.",
+          "Deployed extensible AWS infrastructure with Terraform, onboarding partners including DoorDash and Instacart.",
+          "Architected an image delivery system via API Gateway, Lambda, S3, and CloudFront serving thousands of partners daily.",
+          "Improved reliability with Datadog, Runscope, and BlazeMeter; participated in 24/7 on-call rotations.",
+          "Won internal Hackathon with an image compression solution that cut data transfer costs by $100,000+ annually.",
+          "Mentored new engineers, accelerating ramp-up and driving adoption of best practices.",
         ],
       },
       {
