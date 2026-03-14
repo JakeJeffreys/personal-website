@@ -110,7 +110,7 @@ function Globe() {
   return (
     <group
       ref={groupRef}
-      rotation={[-0.4, 0, 0]}
+      rotation={[0.4, 0, 0]}
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
     >
