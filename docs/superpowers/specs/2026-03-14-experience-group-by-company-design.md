@@ -41,7 +41,8 @@ export const companies: Company[] = [ ... ];
 
 **Key decisions:**
 - `technologies` is pre-merged in the data (no runtime dedup). This keeps the component dumb.
-- `roles` is ordered newest-first so `roles[0]` is always the most recent role.
+- `roles` is ordered newest-first so `roles[0]` is always the most recent role. This is a **trusted data invariant** — the component does not sort at runtime. When adding new companies, roles must be inserted newest-first or tenure span and dot state will be wrong.
+- `location` is a company-level field only. Roles do not carry their own location. This works for the current data (all roles at a company share the same location). If a future role has a different location (e.g., remote vs. office), the data model would need revisiting.
 - The old `Job` interface and `jobs[]` export are removed. Only `Experience.tsx` consumed `jobs[]`.
 
 ---
@@ -57,14 +58,18 @@ Receives a `Company`. Renders one timeline entry.
 **Timeline dot behavior:**
 - Pulsing/glowing accent dot if `company.roles[0].endDate === null` (company is current employer)
 - Static hollow dot otherwise
+- Note: for a single-role current company, both the pulsing dot and the "Current" badge on the role header will appear simultaneously. This is correct and requires no special-casing.
 
 **Card header row:**
 - Left: company name (accent color, `font-semibold`)
-- Right: overall tenure span — `company.roles[roles.length-1].startDate — company.roles[0].endDate ?? "Present"` — in mono/muted font, with location beneath
+- Right: overall tenure span in mono/muted font, with location beneath. Rendered as:
+  ```tsx
+  `${company.roles[company.roles.length - 1].startDate} — ${company.roles[0].endDate ?? "Present"}`
+  ```
 
 **Roles list:**
 - Each role rendered top-to-bottom (newest first)
-- Role header: title (`var(--color-text)`, `font-semibold`) + "Current" badge if `endDate === null`; date range (`var(--color-text-muted)`, mono) on same row
+- Role header: title (`var(--color-text)`, `font-semibold`) + "Current" badge if `role.endDate === null`; date range (`var(--color-text-muted)`, mono) on same row. Badge is driven independently by the role's own `endDate`, not by its position in the list.
 - Bullet points below the role header
 - Roles separated by a `1px var(--color-border)` divider, with `py-4` spacing
 
