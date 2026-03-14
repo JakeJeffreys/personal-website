@@ -263,42 +263,44 @@ function ContributionHeatmap({ events }: HeatmapProps) {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full">
       {/* Month labels */}
-      <div className="relative mb-1 ml-8 flex" style={{ gap: "2px" }}>
+      <div className="flex mb-1" style={{ marginLeft: 22, gap: "2px" }}>
         {Array.from({ length: WEEKS }).map((_, w) => {
           const label = monthLabels.find((ml) => ml.weekIndex === w);
           return (
-            <div key={w} className="flex-none text-[10px]" style={{ width: 11, color: "var(--color-text-dim)" }}>
+            <div key={w} className="flex-1 text-[10px] overflow-hidden" style={{ color: "var(--color-text-dim)" }}>
               {label ? label.label : ""}
             </div>
           );
         })}
       </div>
 
-      <div className="flex items-start gap-1">
+      <div className="flex" style={{ gap: "2px" }}>
         {/* Day-of-week labels */}
-        <div className="flex flex-col mr-1" style={{ gap: "2px" }}>
+        <div className="flex flex-col" style={{ gap: "2px", width: 14, flexShrink: 0 }}>
           {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
             <div
               key={i}
-              className="text-[10px] flex items-center justify-center"
-              style={{ height: 11, width: 14, color: "var(--color-text-dim)" }}
+              className="flex-1 text-[10px] flex items-center justify-center"
+              style={{ color: "var(--color-text-dim)" }}
             >
               {i % 2 === 1 ? d : ""}
             </div>
           ))}
         </div>
 
+        <div style={{ width: 6, flexShrink: 0 }} />
+
         {/* Grid */}
-        <div className="flex" style={{ gap: "2px" }}>
+        <div className="flex flex-1" style={{ gap: "2px" }}>
           {grid.map((col, w) => (
-            <div key={w} className="flex flex-col" style={{ gap: "2px" }}>
+            <div key={w} className="flex-1 flex flex-col" style={{ gap: "2px" }}>
               {col.map((level, d) => (
                 <div
                   key={d}
-                  className="rounded-[2px] transition-transform hover:scale-125"
-                  style={{ width: 11, height: 11, background: heatColor(level) }}
+                  className="w-full rounded-[2px] transition-transform hover:scale-125"
+                  style={{ aspectRatio: "1", background: heatColor(level) }}
                   title={`Level ${level}`}
                 />
               ))}
@@ -308,13 +310,13 @@ function ContributionHeatmap({ events }: HeatmapProps) {
       </div>
 
       {/* Legend */}
-      <div className="mt-2 ml-8 flex items-center gap-1.5 text-[10px]" style={{ color: "var(--color-text-dim)" }}>
+      <div className="mt-2 flex items-center gap-1.5 text-[10px]" style={{ marginLeft: 22, color: "var(--color-text-dim)" }}>
         <span>Less</span>
         {([0, 1, 2, 3] as HeatLevel[]).map((l) => (
           <div
             key={l}
-            className="rounded-[2px]"
-            style={{ width: 11, height: 11, background: heatColor(l) }}
+            className="rounded-[2px] w-3 h-3"
+            style={{ background: heatColor(l) }}
           />
         ))}
         <span>More</span>
@@ -336,7 +338,7 @@ export default async function GitHubActivity() {
   const recentEvents = events.slice(0, 10);
 
   return (
-    <section id="github" className="py-20 px-6">
+    <section id="github" className="py-20 px-6" style={{ background: "var(--color-surface)" }}>
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <div className="mb-12">

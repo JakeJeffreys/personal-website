@@ -44,14 +44,9 @@ export default function Nav() {
 
   return (
     <motion.header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
-          ? "backdrop-blur-md border-b"
-          : "border-b border-transparent"
-      )}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b"
       style={{
-        backgroundColor: scrolled ? "color-mix(in srgb, var(--color-background) 85%, transparent)" : "transparent",
+        backgroundColor: "color-mix(in srgb, var(--color-background) 85%, transparent)",
         borderColor: scrolled ? "var(--color-border)" : "transparent",
       }}
       initial={{ y: -80, opacity: 0 }}

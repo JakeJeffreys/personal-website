@@ -8,12 +8,18 @@ const interests = [
   "Skiing",
   "Backpacking",
   "Live Music",
+  "Soccer",
   "Rafting",
   "Real Estate",
   "Coffee",
   "Barbecue",
   "Travel",
-  "Interior Design"
+  "Biking",
+  "Interior Design",
+  "Photography",
+  "Running",
+  "Personal Finance",
+  "Board Games"
 ];
 
 const stats = [
@@ -164,7 +170,7 @@ export default function About() {
               <ul className="space-y-2">
                 {[
                   "Planning a wedding",
-                  "Leading platform engineering at Ibotta",
+                  "Building platform infrastructure at Ibotta",
                   "Trying to keep up with the rate of change in AI tooling",
                   "Exploring the Colorado 14ers"
                 ].map((item) => (

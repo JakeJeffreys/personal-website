@@ -89,7 +89,7 @@ export const companies: Company[] = [
         ],
       },
     ],
-    technologies: ["JavaScript", "React", "REST APIs"],
+    technologies: [],
   },
   {
     name: "Portland General Electric",

@@ -25,15 +25,11 @@ function SkillPill({ name, index, isAI }: { name: string; index: number; isAI: b
     <motion.div
       custom={index}
       variants={fadeUp}
-      className="group flex items-center gap-2 rounded-lg px-3 py-2 border transition-all duration-200 cursor-default"
+      className="flex items-center gap-2 rounded-lg px-3 py-2 border"
       style={{
         backgroundColor: "var(--color-surface)",
         borderColor: isAI ? "var(--color-accent)" : "var(--color-border)",
         boxShadow: isAI ? "0 0 10px rgba(56,189,248,0.08)" : "none",
-      }}
-      whileHover={{
-        borderColor: "var(--color-accent)",
-        boxShadow: "0 0 14px rgba(56,189,248,0.15)",
       }}
     >
       {icon ? (

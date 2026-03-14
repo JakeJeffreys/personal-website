@@ -4,9 +4,10 @@ import { useRef, useEffect, useState, useMemo, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
+import { useTheme } from "next-themes";
 import { loadContinentLines } from "@/lib/globe-geometry";
 
-const GLOBE_RADIUS = 1.8;
+const GLOBE_RADIUS = 2.1;
 // Denver: lat 39.7392, lon -104.9903
 const DENVER_LAT = 39.7392;
 const DENVER_LON = -104.9903;
@@ -21,7 +22,7 @@ function latLonToVec3(lat: number, lon: number, radius: number): THREE.Vector3 {
   );
 }
 
-function ContinentLines() {
+function ContinentLines({ isLight }: { isLight: boolean }) {
   const [geometry, setGeometry] = useState<THREE.BufferGeometry | null>(null);
 
   useEffect(() => {
@@ -32,12 +33,12 @@ function ContinentLines() {
 
   return (
     <lineSegments geometry={geometry}>
-      <lineBasicMaterial color="#2d5a8e" transparent opacity={0.85} />
+      <lineBasicMaterial color={isLight ? "#ffffff" : "#2d5a8e"} transparent opacity={isLight ? 0.9 : 0.85} />
     </lineSegments>
   );
 }
 
-function DenverPin() {
+function DenverPin({ isLight }: { isLight: boolean }) {
   const pinPos = latLonToVec3(DENVER_LAT, DENVER_LON, GLOBE_RADIUS + 0.05);
   const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
@@ -66,12 +67,12 @@ function DenverPin() {
       {/* Pin dot */}
       <mesh>
         <sphereGeometry args={[0.04, 16, 16]} />
-        <meshBasicMaterial color="#38bdf8" />
+        <meshBasicMaterial color={isLight ? "#ffffff" : "#38bdf8"} />
       </mesh>
       {/* Pulse ring */}
       <mesh ref={ringRef}>
         <ringGeometry args={[0.06, 0.075, 32]} />
-        <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={isLight ? "#ffffff" : "#38bdf8"} transparent opacity={0.4} side={THREE.DoubleSide} />
       </mesh>
       {/* Label — hidden when pin faces away from camera */}
       {labelVisible && (
@@ -84,9 +85,9 @@ function DenverPin() {
             style={{
               fontFamily: "monospace",
               fontSize: "10px",
-              color: "#38bdf8",
+              color: isLight ? "#ffffff" : "#38bdf8",
               whiteSpace: "nowrap",
-              textShadow: "0 0 8px rgba(56,189,248,0.8)",
+              textShadow: isLight ? "0 0 8px rgba(255,255,255,0.8)" : "0 0 8px rgba(56,189,248,0.8)",
             }}
           >
             Denver
@@ -97,7 +98,7 @@ function DenverPin() {
   );
 }
 
-function Globe() {
+function Globe({ isLight }: { isLight: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -114,52 +115,59 @@ function Globe() {
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
     >
-      {/* Globe sphere (solid background) */}
+      {/* Globe sphere (ocean blue) */}
       <mesh>
         <sphereGeometry args={[GLOBE_RADIUS, 36, 18]} />
         <meshBasicMaterial
-          color="#0a0f1e"
-          wireframe={false}
+          color={isLight ? "#0ea5e9" : "#0a0f1e"}
           transparent
-          opacity={0.95}
+          opacity={isLight ? 0.9 : 0.95}
         />
       </mesh>
       {/* Lat/lon grid */}
       <mesh>
         <sphereGeometry args={[GLOBE_RADIUS, 18, 9]} />
-        <meshBasicMaterial color="#1e2a45" wireframe transparent opacity={0.35} />
+        <meshBasicMaterial color={isLight ? "#ffffff" : "#1e2a45"} wireframe transparent opacity={isLight ? 0.2 : 0.35} />
       </mesh>
       {/* Continent outlines */}
-      <ContinentLines />
+      <ContinentLines isLight={isLight} />
       {/* Denver pin */}
-      <DenverPin />
+      <DenverPin isLight={isLight} />
       {/* Rim glow */}
       <mesh>
         <sphereGeometry args={[GLOBE_RADIUS + 0.02, 36, 18]} />
-        <meshBasicMaterial color="#1e3a5f" wireframe={false} transparent opacity={0.08} side={THREE.BackSide} />
+        <meshBasicMaterial color={isLight ? "#38bdf8" : "#1e3a5f"} wireframe={false} transparent opacity={isLight ? 0.12 : 0.08} side={THREE.BackSide} />
       </mesh>
     </group>
   );
 }
 
 export default function GlobeScene() {
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isLight = mounted && resolvedTheme === "light";
+
+  useEffect(() => setMounted(true), []);
+
   return (
-    <div className="w-[260px] h-[260px] relative">
+    <div className="w-[400px] h-[400px] relative">
       {/* Ambient glow behind canvas */}
       <div
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)",
+          background: isLight
+            ? "radial-gradient(circle, rgba(56,189,248,0.13) 0%, rgba(56,189,248,0.04) 60%, transparent 80%)"
+            : "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)",
           transform: "scale(1.4)",
         }}
       />
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
+        camera={{ position: [0, 0, 5.8], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: "transparent" }}
       >
         <Suspense fallback={null}>
-          <Globe />
+          <Globe isLight={isLight} />
           <OrbitControls
             enableZoom={false}
             enablePan={false}
