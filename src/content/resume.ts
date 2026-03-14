@@ -91,6 +91,19 @@ export const companies: Company[] = [
     ],
     technologies: ["JavaScript", "React", "REST APIs"],
   },
+  {
+    name: "Portland General Electric",
+    location: "Portland, OR",
+    roles: [
+      {
+        title: "Software Engineer, Intern",
+        startDate: "Mar 2016",
+        endDate: "Sep 2016",
+        description: [],
+      },
+    ],
+    technologies: [],
+  },
 ];
 
 export const skills: Skill[] = [
