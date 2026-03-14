@@ -67,10 +67,10 @@ export default function TechStack() {
     <section
       id="tech-stack"
       ref={ref}
-      className="py-24 px-6"
+      className="py-24 px-4 sm:px-6 lg:px-8"
       style={{ backgroundColor: "var(--color-background)" }}
     >
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <motion.div
           className="mb-12"
