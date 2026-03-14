@@ -340,15 +340,13 @@ export default async function GitHubActivity() {
       <div className="max-w-4xl mx-auto">
         {/* Heading */}
         <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-8 bg-sky-400" />
-            <span className="text-sky-400 text-sm font-mono tracking-widest uppercase">
-              Source Control
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: "var(--color-text)" }}>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
             GitHub Activity
           </h2>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
+            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
+          </div>
         </div>
 
         {/* User stats */}

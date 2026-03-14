@@ -73,24 +73,22 @@ export default function TechStack() {
       <div className="max-w-5xl mx-auto">
         {/* Section header */}
         <motion.div
-          className="mb-12 text-center"
+          className="mb-12"
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={fadeUp}
           custom={0}
         >
-          <p
-            className="font-mono text-sm tracking-widest uppercase mb-2"
-            style={{ color: "var(--color-accent)" }}
-          >
-            What I work with
-          </p>
           <h2
-            className="text-3xl font-bold"
+            className="text-3xl sm:text-4xl font-bold tracking-tight"
             style={{ color: "var(--color-text)" }}
           >
             Tech Stack
           </h2>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
+            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
+          </div>
         </motion.div>
 
         {/* Categories */}
