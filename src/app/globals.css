@@ -12,13 +12,16 @@
   --color-text-muted: #94a3b8;
   --color-text-dim: #475569;
 
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Heatmap levels — defined at :root so they're always present regardless of Tailwind tree-shaking */
+:root {
   --color-heat-0: #1e293b;
   --color-heat-1: #0c4a6e;
   --color-heat-2: #0369a1;
   --color-heat-3: #38bdf8;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 /* Light mode overrides */
