@@ -99,7 +99,9 @@ export const companies: Company[] = [
         title: "Software Engineer, Intern",
         startDate: "Mar 2016",
         endDate: "Sep 2016",
-        description: [],
+        description: [
+          "Built an on-call scheduling tool as part of the Application Development team.",
+        ],
       },
     ],
     technologies: [],
