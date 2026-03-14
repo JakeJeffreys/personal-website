@@ -28,8 +28,6 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   const isCurrent = company.roles[0].endDate === null;
-  const tenureStart = company.roles[company.roles.length - 1].startDate;
-  const tenureEnd = company.roles[0].endDate ?? "Present";
 
   return (
     <motion.div
@@ -86,27 +84,19 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
         }}
       >
         {/* Company header row */}
-        <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+        <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <p
             className="text-lg font-semibold leading-tight"
             style={{ color: "var(--color-accent)" }}
           >
             {company.name}
           </p>
-          <div className="text-left sm:text-right">
-            <p
-              className="text-sm font-mono"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              {tenureStart} — {tenureEnd}
-            </p>
-            <p
-              className="mt-0.5 text-xs"
-              style={{ color: "var(--color-text-dim)" }}
-            >
-              {company.location}
-            </p>
-          </div>
+          <p
+            className="text-xs"
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            {company.location}
+          </p>
         </div>
 
         {/* Roles list */}
