@@ -120,7 +120,7 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
                   </h3>
                   {role.endDate === null && (
                     <span
-                      className="rounded-full px-2 py-0.5 text-xs font-medium"
+                      className="rounded-full px-6 py-0.5 text-xs font-medium"
                       style={{
                         background: "rgba(56,189,248,0.12)",
                         color: "var(--color-accent)",
@@ -159,7 +159,7 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
           {company.technologies.map((tech) => (
             <span
               key={tech}
-              className="rounded-md px-2.5 py-1 text-xs font-mono font-medium"
+              className="rounded-md px-6.5 py-1 text-xs font-mono font-medium"
               style={{
                 background: "var(--color-surface-2)",
                 color: "var(--color-text-muted)",
@@ -183,7 +183,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-24 px-2"
+      className="relative py-24 px-6"
       style={{ background: "var(--color-surface)" }}
     >
       {/* Subtle top gradient */}
@@ -192,7 +192,7 @@ export default function Experience() {
         style={{ background: "var(--color-border)" }}
       />
 
-      <div className="relative mx-auto max-w-4xl">
+      <div className="relative mx-auto max-w-5xl">
         {/* Section heading */}
         <motion.div
           ref={headingRef}

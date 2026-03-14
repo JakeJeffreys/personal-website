@@ -30,8 +30,8 @@ const socialLinks = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 px-2">
-      <div className="max-w-4xl mx-auto text-center">
+    <section id="contact" className="py-24 px-6">
+      <div className="max-w-5xl mx-auto text-center">
         <motion.div className="mb-12" {...fadeUpProps(0)}>
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="h-px w-8" style={{ background: "var(--color-accent)" }} />
