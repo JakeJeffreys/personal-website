@@ -154,18 +154,16 @@ export default function Instagram() {
 
   return (
     <section id="instagram" className="py-20 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto">
         <motion.div className="mb-12" {...fadeUpProps(0)}>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-8" style={{ backgroundColor: "var(--color-accent)" }} />
-            <span className="text-sm font-mono tracking-widest uppercase" style={{ color: "var(--color-accent)" }}>
-              Photo Feed
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: "var(--color-text)" }}>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
             Photo Feed
           </h2>
-          <p className="text-base sm:text-lg max-w-xl leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
+            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
+          </div>
+          <p className="mt-4 text-base sm:text-lg max-w-xl leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
             Life outside the terminal.
           </p>
         </motion.div>

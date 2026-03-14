@@ -44,14 +44,9 @@ export default function Nav() {
 
   return (
     <motion.header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
-          ? "backdrop-blur-md border-b"
-          : "border-b border-transparent"
-      )}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b"
       style={{
-        backgroundColor: scrolled ? "color-mix(in srgb, var(--color-background) 85%, transparent)" : "transparent",
+        backgroundColor: "color-mix(in srgb, var(--color-background) 85%, transparent)",
         borderColor: scrolled ? "var(--color-border)" : "transparent",
       }}
       initial={{ y: -80, opacity: 0 }}
@@ -117,7 +112,7 @@ export default function Nav() {
         {/* ⌘K hint */}
         <motion.button
           onClick={() => setOpen(true)}
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none group relative"
           style={{
             borderColor: "var(--color-accent)",
             color: "var(--color-accent)",
@@ -128,32 +123,49 @@ export default function Nav() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           aria-label="Open command palette"
+          title="Open command palette"
         >
           <span>⌘K</span>
+          <span className="text-xs opacity-60">· Command</span>
+          {/* Tooltip */}
+          <span
+            className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-xs font-mono whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            style={{
+              background: "var(--color-surface)",
+              color: "var(--color-text-muted)",
+              border: "1px solid var(--color-border)",
+            }}
+          >
+            Open command palette
+          </span>
         </motion.button>
 
         {/* Theme Toggle */}
         {mounted && (
           <motion.button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="flex items-center justify-center w-9 h-9 rounded-md border transition-colors focus:outline-none"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none"
             style={{
-              color: "var(--color-text-muted)",
-              borderColor: "var(--color-border)",
-              backgroundColor: "var(--color-surface)",
+              borderColor: "var(--color-accent)",
+              color: "var(--color-accent)",
+              backgroundColor: "rgba(56,189,248,0.06)",
             }}
-            whileHover={{ color: "var(--color-accent)", borderColor: "var(--color-accent)" }}
+            whileHover={{ backgroundColor: "rgba(56,189,248,0.14)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
             aria-label="Toggle theme"
           >
             {theme === "dark" ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
               </svg>
             )}
+            <span>{theme === "dark" ? "Light" : "Dark"}</span>
           </motion.button>
         )}
 

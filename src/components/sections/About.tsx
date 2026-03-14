@@ -5,20 +5,25 @@ import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const interests = [
-  "AWS",
-  "Denver",
   "Skiing",
   "Backpacking",
   "Live Music",
+  "Soccer",
   "Rafting",
   "Real Estate",
   "Coffee",
   "Barbecue",
-  "Oregon Roots",
+  "Travel",
+  "Biking",
+  "Interior Design",
+  "Photography",
+  "Running",
+  "Personal Finance",
+  "Board Games"
 ];
 
 const stats = [
-  { label: "Years of Experience", value: "7+" },
+  { label: "Years of Experience", value: "8+" },
   { label: "Current Location", value: "Denver, CO" },
   { label: "Current Role", value: "Sr. Platform Engineer" },
   { label: "Current Company", value: "Ibotta" },
@@ -38,7 +43,7 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="about" ref={ref} className="relative py-24 px-4 sm:px-6 lg:px-8">
+    <section id="about" ref={ref} className="relative py-24 px-6">
       {/* subtle background gradient */}
       <div
         className="pointer-events-none absolute inset-0 opacity-30"
@@ -80,7 +85,7 @@ export default function About() {
           {/* Left — bio text */}
           <div className="flex flex-col gap-5">
             {[
-              "I'm a Senior Platform Engineer based in Denver, Colorado with 7+ years of experience designing and scaling cloud-native backend systems. Currently at Ibotta, I lead backend architecture and AWS infrastructure projects that support a partner network serving millions of daily customers — including integrations with DoorDash, Instacart, and Walmart.",
+              "I'm a Senior Platform Engineer based in Denver, Colorado with 8+ years of experience designing and scaling cloud-native backend systems. Currently at Ibotta, I lead backend architecture and AWS infrastructure projects that support a partner network serving millions of daily customers — including integrations with DoorDash, Instacart, and Walmart.",
               "I specialize in AWS serverless architecture, Terraform-based infrastructure, and building systems that are fast, reliable, and easy to operate. I care about the details — whether that's shaving latency off a hot path, building observability into a service from day one, or mentoring engineers to level up their craft. I thrive in environments where engineering quality and product velocity reinforce each other.",
               "Originally from Portland, Oregon, I moved to Denver in 2018 and haven't looked back. The mountains are a big part of my life — skiing in winter, backpacking and rafting in summer. I'm also into live music, barbecue, and in my free time I enjoy exploring real estate and personal finance, including managing my own Airbnb property.",
             ].map((para, i) => (
@@ -164,10 +169,10 @@ export default function About() {
               </p>
               <ul className="space-y-2">
                 {[
-                  "Leading platform engineering at Ibotta",
+                  "Planning a wedding",
+                  "Building platform infrastructure at Ibotta",
                   "Trying to keep up with the rate of change in AI tooling",
-                  "Exploring the Colorado 14ers",
-                  "Managing my Airbnb investment property",
+                  "Exploring the Colorado 14ers"
                 ].map((item) => (
                   <li
                     key={item}
@@ -205,7 +210,7 @@ export default function About() {
               <span
                 key={interest}
                 className={cn(
-                  "rounded-full border px-4 py-1.5 text-sm font-medium",
+                  "rounded-full border px-6 py-1.5 text-sm font-medium",
                   "transition-colors duration-200 hover:border-sky-400/50 hover:text-sky-400"
                 )}
                 style={{

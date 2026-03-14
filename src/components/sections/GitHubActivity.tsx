@@ -132,23 +132,23 @@ function EventIcon({ type }: { type: string }) {
 function eventIconBg(type: string): string {
   switch (type) {
     case "PushEvent":
-      return "bg-sky-900/60 text-sky-400";
+      return "bg-sky-500/15 text-sky-500";
     case "CreateEvent":
-      return "bg-emerald-900/60 text-emerald-400";
+      return "bg-emerald-500/15 text-emerald-600";
     case "DeleteEvent":
-      return "bg-red-900/60 text-red-400";
+      return "bg-red-500/15 text-red-500";
     case "ForkEvent":
-      return "bg-violet-900/60 text-violet-400";
+      return "bg-violet-500/15 text-violet-500";
     case "WatchEvent":
-      return "bg-yellow-900/60 text-yellow-400";
+      return "bg-yellow-500/15 text-yellow-600";
     case "PullRequestEvent":
     case "PullRequestReviewEvent":
-      return "bg-purple-900/60 text-purple-400";
+      return "bg-purple-500/15 text-purple-500";
     case "IssuesEvent":
     case "IssueCommentEvent":
-      return "bg-orange-900/60 text-orange-400";
+      return "bg-orange-500/15 text-orange-500";
     default:
-      return "bg-slate-800 text-slate-400";
+      return "bg-slate-500/15 text-slate-500";
   }
 }
 
@@ -172,16 +172,7 @@ function mulberry32(seed: number) {
 type HeatLevel = 0 | 1 | 2 | 3;
 
 function heatColor(level: HeatLevel): string {
-  switch (level) {
-    case 0:
-      return "bg-slate-800";
-    case 1:
-      return "bg-sky-900";
-    case 2:
-      return "bg-sky-700";
-    case 3:
-      return "bg-sky-400";
-  }
+  return `var(--color-heat-${level})`;
 }
 
 interface HeatmapProps {
@@ -272,45 +263,44 @@ function ContributionHeatmap({ events }: HeatmapProps) {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full">
       {/* Month labels */}
-      <div className="relative mb-1 ml-8 flex" style={{ gap: "2px" }}>
+      <div className="flex mb-1" style={{ marginLeft: 22, gap: "2px" }}>
         {Array.from({ length: WEEKS }).map((_, w) => {
           const label = monthLabels.find((ml) => ml.weekIndex === w);
           return (
-            <div key={w} className="flex-none text-[10px] text-slate-500" style={{ width: 11 }}>
+            <div key={w} className="flex-1 text-[10px] overflow-hidden" style={{ color: "var(--color-text-dim)" }}>
               {label ? label.label : ""}
             </div>
           );
         })}
       </div>
 
-      <div className="flex items-start gap-1">
+      <div className="flex" style={{ gap: "2px" }}>
         {/* Day-of-week labels */}
-        <div className="flex flex-col mr-1" style={{ gap: "2px" }}>
+        <div className="flex flex-col" style={{ gap: "2px", width: 14, flexShrink: 0 }}>
           {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
             <div
               key={i}
-              className="text-[10px] text-slate-600 flex items-center justify-center"
-              style={{ height: 11, width: 14 }}
+              className="flex-1 text-[10px] flex items-center justify-center"
+              style={{ color: "var(--color-text-dim)" }}
             >
               {i % 2 === 1 ? d : ""}
             </div>
           ))}
         </div>
 
+        <div style={{ width: 6, flexShrink: 0 }} />
+
         {/* Grid */}
-        <div className="flex" style={{ gap: "2px" }}>
+        <div className="flex flex-1" style={{ gap: "2px" }}>
           {grid.map((col, w) => (
-            <div key={w} className="flex flex-col" style={{ gap: "2px" }}>
+            <div key={w} className="flex-1 flex flex-col" style={{ gap: "2px" }}>
               {col.map((level, d) => (
                 <div
                   key={d}
-                  className={cn(
-                    "rounded-[2px] transition-transform hover:scale-125",
-                    heatColor(level)
-                  )}
-                  style={{ width: 11, height: 11 }}
+                  className="w-full rounded-[2px] transition-transform hover:scale-125"
+                  style={{ aspectRatio: "1", background: heatColor(level) }}
                   title={`Level ${level}`}
                 />
               ))}
@@ -320,13 +310,13 @@ function ContributionHeatmap({ events }: HeatmapProps) {
       </div>
 
       {/* Legend */}
-      <div className="mt-2 ml-8 flex items-center gap-1.5 text-[10px] text-slate-500">
+      <div className="mt-2 flex items-center gap-1.5 text-[10px]" style={{ marginLeft: 22, color: "var(--color-text-dim)" }}>
         <span>Less</span>
         {([0, 1, 2, 3] as HeatLevel[]).map((l) => (
           <div
             key={l}
-            className={cn("rounded-[2px]", heatColor(l))}
-            style={{ width: 11, height: 11 }}
+            className="rounded-[2px] w-3 h-3"
+            style={{ background: heatColor(l) }}
           />
         ))}
         <span>More</span>
@@ -348,24 +338,25 @@ export default async function GitHubActivity() {
   const recentEvents = events.slice(0, 10);
 
   return (
-    <section id="github" className="py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <section id="github" className="py-20 px-6" style={{ background: "var(--color-surface)" }}>
+      <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-8 bg-sky-400" />
-            <span className="text-sky-400 text-sm font-mono tracking-widest uppercase">
-              Source Control
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-100">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
             GitHub Activity
           </h2>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
+            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
+          </div>
         </div>
 
         {/* User stats */}
         {user && (
-          <div className="flex flex-wrap items-center gap-4 mb-8 p-4 rounded-xl border border-slate-700/60 bg-slate-900/40">
+          <div
+            className="flex flex-wrap items-center gap-4 mb-8 p-4 rounded-xl border"
+            style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+          >
             <Image
               src={user.avatar_url}
               alt={`${user.login} avatar`}
@@ -374,40 +365,44 @@ export default async function GitHubActivity() {
               className="rounded-full ring-2 ring-sky-400/30 shrink-0"
             />
             <div className="flex flex-col min-w-0">
-              <span className="font-semibold text-slate-100 text-base leading-tight truncate">
+              <span className="font-semibold text-base leading-tight truncate" style={{ color: "var(--color-text)" }}>
                 {user.name ?? user.login}
               </span>
               <Link
                 href={`https://github.com/${user.login}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sky-400 text-sm hover:text-sky-300 transition-colors font-mono"
+                className="text-sm hover:opacity-75 transition-opacity font-mono"
+                style={{ color: "var(--color-accent)" }}
               >
                 @{user.login}
               </Link>
             </div>
             <div className="flex items-center gap-4 sm:gap-6 sm:ml-auto">
               <div className="flex flex-col items-center">
-                <div className="flex items-center gap-1.5 text-slate-300 font-semibold text-base">
-                  <Users className="w-4 h-4 text-slate-500" />
+                <div className="flex items-center gap-1.5 font-semibold text-base" style={{ color: "var(--color-text-muted)" }}>
+                  <Users className="w-4 h-4" style={{ color: "var(--color-text-dim)" }} />
                   {user.followers.toLocaleString()}
                 </div>
-                <span className="text-xs text-slate-500 mt-0.5">followers</span>
+                <span className="text-xs mt-0.5" style={{ color: "var(--color-text-dim)" }}>followers</span>
               </div>
               <div className="flex flex-col items-center">
-                <div className="flex items-center gap-1.5 text-slate-300 font-semibold text-base">
-                  <BookOpen className="w-4 h-4 text-slate-500" />
+                <div className="flex items-center gap-1.5 font-semibold text-base" style={{ color: "var(--color-text-muted)" }}>
+                  <BookOpen className="w-4 h-4" style={{ color: "var(--color-text-dim)" }} />
                   {user.public_repos.toLocaleString()}
                 </div>
-                <span className="text-xs text-slate-500 mt-0.5">repos</span>
+                <span className="text-xs mt-0.5" style={{ color: "var(--color-text-dim)" }}>repos</span>
               </div>
             </div>
           </div>
         )}
 
         {/* Heatmap */}
-        <div className="mb-10 p-4 sm:p-5 rounded-xl border border-slate-700/60 bg-slate-900/40">
-          <p className="text-xs text-slate-500 font-mono mb-4">
+        <div
+          className="mb-10 p-4 sm:p-5 rounded-xl border"
+          style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+        >
+          <p className="text-xs font-mono mb-4" style={{ color: "var(--color-text-dim)" }}>
             Contribution activity — past 52 weeks
           </p>
           <ContributionHeatmap events={events} />
@@ -415,13 +410,13 @@ export default async function GitHubActivity() {
 
         {/* Recent activity feed */}
         <div>
-          <h3 className="text-sm font-mono text-slate-400 uppercase tracking-widest mb-4">
+          <h3 className="text-sm font-mono uppercase tracking-widest mb-4" style={{ color: "var(--color-text-muted)" }}>
             Recent Events
           </h3>
           {recentEvents.length === 0 ? (
-            <p className="text-slate-500 text-sm">No recent public activity.</p>
+            <p className="text-sm" style={{ color: "var(--color-text-dim)" }}>No recent public activity.</p>
           ) : (
-            <ol className="relative border-l border-slate-700/60 space-y-0">
+            <ol className="relative border-l space-y-0" style={{ borderColor: "var(--color-border)" }}>
               {recentEvents.map((event, i) => {
                 const repoName = event.repo.name;
                 const repoUrl = `https://github.com/${repoName}`;
@@ -433,15 +428,16 @@ export default async function GitHubActivity() {
                     {/* Timeline dot with icon */}
                     <span
                       className={cn(
-                        "absolute -left-[2.1rem] top-0.5 flex items-center justify-center w-7 h-7 rounded-full border border-slate-700/60",
+                        "absolute -left-[2.1rem] top-0.5 flex items-center justify-center w-7 h-7 rounded-full border",
                         eventIconBg(event.type)
                       )}
+                      style={{ borderColor: "var(--color-border)" }}
                     >
                       <EventIcon type={event.type} />
                     </span>
 
                     <div className="flex flex-col gap-0.5">
-                      <p className="text-sm text-slate-200 leading-snug">
+                      <p className="text-sm leading-snug" style={{ color: "var(--color-text)" }}>
                         {describeEvent(event)}
                       </p>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -449,14 +445,16 @@ export default async function GitHubActivity() {
                           href={repoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs font-mono text-sky-400 hover:text-sky-300 transition-colors"
+                          className="text-xs font-mono hover:opacity-75 transition-opacity"
+                          style={{ color: "var(--color-accent)" }}
                         >
                           {repoName}
                         </Link>
-                        <span className="text-slate-600 text-xs">·</span>
+                        <span className="text-xs" style={{ color: "var(--color-text-dim)" }}>·</span>
                         <time
                           dateTime={event.created_at}
-                          className="text-xs text-slate-500"
+                          className="text-xs"
+                          style={{ color: "var(--color-text-dim)" }}
                         >
                           {relativeTime(event.created_at)}
                         </time>
@@ -475,7 +473,8 @@ export default async function GitHubActivity() {
             href="https://github.com/jakejeffreys"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-sky-400 hover:text-sky-300 transition-colors font-mono group"
+            className="inline-flex items-center gap-2 text-sm hover:opacity-75 transition-opacity font-mono group"
+            style={{ color: "var(--color-accent)" }}
           >
             View full profile on GitHub
             <span className="transition-transform group-hover:translate-x-1">→</span>

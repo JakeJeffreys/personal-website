@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import Globe from "@/components/Globe";
 
@@ -15,6 +16,11 @@ const PHRASE_DURATION_MS = 2800;
 
 export default function Hero() {
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isLight = mounted && resolvedTheme === "light";
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -216,11 +222,11 @@ export default function Hero() {
               )}
               style={{
                 borderColor: "var(--color-accent)",
-                color: "var(--color-accent)",
-                backgroundColor: "transparent",
+                color: isLight ? "var(--color-accent)" : "var(--color-accent)",
+                backgroundColor: isLight ? "#ffffff" : "#0c2a4a",
               }}
               whileHover={{
-                backgroundColor: "rgba(56, 189, 248, 0.08)",
+                opacity: 0.88,
                 scale: 1.04,
               }}
               whileTap={{ scale: 0.97 }}

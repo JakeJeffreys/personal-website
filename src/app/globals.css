@@ -8,12 +8,20 @@
   --color-accent: #38bdf8;
   --color-accent-muted: #0ea5e9;
   --color-accent-glow: rgba(56, 189, 248, 0.15);
-  --color-text: #e2e8f0;
-  --color-text-muted: #94a3b8;
-  --color-text-dim: #475569;
+  --color-text: #f1f5f9;
+  --color-text-muted: #cbd5e1;
+  --color-text-dim: #64748b;
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Heatmap levels — defined at :root so they're always present regardless of Tailwind tree-shaking */
+:root {
+  --color-heat-0: #1e293b;
+  --color-heat-1: #0c4a6e;
+  --color-heat-2: #0369a1;
+  --color-heat-3: #38bdf8;
 }
 
 /* Light mode overrides */
@@ -26,8 +34,12 @@ html.light {
   --color-accent-muted: #0369a1;
   --color-accent-glow: rgba(2, 132, 199, 0.12);
   --color-text: #0f172a;
-  --color-text-muted: #475569;
-  --color-text-dim: #94a3b8;
+  --color-text-muted: #1e293b;
+  --color-text-dim: #475569;
+  --color-heat-0: #e2e8f0;
+  --color-heat-1: #bae6fd;
+  --color-heat-2: #38bdf8;
+  --color-heat-3: #0284c7;
 }
 
 * {

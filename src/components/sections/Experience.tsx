@@ -2,8 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { jobs } from "@/content/resume";
+import { companies, type Company } from "@/content/resume";
 
 // Animation variants
 const fadeUp = {
@@ -24,11 +23,11 @@ const fadeIn = {
   },
 };
 
-// ---------- Timeline Item ----------
-function TimelineItem({ job, index }: { job: (typeof jobs)[0]; index: number }) {
+// ---------- Company Item ----------
+function CompanyItem({ company, index }: { company: Company; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
-  const isCurrent = job.endDate === null;
+  const isCurrent = company.roles[0].endDate === null;
 
   return (
     <motion.div
@@ -41,11 +40,9 @@ function TimelineItem({ job, index }: { job: (typeof jobs)[0]; index: number }) 
     >
       {/* Timeline dot */}
       <div className="relative flex flex-col items-center">
-        {/* Dot */}
         <div className="relative z-10 mt-1 flex h-3 w-3 shrink-0 items-center justify-center">
           {isCurrent ? (
             <>
-              {/* Pulsing glow ring */}
               <span
                 className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
                 style={{ background: "var(--color-accent)" }}
@@ -68,7 +65,7 @@ function TimelineItem({ job, index }: { job: (typeof jobs)[0]; index: number }) 
             />
           )}
         </div>
-        {/* Vertical line (extends downward, hidden on last item via parent) */}
+        {/* Vertical line */}
         <div
           className="mt-2 w-px flex-1"
           style={{ background: "var(--color-border)" }}
@@ -86,71 +83,83 @@ function TimelineItem({ job, index }: { job: (typeof jobs)[0]; index: number }) 
             : "0 4px 24px rgba(0,0,0,0.25)",
         }}
       >
-        {/* Header row */}
-        <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <h3
-                className="text-lg font-semibold leading-tight"
-                style={{ color: "var(--color-text)" }}
-              >
-                {job.title}
-              </h3>
-              {isCurrent && (
-                <span
-                  className="rounded-full px-2 py-0.5 text-xs font-medium"
-                  style={{
-                    background: "rgba(56,189,248,0.12)",
-                    color: "var(--color-accent)",
-                    border: "1px solid rgba(56,189,248,0.25)",
-                  }}
-                >
-                  Current
-                </span>
-              )}
-            </div>
-            <p
-              className="mt-0.5 text-sm font-medium"
-              style={{ color: "var(--color-accent)" }}
-            >
-              {job.company}
-            </p>
-          </div>
-          <div className="text-left sm:text-right">
-            <p
-              className="text-sm font-mono"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              {job.startDate} — {job.endDate ?? "Present"}
-            </p>
-            <p
-              className="mt-0.5 text-xs"
-              style={{ color: "var(--color-text-dim)" }}
-            >
-              {job.location}
-            </p>
-          </div>
+        {/* Company header row */}
+        <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <p
+            className="text-lg font-semibold leading-tight"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {company.name}
+          </p>
+          <p
+            className="text-xs"
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            {company.location}
+          </p>
         </div>
 
-        {/* Bullet points */}
-        <ul className="mb-5 space-y-2">
-          {job.description.map((point, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm leading-6">
-              <span
-                className="mt-2.5 h-1 w-1 shrink-0 rounded-full"
-                style={{ background: "var(--color-accent)" }}
-              />
-              <span style={{ color: "var(--color-text-muted)" }}>{point}</span>
-            </li>
+        {/* Roles list */}
+        <div className="mb-5 space-y-0">
+          {company.roles.map((role, i) => (
+            <div key={i}>
+              {i > 0 && (
+                <div
+                  className="my-4 h-px"
+                  style={{ background: "var(--color-border)" }}
+                />
+              )}
+              {/* Role header */}
+              <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <h3
+                    className="text-base font-semibold leading-tight"
+                    style={{ color: "var(--color-text)" }}
+                  >
+                    {role.title}
+                  </h3>
+                  {role.endDate === null && (
+                    <span
+                      className="rounded-full px-6 py-0.5 text-xs font-medium"
+                      style={{
+                        background: "rgba(56,189,248,0.12)",
+                        color: "var(--color-accent)",
+                        border: "1px solid rgba(56,189,248,0.25)",
+                      }}
+                    >
+                      Current
+                    </span>
+                  )}
+                </div>
+                <p
+                  className="text-sm font-mono"
+                  style={{ color: "var(--color-text-muted)" }}
+                >
+                  {role.startDate} — {role.endDate ?? "Present"}
+                </p>
+              </div>
+              {/* Bullet points */}
+              <ul className="space-y-2">
+                {role.description.map((point, j) => (
+                  <li key={j} className="flex items-start gap-2 text-sm leading-6">
+                    <span
+                      className="mt-2.5 h-1 w-1 shrink-0 rounded-full"
+                      style={{ background: "var(--color-accent)" }}
+                    />
+                    <span style={{ color: "var(--color-text-muted)" }}>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
 
         {/* Technology chips */}
         <div className="flex flex-wrap gap-1.5">
-          {job.technologies.map((tech) => (
+          {company.technologies.map((tech) => (
             <span
               key={tech}
-              className="rounded-md px-2.5 py-1 text-xs font-mono font-medium"
+              className="rounded-md px-6.5 py-1 text-xs font-mono font-medium"
               style={{
                 background: "var(--color-surface-2)",
                 color: "var(--color-text-muted)",
@@ -174,7 +183,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-24 px-4 sm:px-6 lg:px-8"
+      className="relative py-24 px-6"
       style={{ background: "var(--color-surface)" }}
     >
       {/* Subtle top gradient */}
@@ -183,7 +192,7 @@ export default function Experience() {
         style={{ background: "var(--color-border)" }}
       />
 
-      <div className="relative mx-auto max-w-4xl">
+      <div className="relative mx-auto max-w-5xl">
         {/* Section heading */}
         <motion.div
           ref={headingRef}
@@ -212,20 +221,15 @@ export default function Experience() {
 
         {/* Timeline */}
         <div className="relative">
-          {/*
-            Continuous vertical accent line behind all items.
-            It sits at left-[5px] to align with the center of the 3px-wide dot column.
-          */}
           <div
             className="absolute bottom-0 left-[5px] top-0 w-px"
             style={{ background: "var(--color-border)" }}
           />
 
-          {jobs.map((job, index) => (
-            <TimelineItem key={`${job.company}-${index}`} job={job} index={index} />
+          {companies.map((company, index) => (
+            <CompanyItem key={company.name} company={company} index={index} />
           ))}
         </div>
-
       </div>
     </section>
   );
