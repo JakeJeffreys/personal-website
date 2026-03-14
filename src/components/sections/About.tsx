@@ -37,7 +37,7 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="about" ref={ref} className="relative py-24 px-4">
+    <section id="about" ref={ref} className="relative py-24 px-2">
       {/* subtle background gradient */}
       <div
         className="pointer-events-none absolute inset-0 opacity-30"
@@ -204,7 +204,7 @@ export default function About() {
               <span
                 key={interest}
                 className={cn(
-                  "rounded-full border px-4 py-1.5 text-sm font-medium",
+                  "rounded-full border px-2 py-1.5 text-sm font-medium",
                   "transition-colors duration-200 hover:border-sky-400/50 hover:text-sky-400"
                 )}
                 style={{
