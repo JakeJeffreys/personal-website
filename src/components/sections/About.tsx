@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { PaperCard, SectionHeading, Scrawl } from "@/components/paper";
 
 const interests = [
   "Skiing",
@@ -19,7 +18,7 @@ const interests = [
   "Photography",
   "Running",
   "Personal Finance",
-  "Board Games"
+  "Board Games",
 ];
 
 const stats = [
@@ -29,103 +28,60 @@ const stats = [
   { label: "Current Company", value: "Ibotta" },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-  }),
-};
+const currently = [
+  "Planning a wedding",
+  "Building platform infrastructure at Ibotta",
+  "Trying to keep up with the rate of change in AI tooling",
+  "Exploring the Colorado 14ers",
+];
+
+const BIO = [
+  "I'm a Senior Platform Engineer based in Denver, Colorado with 8+ years of experience designing and scaling cloud-native backend systems. Currently at Ibotta, I lead backend architecture and AWS infrastructure projects that support a partner network serving millions of daily customers — including integrations with DoorDash, Instacart, and Walmart.",
+  "I specialize in AWS serverless architecture, Terraform-based infrastructure, and building systems that are fast, reliable, and easy to operate. I care about the details — whether that's shaving latency off a hot path, building observability into a service from day one, or mentoring engineers to level up their craft. I thrive in environments where engineering quality and product velocity reinforce each other.",
+  "Originally from Portland, Oregon, I moved to Denver in 2018 and haven't looked back. The mountains are a big part of my life — skiing in winter, backpacking and rafting in summer. I'm also into live music, barbecue, and in my free time I enjoy exploring real estate and personal finance, including managing my own Airbnb property.",
+];
+
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
+/** Rotations for the sticker tags — irregular on purpose, cycled by index. */
+const STICKER_ROTATIONS = [-2.2, 1.4, -0.8, 2.1, -1.6, 0.9, -2.6, 1.8];
 
 export default function About() {
-  const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-
   return (
-    <section id="about" ref={ref} className="relative py-24 px-6">
-      {/* subtle background gradient */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-30"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 40% at 50% 0%, var(--color-accent-glow), transparent)",
-        }}
-      />
-
+    <section id="about" className="relative px-6 py-24">
       <div className="relative mx-auto max-w-5xl">
-        {/* Section heading */}
-        <motion.div
-          custom={0}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={fadeUp}
-          className="mb-14"
-        >
-          <h2
-            className="text-3xl font-bold tracking-tight sm:text-4xl"
-            style={{ color: "var(--color-text)" }}
-          >
-            About Me
-          </h2>
-          <div className="mt-3 flex items-center gap-3">
-            <div
-              className="h-px w-12 rounded-full"
-              style={{ background: "var(--color-accent)" }}
-            />
-            <div
-              className="h-px flex-1 rounded-full"
-              style={{ background: "var(--color-border)" }}
-            />
-          </div>
-        </motion.div>
+        <SectionHeading title="about me" eyebrow="who's this" variant="taped" />
 
-        {/* Two-column layout */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left — bio text */}
+          {/* Bio */}
           <div className="flex flex-col gap-5">
-            {[
-              "I'm a Senior Platform Engineer based in Denver, Colorado with 8+ years of experience designing and scaling cloud-native backend systems. Currently at Ibotta, I lead backend architecture and AWS infrastructure projects that support a partner network serving millions of daily customers — including integrations with DoorDash, Instacart, and Walmart.",
-              "I specialize in AWS serverless architecture, Terraform-based infrastructure, and building systems that are fast, reliable, and easy to operate. I care about the details — whether that's shaving latency off a hot path, building observability into a service from day one, or mentoring engineers to level up their craft. I thrive in environments where engineering quality and product velocity reinforce each other.",
-              "Originally from Portland, Oregon, I moved to Denver in 2018 and haven't looked back. The mountains are a big part of my life — skiing in winter, backpacking and rafting in summer. I'm also into live music, barbecue, and in my free time I enjoy exploring real estate and personal finance, including managing my own Airbnb property.",
-            ].map((para, i) => (
+            {BIO.map((para, i) => (
               <motion.p
                 key={i}
-                custom={i + 1}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                variants={fadeUp}
                 className="text-base leading-7"
                 style={{ color: "var(--color-text-muted)" }}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, delay: i * 0.1, ease: EASE }}
               >
                 {para}
               </motion.p>
             ))}
+
+            <div className="mt-2">
+              <Scrawl arrow="left" rotate={-1.8}>
+                8 years, still enjoying it
+              </Scrawl>
+            </div>
           </div>
 
-          {/* Right — stats card */}
-          <motion.div
-            custom={4}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            variants={fadeUp}
-            className="flex flex-col gap-6"
-          >
-            {/* Stats card */}
-            <div
-              className={cn(
-                "rounded-2xl border p-6",
-                "backdrop-blur-sm"
-              )}
-              style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-                boxShadow: "0 0 0 1px var(--color-border), 0 8px 40px rgba(0,0,0,0.4)",
-              }}
-            >
+          {/* Index cards */}
+          <div className="flex flex-col gap-6">
+            <PaperCard tilt="a" delay={0.05} className="p-6">
               <p
-                className="mb-5 text-xs font-semibold uppercase tracking-widest"
-                style={{ color: "var(--color-accent)" }}
+                className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--color-accent-ink)" }}
               >
                 Quick Stats
               </p>
@@ -133,13 +89,13 @@ export default function About() {
                 {stats.map((stat) => (
                   <div
                     key={stat.label}
-                    className="rounded-xl p-4"
-                    style={{ background: "var(--color-surface-2)" }}
+                    className="p-4"
+                    style={{
+                      background: "var(--color-surface-2)",
+                      borderRadius: "var(--radius-card)",
+                    }}
                   >
-                    <dt
-                      className="mb-1 text-xs"
-                      style={{ color: "var(--color-text-dim)" }}
-                    >
+                    <dt className="mb-1 text-xs" style={{ color: "var(--color-text-dim)" }}>
                       {stat.label}
                     </dt>
                     <dd
@@ -151,77 +107,92 @@ export default function About() {
                   </div>
                 ))}
               </dl>
-            </div>
+            </PaperCard>
 
-            {/* Currently section */}
-            <div
-              className="rounded-2xl border p-6"
-              style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-              }}
-            >
+            <PaperCard tilt="b" delay={0.15} className="p-6">
               <p
-                className="mb-4 text-xs font-semibold uppercase tracking-widest"
-                style={{ color: "var(--color-accent)" }}
+                className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--color-accent-ink)" }}
               >
                 Currently
               </p>
               <ul className="space-y-2">
-                {[
-                  "Planning a wedding",
-                  "Building platform infrastructure at Ibotta",
-                  "Trying to keep up with the rate of change in AI tooling",
-                  "Exploring the Colorado 14ers"
-                ].map((item) => (
+                {currently.map((item) => (
                   <li
                     key={item}
                     className="flex items-start gap-2 text-sm"
                     style={{ color: "var(--color-text-muted)" }}
                   >
+                    {/* Hand-drawn dash rather than a perfect dot */}
                     <span
-                      className="mt-2 h-1 w-1 shrink-0 rounded-full"
+                      className="mt-2.5 block h-px w-2.5 shrink-0"
                       style={{ background: "var(--color-accent)" }}
+                      aria-hidden="true"
                     />
                     {item}
                   </li>
                 ))}
               </ul>
-            </div>
-          </motion.div>
+            </PaperCard>
+          </div>
         </div>
 
-        {/* Interest badges */}
+        {/* Sticker tags */}
         <motion.div
-          custom={5}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={fadeUp}
-          className="mt-12"
+          className="mt-14"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: EASE }}
         >
           <p
-            className="mb-4 text-xs font-semibold uppercase tracking-widest"
-            style={{ color: "var(--color-text-dim)" }}
+            className="mb-5"
+            style={{
+              fontFamily: "var(--font-hand)",
+              color: "var(--color-text-dim)",
+              fontSize: "1.4rem",
+            }}
           >
-            Interests & Passions
+            things I&apos;d rather be doing
           </p>
-          <div className="flex flex-wrap gap-2">
-            {interests.map((interest) => (
-              <span
-                key={interest}
-                className={cn(
-                  "rounded-full border px-6 py-1.5 text-sm font-medium",
-                  "transition-colors duration-200 hover:border-sky-400/50 hover:text-sky-400"
-                )}
-                style={{
-                  background: "var(--color-surface)",
-                  borderColor: "var(--color-border)",
-                  color: "var(--color-text-muted)",
-                }}
-              >
-                {interest}
-              </span>
-            ))}
+          <div className="flex flex-wrap gap-2.5">
+            {interests.map((interest, i) => {
+              const rot = STICKER_ROTATIONS[i % STICKER_ROTATIONS.length];
+              const highlighted = i % 4 === 1;
+              return (
+                <motion.span
+                  key={interest}
+                  className="paper-tilt inline-block px-3.5 py-1.5 font-mono text-xs"
+                  style={{
+                    backgroundColor: highlighted
+                      ? "var(--color-accent)"
+                      : "var(--color-surface)",
+                    color: highlighted ? "var(--color-surface)" : "var(--color-text-muted)",
+                    border: `1px solid ${
+                      highlighted ? "var(--color-accent)" : "var(--color-border)"
+                    }`,
+                    borderRadius: "999px",
+                    boxShadow: "var(--shadow-paper)",
+                  }}
+                  initial={{ opacity: 0, y: -10, rotate: 0 }}
+                  whileInView={{ opacity: 1, y: 0, rotate: rot }}
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 16,
+                    delay: i * 0.03,
+                  }}
+                  whileHover={{
+                    y: -4,
+                    rotate: rot * -1.4,
+                    boxShadow: "var(--shadow-paper-lift)",
+                  }}
+                >
+                  {interest}
+                </motion.span>
+              );
+            })}
           </div>
         </motion.div>
       </div>
