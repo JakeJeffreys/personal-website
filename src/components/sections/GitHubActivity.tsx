@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SectionHeading } from "@/components/paper";
 import Link from "next/link";
 import {
   GitCommit,
@@ -16,7 +17,6 @@ import {
   BookOpen,
 } from "lucide-react";
 import { getGitHubActivity, getGitHubUser, type GitHubEvent } from "@/lib/github";
-import { cn } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -129,28 +129,6 @@ function EventIcon({ type }: { type: string }) {
   }
 }
 
-function eventIconBg(type: string): string {
-  switch (type) {
-    case "PushEvent":
-      return "bg-sky-500/15 text-sky-500";
-    case "CreateEvent":
-      return "bg-emerald-500/15 text-emerald-600";
-    case "DeleteEvent":
-      return "bg-red-500/15 text-red-500";
-    case "ForkEvent":
-      return "bg-violet-500/15 text-violet-500";
-    case "WatchEvent":
-      return "bg-yellow-500/15 text-yellow-600";
-    case "PullRequestEvent":
-    case "PullRequestReviewEvent":
-      return "bg-purple-500/15 text-purple-500";
-    case "IssuesEvent":
-    case "IssueCommentEvent":
-      return "bg-orange-500/15 text-orange-500";
-    default:
-      return "bg-slate-500/15 text-slate-500";
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Heatmap
@@ -299,8 +277,13 @@ function ContributionHeatmap({ events }: HeatmapProps) {
               {col.map((level, d) => (
                 <div
                   key={d}
-                  className="w-full rounded-[2px] transition-transform hover:scale-125"
-                  style={{ aspectRatio: "1", background: heatColor(level) }}
+                  className="w-full transition-transform hover:scale-125"
+                  style={{
+                    aspectRatio: "1",
+                    background: heatColor(level),
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "1px",
+                  }}
                   title={`Level ${level}`}
                 />
               ))}
@@ -315,8 +298,12 @@ function ContributionHeatmap({ events }: HeatmapProps) {
         {([0, 1, 2, 3] as HeatLevel[]).map((l) => (
           <div
             key={l}
-            className="rounded-[2px] w-3 h-3"
-            style={{ background: heatColor(l) }}
+            className="h-3 w-3"
+            style={{
+              background: heatColor(l),
+              border: "1px solid var(--color-border)",
+              borderRadius: "1px",
+            }}
           />
         ))}
         <span>More</span>
@@ -341,28 +328,26 @@ export default async function GitHubActivity() {
     <section id="github" className="py-20 px-6" style={{ background: "var(--color-surface)" }}>
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
-        <div className="mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
-            GitHub Activity
-          </h2>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
-            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
-          </div>
-        </div>
+        <SectionHeading title="what I've been building" eyebrow="github" variant="torn" />
 
         {/* User stats */}
         {user && (
           <div
-            className="flex flex-wrap items-center gap-4 mb-8 p-4 rounded-xl border"
-            style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+            className="mb-8 flex flex-wrap items-center gap-4 border p-4"
+            style={{
+              background: "var(--color-surface)",
+              borderColor: "var(--color-border)",
+              borderRadius: "var(--radius-card)",
+              boxShadow: "var(--shadow-paper)",
+            }}
           >
             <Image
               src={user.avatar_url}
               alt={`${user.login} avatar`}
               width={52}
               height={52}
-              className="rounded-full ring-2 ring-sky-400/30 shrink-0"
+              className="shrink-0 rounded-full"
+              style={{ boxShadow: "0 0 0 2px var(--color-accent)" }}
             />
             <div className="flex flex-col min-w-0">
               <span className="font-semibold text-base leading-tight truncate" style={{ color: "var(--color-text)" }}>
@@ -373,7 +358,7 @@ export default async function GitHubActivity() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm hover:opacity-75 transition-opacity font-mono"
-                style={{ color: "var(--color-accent)" }}
+                style={{ color: "var(--color-accent-ink)" }}
               >
                 @{user.login}
               </Link>
@@ -399,7 +384,7 @@ export default async function GitHubActivity() {
 
         {/* Heatmap */}
         <div
-          className="mb-10 p-4 sm:p-5 rounded-xl border"
+          className="mb-10 border p-4 sm:p-5"
           style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
         >
           <p className="text-xs font-mono mb-4" style={{ color: "var(--color-text-dim)" }}>
@@ -427,11 +412,12 @@ export default async function GitHubActivity() {
                   >
                     {/* Timeline dot with icon */}
                     <span
-                      className={cn(
-                        "absolute -left-[2.1rem] top-0.5 flex items-center justify-center w-7 h-7 rounded-full border",
-                        eventIconBg(event.type)
-                      )}
-                      style={{ borderColor: "var(--color-border)" }}
+                      className="absolute -left-[2.1rem] top-0.5 flex h-7 w-7 items-center justify-center rounded-full border"
+                      style={{
+                        borderColor: "var(--color-border)",
+                        background: "var(--color-surface-2)",
+                        color: "var(--color-text-muted)",
+                      }}
                     >
                       <EventIcon type={event.type} />
                     </span>
@@ -446,7 +432,7 @@ export default async function GitHubActivity() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs font-mono hover:opacity-75 transition-opacity"
-                          style={{ color: "var(--color-accent)" }}
+                          style={{ color: "var(--color-accent-ink)" }}
                         >
                           {repoName}
                         </Link>
@@ -474,7 +460,7 @@ export default async function GitHubActivity() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm hover:opacity-75 transition-opacity font-mono group"
-            style={{ color: "var(--color-accent)" }}
+            style={{ color: "var(--color-accent-ink)" }}
           >
             View full profile on GitHub
             <span className="transition-transform group-hover:translate-x-1">→</span>
