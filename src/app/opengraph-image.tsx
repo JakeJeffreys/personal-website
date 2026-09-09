@@ -16,7 +16,7 @@ export default function OGImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "linear-gradient(135deg, #0a0f1e 0%, #0f1629 50%, #0d1f3c 100%)",
+          background: "#efe8db",
           position: "relative",
           overflow: "hidden",
         }}
@@ -30,7 +30,7 @@ export default function OGImage() {
             width: "340px",
             height: "340px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(232,85,43,0.16) 0%, transparent 70%)",
           }}
         />
         {/* Glow blob bottom-left */}
@@ -42,16 +42,16 @@ export default function OGImage() {
             width: "440px",
             height: "220px",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(232,85,43,0.09) 0%, transparent 70%)",
           }}
         />
 
         {/* Content */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <div style={{ fontSize: "72px", fontWeight: "bold", color: "#e2e8f0", lineHeight: "1.1" }}>
+          <div style={{ fontSize: "78px", fontWeight: "bold", color: "#2a2622", lineHeight: "1.1" }}>
             Jake Jeffreys
           </div>
-          <div style={{ fontSize: "32px", color: "#38bdf8" }}>
+          <div style={{ fontSize: "32px", color: "#c2431f" }}>
             Senior Platform Engineer
           </div>
           <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
@@ -59,8 +59,9 @@ export default function OGImage() {
               <div
                 key={tag}
                 style={{
-                  background: "#1e2a45",
-                  color: "#94a3b8",
+                  background: "#fbf7ef",
+                  color: "#554c43",
+                  border: "1px solid #c3b7a4",
                   fontSize: "22px",
                   padding: "8px 20px",
                   borderRadius: "9999px",
@@ -79,7 +80,7 @@ export default function OGImage() {
             bottom: "48px",
             left: "80px",
             fontSize: "22px",
-            color: "#2d4a6e",
+            color: "#6b6157",
           }}
         >
           jakejeffreys.dev

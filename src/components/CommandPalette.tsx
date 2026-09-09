@@ -109,7 +109,7 @@ export default function CommandPalette() {
                   className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
                   style={{ color: "var(--color-text-muted)" }}
                 >
-                  <span style={{ color: "var(--color-accent)" }}>↓</span>
+                  <span style={{ color: "var(--color-accent-ink)" }}>↓</span>
                   {cmd.label}
                 </Command.Item>
               ))}
@@ -124,7 +124,7 @@ export default function CommandPalette() {
                 style={{ color: "var(--color-text-muted)" }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ color: "var(--color-accent)" }}>↓</span>
+                  <span style={{ color: "var(--color-accent-ink)" }}>↓</span>
                   Open Resume
                 </div>
                 <span
@@ -140,7 +140,7 @@ export default function CommandPalette() {
                 className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
                 style={{ color: "var(--color-text-muted)" }}
               >
-                <span style={{ color: "var(--color-accent)" }}>↓</span>
+                <span style={{ color: "var(--color-accent-ink)" }}>↓</span>
                 Toggle Dark / Light Mode
               </Command.Item>
             </Command.Group>
