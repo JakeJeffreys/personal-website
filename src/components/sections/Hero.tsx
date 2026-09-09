@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import ColoradoMap from "@/components/ColoradoMap";
+import { Tape, Scrawl } from "@/components/paper";
 
 const TYPED_PHRASES = [
   "Senior Platform Engineer",
@@ -14,13 +14,10 @@ const TYPED_PHRASES = [
 
 const PHRASE_DURATION_MS = 2800;
 
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
 export default function Hero() {
   const [phraseIndex, setPhraseIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  const { resolvedTheme } = useTheme();
-  const isLight = mounted && resolvedTheme === "light";
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,212 +34,135 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative flex min-h-[88vh] flex-col items-center justify-center overflow-hidden py-20"
       style={{ backgroundColor: "var(--color-background)" }}
     >
-      {/* Dot/grid pattern overlay */}
+      {/* Faint ruled lines, like a legal pad under the content */}
       <div
-        className="absolute inset-0 z-0 pointer-events-none"
+        className="pointer-events-none absolute inset-0 opacity-[0.5]"
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(30, 42, 69, 0.7) 1px, transparent 1px)`,
-          backgroundSize: "28px 28px",
+          backgroundImage:
+            "repeating-linear-gradient(to bottom, transparent, transparent 33px, var(--color-border) 33px, var(--color-border) 34px)",
+          maskImage: "linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent)",
         }}
+        aria-hidden="true"
       />
 
-      {/* Animated gradient blobs */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Blob 1 — sky blue */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "520px",
-            height: "520px",
-            background:
-              "radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%)",
-            filter: "blur(72px)",
-            top: "5%",
-            left: "-10%",
-          }}
-          animate={{
-            x: [0, 60, 20, 0],
-            y: [0, 40, -20, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        {/* Blob 2 — purple */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "480px",
-            height: "480px",
-            background:
-              "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)",
-            filter: "blur(80px)",
-            top: "20%",
-            right: "-8%",
-          }}
-          animate={{
-            x: [0, -50, -20, 0],
-            y: [0, 60, 10, 0],
-          }}
-          transition={{
-            duration: 22,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3,
-          }}
-        />
-        {/* Blob 3 — deep blue */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "400px",
-            height: "400px",
-            background:
-              "radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, transparent 70%)",
-            filter: "blur(64px)",
-            bottom: "10%",
-            left: "30%",
-          }}
-          animate={{
-            x: [0, 30, -30, 0],
-            y: [0, -40, 20, 0],
-          }}
-          transition={{
-            duration: 26,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 6,
-          }}
-        />
-      </div>
-
-      {/* Main content — two column on desktop */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12 px-6 max-w-5xl mx-auto w-full">
+      <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-14 px-6 md:flex-row">
         {/* Text column */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1">
-          {/* Pre-title label */}
-          <motion.p
-            className="font-mono text-sm mb-4 tracking-widest uppercase"
-            style={{ color: "var(--color-accent)" }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+        <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
+          <motion.div
+            initial={{ opacity: 0, y: -10, rotate: 0 }}
+            animate={{ opacity: 1, y: 0, rotate: -1.6 }}
+            transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
           >
-            Hello, world. I&apos;m
-          </motion.p>
+            <Tape rotate={0}>denver, colorado</Tape>
+          </motion.div>
 
-          {/* Name */}
           <motion.h1
-            className="font-sans font-bold leading-tight tracking-tight mb-4"
+            className="mb-2 mt-6"
             style={{
+              fontFamily: "var(--font-hand)",
               color: "var(--color-text)",
-              fontSize: "clamp(2.75rem, 8vw, 5.5rem)",
+              fontSize: "clamp(3.5rem, 10vw, 6.5rem)",
+              lineHeight: 0.88,
             }}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}
+            transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
           >
-            Jake{" "}
-            <span style={{ color: "var(--color-accent)" }}>Jeffreys</span>
+            hi, i&apos;m{" "}
+            <span style={{ color: "var(--color-accent)" }}>jake</span>
           </motion.h1>
 
-          {/* Cycling typed text */}
+          {/* Cycling role, in the margin-note voice */}
           <motion.div
-            className="h-10 flex items-center justify-center md:justify-start mb-6 overflow-hidden"
+            className="mb-7 flex h-10 items-center justify-center md:justify-start"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.4 }}
           >
             <AnimatePresence mode="wait">
-              <motion.p
+              <motion.div
                 key={phraseIndex}
-                className="font-mono text-xl sm:text-2xl"
-                style={{ color: "var(--color-text-muted)" }}
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -18 }}
-                transition={{ duration: 0.45, ease: "easeInOut" }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4, ease: EASE }}
               >
-                {TYPED_PHRASES[phraseIndex]}
-              </motion.p>
+                <Scrawl arrow="left" rotate={-1.5}>
+                  {TYPED_PHRASES[phraseIndex]}
+                </Scrawl>
+              </motion.div>
             </AnimatePresence>
           </motion.div>
 
-          {/* Tagline */}
           <motion.p
-            className="text-base sm:text-lg max-w-xl mx-auto md:mx-0 mb-10 leading-relaxed"
-            style={{ color: "var(--color-text-dim)" }}
-            initial={{ opacity: 0, y: 20 }}
+            className="mx-auto mb-9 max-w-xl text-base leading-relaxed sm:text-lg md:mx-0"
+            style={{ color: "var(--color-text-muted)" }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.65 }}
+            transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
           >
-            Designing and scaling cloud-native backend systems. Currently building platform infrastructure at Ibotta.
+            I build the boring, load-bearing parts — the clusters, pipelines and paved
+            roads that let everyone else ship. Currently doing that at Ibotta.
           </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
+            className="flex flex-col items-center gap-4 sm:flex-row"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+            transition={{ duration: 0.6, delay: 0.75, ease: EASE }}
           >
-            {/* Primary CTA */}
             <motion.button
               onClick={() => scrollToSection("#experience")}
               className={cn(
-                "relative px-7 py-3 rounded-lg font-mono font-medium text-sm",
-                "overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                "px-7 py-3 font-mono text-sm font-medium",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               )}
               style={{
                 backgroundColor: "var(--color-accent)",
-                color: "var(--color-background)",
+                color: "var(--color-surface)",
+                borderRadius: "var(--radius-card)",
+                boxShadow: "var(--shadow-paper)",
               }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              whileHover={{ y: -3, boxShadow: "var(--shadow-paper-lift)" }}
+              whileTap={{ y: 0, boxShadow: "var(--shadow-paper)" }}
+              transition={{ type: "spring", stiffness: 400, damping: 22 }}
             >
-              <span className="relative z-10">View My Work</span>
-              <motion.span
-                className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-                style={{ background: "linear-gradient(135deg, #fff 0%, transparent 60%)" }}
-              />
+              see the work
             </motion.button>
 
-            {/* Secondary CTA */}
             <motion.button
               onClick={() => scrollToSection("#contact")}
               className={cn(
-                "px-7 py-3 rounded-lg font-mono font-medium text-sm border",
-                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-colors duration-200"
+                "px-7 py-3 font-mono text-sm font-medium",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               )}
               style={{
-                borderColor: "var(--color-accent)",
-                color: isLight ? "var(--color-accent)" : "var(--color-accent)",
-                backgroundColor: isLight ? "#ffffff" : "#0c2a4a",
+                backgroundColor: "var(--color-surface)",
+                color: "var(--color-text)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-card)",
+                boxShadow: "var(--shadow-paper)",
               }}
-              whileHover={{
-                opacity: 0.88,
-                scale: 1.04,
-              }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              whileHover={{ y: -3, boxShadow: "var(--shadow-paper-lift)" }}
+              whileTap={{ y: 0, boxShadow: "var(--shadow-paper)" }}
+              transition={{ type: "spring", stiffness: 400, damping: 22 }}
             >
-              Get In Touch
+              say hi
             </motion.button>
           </motion.div>
         </div>
 
         {/* Ink map — hidden on mobile */}
         <motion.div
-          className="hidden md:flex flex-shrink-0 items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+          className="hidden flex-shrink-0 items-center justify-center md:flex"
+          initial={{ opacity: 0, rotate: 0 }}
+          animate={{ opacity: 1, rotate: 1.1 }}
+          transition={{ duration: 0.9, delay: 0.4, ease: EASE }}
         >
           <ColoradoMap />
         </motion.div>
@@ -251,39 +171,38 @@ export default function Hero() {
       {/* Scroll indicator */}
       <motion.button
         onClick={() => scrollToSection("#about")}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 focus:outline-none group"
+        className="group absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 focus:outline-none"
         aria-label="Scroll down"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
       >
         <span
-          className="font-mono text-xs tracking-widest uppercase"
-          style={{ color: "var(--color-text-dim)" }}
+          style={{
+            fontFamily: "var(--font-hand)",
+            color: "var(--color-text-dim)",
+            fontSize: "1.1rem",
+          }}
         >
-          scroll
+          keep going
         </span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-          className="group-hover:opacity-80 transition-opacity duration-200"
+        <motion.svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M10 3v12M4.5 10.5l5.5 5.5 5.5-5.5"
-              stroke="var(--color-accent)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </motion.div>
+          <path
+            d="M10 3v12M4.5 10.5l5.5 5.5 5.5-5.5"
+            stroke="var(--color-accent)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </motion.svg>
       </motion.button>
     </section>
   );
