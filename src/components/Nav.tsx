@@ -3,17 +3,25 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
 import { useCommandPalette } from "./CommandPaletteProvider";
 
 const NAV_LINKS = [
-  { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Tech Stack", href: "#tech-stack" },
-  { label: "GitHub", href: "#github" },
-  { label: "Photo Feed", href: "#instagram" },
-  { label: "Contact", href: "#contact" },
+  { label: "about", href: "#about" },
+  { label: "experience", href: "#experience" },
+  { label: "stack", href: "#tech-stack" },
+  { label: "github", href: "#github" },
+  { label: "photos", href: "#instagram" },
+  { label: "contact", href: "#contact" },
 ];
+
+/** Shared paper-button styling for the ⌘K and theme controls. */
+const paperButton: React.CSSProperties = {
+  backgroundColor: "var(--color-surface)",
+  borderColor: "var(--color-border)",
+  color: "var(--color-text-muted)",
+  borderRadius: "var(--radius-card)",
+  boxShadow: "var(--shadow-paper)",
+};
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -44,152 +52,140 @@ export default function Nav() {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b"
+      /* No backdrop blur — paper is opaque. The ink rule fades in on scroll. */
+      className="fixed left-0 right-0 top-0 z-50 border-b transition-colors duration-300"
       style={{
-        backgroundColor: "color-mix(in srgb, var(--color-background) 85%, transparent)",
+        backgroundColor: scrolled ? "var(--color-background)" : "transparent",
         borderColor: scrolled ? "var(--color-border)" : "transparent",
       }}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <nav className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16">
-        {/* Logo / Name */}
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        {/* Signature */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group flex items-center gap-2 focus:outline-none"
+          className="group flex items-baseline gap-2 focus:outline-none"
           aria-label="Scroll to top"
         >
           <span
-            className="font-mono text-lg font-bold tracking-tight transition-opacity duration-200 group-hover:opacity-80"
-            style={{ color: "var(--color-accent)" }}
+            className="transition-opacity duration-200 group-hover:opacity-70"
+            style={{
+              fontFamily: "var(--font-hand)",
+              color: "var(--color-accent)",
+              fontSize: "1.75rem",
+              lineHeight: 1,
+            }}
           >
-            JJ
-          </span>
-          <span
-            className="hidden sm:inline font-mono text-sm font-medium transition-opacity duration-200 group-hover:opacity-80"
-            style={{ color: "var(--color-text-muted)" }}
-          >
-            /
-          </span>
-          <span
-            className="hidden sm:inline font-mono text-sm font-medium transition-opacity duration-200 group-hover:opacity-80"
-            style={{ color: "var(--color-text)" }}
-          >
-            Jake Jeffreys
+            jake jeffreys
           </span>
         </button>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex items-center gap-8">
+        {/* Desktop links */}
+        <ul className="hidden items-center gap-7 md:flex">
           {NAV_LINKS.map((link, i) => (
             <li key={link.href}>
               <motion.button
                 onClick={() => handleNavClick(link.href)}
-                className="relative font-mono text-sm group focus:outline-none"
-                style={{ color: "var(--color-text-muted)" }}
+                className="group relative focus:outline-none"
+                style={{
+                  fontFamily: "var(--font-hand)",
+                  color: "var(--color-text-muted)",
+                  fontSize: "1.35rem",
+                  lineHeight: 1.1,
+                }}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
                 whileHover={{ color: "var(--color-accent)" }}
               >
-                <span
-                  className="text-xs mr-1"
-                  style={{ color: "var(--color-accent)" }}
-                >
-                  0{i + 1}.
-                </span>
                 {link.label}
-                <span
-                  className="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300"
-                  style={{ backgroundColor: "var(--color-accent)" }}
-                />
+                {/* Hand-drawn underline, drawn on hover */}
+                <svg
+                  className="absolute -bottom-1 left-0 w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                  height="4"
+                  viewBox="0 0 60 4"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M1 2.5 Q 15 0.8, 30 2.4 T 59 2"
+                    fill="none"
+                    stroke="var(--color-accent)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </motion.button>
             </li>
           ))}
         </ul>
 
-        {/* ⌘K hint */}
-        <motion.button
-          onClick={() => setOpen(true)}
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none group relative"
-          style={{
-            borderColor: "var(--color-accent)",
-            color: "var(--color-accent)",
-            backgroundColor: "rgba(56,189,248,0.06)",
-          }}
-          whileHover={{ backgroundColor: "rgba(56,189,248,0.14)" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          aria-label="Open command palette"
-          title="Open command palette"
-        >
-          <span>⌘K</span>
-          <span className="text-xs opacity-60">· Command</span>
-          {/* Tooltip */}
-          <span
-            className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-xs font-mono whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            style={{
-              background: "var(--color-surface)",
-              color: "var(--color-text-muted)",
-              border: "1px solid var(--color-border)",
-            }}
-          >
-            Open command palette
-          </span>
-        </motion.button>
-
-        {/* Theme Toggle */}
-        {mounted && (
+        <div className="hidden items-center gap-2 md:flex">
+          {/* ⌘K */}
           <motion.button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono font-semibold transition-colors focus:outline-none"
-            style={{
-              borderColor: "var(--color-accent)",
-              color: "var(--color-accent)",
-              backgroundColor: "rgba(56,189,248,0.06)",
-            }}
-            whileHover={{ backgroundColor: "rgba(56,189,248,0.14)" }}
+            onClick={() => setOpen(true)}
+            className="flex items-center gap-1.5 border px-3 py-1.5 font-mono text-xs font-semibold focus:outline-none"
+            style={paperButton}
+            whileHover={{ y: -2, boxShadow: "var(--shadow-paper-lift)" }}
+            transition={{ type: "spring", stiffness: 400, damping: 22 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            aria-label="Toggle theme"
+            aria-label="Open command palette"
+            title="Open command palette"
           >
-            {theme === "dark" ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-              </svg>
-            )}
-            <span>{theme === "dark" ? "Light" : "Dark"}</span>
+            <span style={{ color: "var(--color-accent-ink)" }}>⌘K</span>
+            <span className="opacity-70">command</span>
           </motion.button>
-        )}
 
-        {/* Mobile Hamburger */}
+          {/* Theme toggle */}
+          {mounted && (
+            <motion.button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="flex items-center gap-1.5 border px-3 py-1.5 font-mono text-xs font-semibold focus:outline-none"
+              style={paperButton}
+              whileHover={{ y: -2, boxShadow: "var(--shadow-paper-lift)" }}
+              transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                </svg>
+              )}
+              <span>{theme === "dark" ? "day" : "night"}</span>
+            </motion.button>
+          )}
+        </div>
+
+        {/* Mobile hamburger */}
         <button
-          className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5 focus:outline-none"
+          className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 focus:outline-none md:hidden"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
         >
           <motion.span
-            className="block h-0.5 w-6 rounded-full origin-center"
+            className="block h-0.5 w-6 origin-center"
             style={{ backgroundColor: "var(--color-text)" }}
             animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
             transition={{ duration: 0.25 }}
           />
           <motion.span
-            className="block h-0.5 w-6 rounded-full"
+            className="block h-0.5 w-6"
             style={{ backgroundColor: "var(--color-text)" }}
             animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
             transition={{ duration: 0.2 }}
           />
           <motion.span
-            className="block h-0.5 w-6 rounded-full origin-center"
+            className="block h-0.5 w-6 origin-center"
             style={{ backgroundColor: "var(--color-text)" }}
             animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
             transition={{ duration: 0.25 }}
@@ -197,7 +193,7 @@ export default function Nav() {
         </button>
       </nav>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -206,13 +202,13 @@ export default function Nav() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden border-t"
+            className="overflow-hidden border-t md:hidden"
             style={{
-              backgroundColor: "color-mix(in srgb, var(--color-background) 97%, transparent)",
+              backgroundColor: "var(--color-background)",
               borderColor: "var(--color-border)",
             }}
           >
-            <ul className="flex flex-col px-6 py-4 gap-4">
+            <ul className="flex flex-col gap-3 px-6 py-4">
               {NAV_LINKS.map((link, i) => (
                 <motion.li
                   key={link.href}
@@ -222,15 +218,13 @@ export default function Nav() {
                 >
                   <button
                     onClick={() => handleNavClick(link.href)}
-                    className="w-full text-left font-mono text-base py-2 focus:outline-none"
-                    style={{ color: "var(--color-text-muted)" }}
+                    className="w-full py-1 text-left focus:outline-none"
+                    style={{
+                      fontFamily: "var(--font-hand)",
+                      color: "var(--color-text-muted)",
+                      fontSize: "1.5rem",
+                    }}
                   >
-                    <span
-                      className="text-sm mr-2"
-                      style={{ color: "var(--color-accent)" }}
-                    >
-                      0{i + 1}.
-                    </span>
                     {link.label}
                   </button>
                 </motion.li>
