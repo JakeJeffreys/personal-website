@@ -2,6 +2,10 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { SectionHeading } from "@/components/paper";
+
+/** Alternating tilts so the strip reads as photos dropped on a table. */
+const POLAROID_ROTATIONS = [-2.1, 1.6, -1.2, 2.3, -1.8, 1.1];
 
 const PHOTOS = [
   "SnapInsta.to_288467111_551773773336159_6541681656165698825_n.jpg",
@@ -155,18 +159,11 @@ export default function Instagram() {
   return (
     <section id="instagram" className="py-20 overflow-hidden">
       <div className="max-w-5xl mx-auto">
-        <motion.div className="mb-12" {...fadeUpProps(0)}>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
-            Photo Feed
-          </h2>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
-            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
-          </div>
-          <p className="mt-4 text-base sm:text-lg max-w-xl leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
-            Life outside the terminal.
-          </p>
-        </motion.div>
+        <SectionHeading
+          title="life outside the terminal"
+          eyebrow="the photo box"
+          variant="taped"
+        />
       </div>
 
       <motion.div {...fadeUpProps(0.1)}>
@@ -194,23 +191,35 @@ export default function Instagram() {
               style={{ gap: `${GAP}px`, width: `${loopedPhotos.length * ITEM_WIDTH}px` }}
             >
               {loopedPhotos.map((photo, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className="flex-shrink-0 rounded-lg overflow-hidden"
+                  className="paper-tilt flex-shrink-0"
                   style={{
                     width: PHOTO_SIZE,
-                    height: PHOTO_SIZE,
+                    // Polaroid: even frame with a deep chin below the image
+                    padding: "10px 10px 34px",
+                    background: "var(--color-surface)",
                     border: "1px solid var(--color-border)",
+                    borderRadius: "var(--radius-card)",
+                    boxShadow: "var(--shadow-paper)",
+                    transform: `rotate(${POLAROID_ROTATIONS[i % POLAROID_ROTATIONS.length]}deg)`,
                   }}
+                  whileHover={{
+                    rotate: 0,
+                    y: -6,
+                    boxShadow: "var(--shadow-paper-lift)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`/instagram/${photo}`}
                     alt=""
                     draggable={false}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
+                    style={{ height: PHOTO_SIZE - 44 }}
                   />
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
