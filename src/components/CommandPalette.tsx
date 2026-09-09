@@ -57,15 +57,16 @@ export default function CommandPalette() {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]"
-      style={{ backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+      style={{ backgroundColor: "rgba(42, 38, 34, 0.55)" }}
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-full max-w-lg mx-4 rounded-xl overflow-hidden border"
+        className="mx-4 w-full max-w-lg overflow-hidden border"
         style={{
-          backgroundColor: "var(--color-background)",
+          backgroundColor: "var(--color-surface)",
           borderColor: "var(--color-border)",
-          boxShadow: "0 25px 60px rgba(0,0,0,0.6)",
+          borderRadius: "var(--radius-card)",
+          boxShadow: "var(--shadow-paper-lift)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -83,7 +84,7 @@ export default function CommandPalette() {
               style={{ color: "var(--color-text)" }}
             />
             <kbd
-              className="text-xs font-mono px-1.5 py-0.5 rounded border"
+              className="border px-1.5 py-0.5 font-mono text-xs"
               style={{ color: "var(--color-text-dim)", borderColor: "var(--color-border)" }}
             >
               ESC
@@ -105,7 +106,7 @@ export default function CommandPalette() {
                   key={cmd.href}
                   value={cmd.href}
                   onSelect={handleSelect}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
+                  className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
                   style={{ color: "var(--color-text-muted)" }}
                 >
                   <span style={{ color: "var(--color-accent)" }}>↓</span>
@@ -119,7 +120,7 @@ export default function CommandPalette() {
               <Command.Item
                 value="resume"
                 onSelect={handleSelect}
-                className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
+                className="flex items-center justify-between px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
                 style={{ color: "var(--color-text-muted)" }}
               >
                 <div className="flex items-center gap-3">
@@ -127,7 +128,7 @@ export default function CommandPalette() {
                   Open Resume
                 </div>
                 <span
-                  className="text-xs px-1.5 py-0.5 rounded border"
+                  className="border px-1.5 py-0.5 font-mono text-xs"
                   style={{ borderColor: "var(--color-border)", color: "var(--color-text-dim)" }}
                 >
                   PDF
@@ -136,7 +137,7 @@ export default function CommandPalette() {
               <Command.Item
                 value="theme"
                 onSelect={handleSelect}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
+                className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
                 style={{ color: "var(--color-text-muted)" }}
               >
                 <span style={{ color: "var(--color-accent)" }}>↓</span>
@@ -149,7 +150,7 @@ export default function CommandPalette() {
               <Command.Item
                 value="konami"
                 onSelect={handleSelect}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
+                className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
                 style={{ color: "var(--color-text-dim)" }}
               >
                 <span style={{ color: "#f59e0b" }}>★</span>
