@@ -1,40 +1,37 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { skills } from "@/content/resume";
 import { getIconInfo } from "@/lib/icons";
+import { SectionHeading } from "@/components/paper";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.55,
-      delay: i * 0.08,
-      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-    },
-  }),
-};
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
-function SkillPill({ name, index, isAI }: { name: string; index: number; isAI: boolean }) {
+/** Irregular rotations so the chips look pinned up rather than laid out. */
+const CHIP_ROTATIONS = [-1.5, 0.9, -0.6, 1.4, -1.1, 0.5];
+
+function SkillChip({ name, index }: { name: string; index: number }) {
   const icon = getIconInfo(name);
+  const rot = CHIP_ROTATIONS[index % CHIP_ROTATIONS.length];
 
   return (
     <motion.div
-      custom={index}
-      variants={fadeUp}
-      className="flex items-center gap-2 rounded-lg px-3 py-2 border"
+      className="paper-tilt flex items-center gap-2 border px-3 py-2"
       style={{
         backgroundColor: "var(--color-surface)",
-        borderColor: isAI ? "var(--color-accent)" : "var(--color-border)",
-        boxShadow: isAI ? "0 0 10px rgba(56,189,248,0.08)" : "none",
+        borderColor: "var(--color-border)",
+        borderRadius: "var(--radius-card)",
+        boxShadow: "var(--shadow-paper)",
       }}
+      initial={{ opacity: 0, y: -8, rotate: 0 }}
+      whileInView={{ opacity: 1, y: 0, rotate: rot }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ type: "spring", stiffness: 300, damping: 17, delay: index * 0.02 }}
+      whileHover={{ y: -3, rotate: 0, boxShadow: "var(--shadow-paper-lift)" }}
     >
       {icon ? (
         <span
-          className="w-4 h-4 flex-shrink-0"
+          className="h-4 w-4 flex-shrink-0"
           style={{ color: icon.color }}
           dangerouslySetInnerHTML={{
             __html: icon.svg.replace("<svg", `<svg width="16" height="16" fill="currentColor"`),
@@ -42,13 +39,17 @@ function SkillPill({ name, index, isAI }: { name: string; index: number; isAI: b
         />
       ) : (
         <span
-          className="w-4 h-4 flex-shrink-0 rounded text-[8px] font-bold font-mono flex items-center justify-center"
-          style={{ backgroundColor: "var(--color-accent)", color: "var(--color-background)" }}
+          className="flex h-4 w-4 flex-shrink-0 items-center justify-center font-mono text-[8px] font-bold"
+          style={{
+            backgroundColor: "var(--color-accent)",
+            color: "var(--color-surface)",
+            borderRadius: "var(--radius-card)",
+          }}
         >
           {name.slice(0, 2).toUpperCase()}
         </span>
       )}
-      <span className="text-sm font-mono" style={{ color: "var(--color-text-muted)" }}>
+      <span className="font-mono text-sm" style={{ color: "var(--color-text-muted)" }}>
         {name}
       </span>
     </motion.div>
@@ -56,74 +57,48 @@ function SkillPill({ name, index, isAI }: { name: string; index: number; isAI: b
 }
 
 export default function TechStack() {
-  const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  let running = 0;
 
   return (
     <section
       id="tech-stack"
-      ref={ref}
-      className="py-24 px-6"
+      className="px-6 py-24"
       style={{ backgroundColor: "var(--color-background)" }}
     >
-      <div className="max-w-5xl mx-auto">
-        {/* Section header */}
-        <motion.div
-          className="mb-12"
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={fadeUp}
-          custom={0}
-        >
-          <h2
-            className="text-3xl sm:text-4xl font-bold tracking-tight"
-            style={{ color: "var(--color-text)" }}
-          >
-            Tech Stack
-          </h2>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="h-px w-12 rounded-full" style={{ background: "var(--color-accent)" }} />
-            <div className="h-px flex-1 rounded-full" style={{ background: "var(--color-border)" }} />
-          </div>
-        </motion.div>
+      <div className="mx-auto max-w-5xl">
+        <SectionHeading title="the toolbox" eyebrow="what I reach for" variant="dashed" />
 
-        {/* Categories */}
-        <motion.div
-          className="space-y-10"
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {skills.map((category, catIndex) => (
+        <div className="space-y-10">
+          {skills.map((category) => (
             <div key={category.category}>
-              {/* Category label */}
               <motion.div
-                custom={catIndex * 3}
-                variants={fadeUp}
-                className="mb-4 pb-2 border-b"
-                style={{ borderColor: "var(--color-border)" }}
+                className="mb-4 pb-2"
+                style={{ borderBottom: "1.5px dashed var(--color-border)" }}
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.45, ease: EASE }}
               >
                 <span
-                  className="text-xs font-mono font-semibold tracking-widest uppercase"
-                  style={{ color: "var(--color-text-dim)" }}
+                  style={{
+                    fontFamily: "var(--font-hand)",
+                    color: "var(--color-text)",
+                    fontSize: "1.55rem",
+                    lineHeight: 1.1,
+                  }}
                 >
                   {category.category}
                 </span>
               </motion.div>
 
-              {/* Pills */}
-              <div className="flex flex-wrap gap-2">
-                {category.items.map((item, itemIndex) => (
-                  <SkillPill
-                    key={item}
-                    name={item}
-                    index={catIndex * 3 + itemIndex + 1}
-                    isAI={false}
-                  />
+              <div className="flex flex-wrap gap-2.5">
+                {category.items.map((item) => (
+                  <SkillChip key={item} name={item} index={running++} />
                 ))}
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
