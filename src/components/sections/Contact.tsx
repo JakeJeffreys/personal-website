@@ -1,17 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Linkedin } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Github, Linkedin, Mail } from "lucide-react";
+import { Scrawl } from "@/components/paper";
 
-function fadeUpProps(delay = 0) {
-  return {
-    initial: { opacity: 0, y: 24 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-80px" } as const,
-    transition: { duration: 0.5, ease: "easeOut" as const, delay },
-  };
-}
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 const socialLinks = [
   {
@@ -28,55 +21,129 @@ const socialLinks = [
   },
 ];
 
+/**
+ * A postcard: divided back, stamp box in the corner, ruled address lines.
+ * The section heading lives inside the card rather than above it, so the
+ * postcard reads as one object.
+ */
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 px-6">
-      <div className="max-w-5xl mx-auto text-center">
-        <motion.div className="mb-12" {...fadeUpProps(0)}>
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="h-px w-8" style={{ background: "var(--color-accent)" }} />
-            <span className="text-sm font-mono tracking-widest uppercase" style={{ color: "var(--color-accent)" }}>
-              Contact
+    <section id="contact" className="px-6 py-24">
+      <div className="mx-auto max-w-3xl">
+        <motion.div
+          className="paper-tilt relative"
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-card)",
+            boxShadow: "var(--shadow-paper-lift)",
+          }}
+          initial={{ opacity: 0, y: -20, rotate: 0 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -0.6 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ type: "spring", stiffness: 240, damping: 20 }}
+        >
+          {/* Stamp */}
+          <div
+            className="absolute right-5 top-5 flex h-16 w-14 flex-col items-center justify-center"
+            style={{
+              border: "2px dashed var(--color-border)",
+              borderRadius: "var(--radius-card)",
+              color: "var(--color-text-dim)",
+            }}
+            aria-hidden="true"
+          >
+            <Mail className="h-5 w-5" />
+            <span className="mt-1 font-mono text-[8px] uppercase tracking-wider">
+              Denver
             </span>
-            <div className="h-px w-8" style={{ background: "var(--color-accent)" }} />
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: "var(--color-text)" }}>
-            Get In Touch
-          </h2>
-          <p className="text-base sm:text-lg max-w-md mx-auto leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
-            I&apos;m always open to interesting conversations and new opportunities.
-          </p>
-        </motion.div>
 
-        <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-4" {...fadeUpProps(0.15)}>
-          {socialLinks.map(({ label, href, Icon, description }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                "flex items-center gap-3 px-6 py-4 rounded-xl border w-full sm:w-auto",
-                "transition-all duration-200 group"
-              )}
-              style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--color-accent)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border)";
-              }}
-            >
-              <Icon className="w-5 h-5 shrink-0 transition-colors duration-200" style={{ color: "var(--color-accent)" }} />
-              <div className="text-left">
-                <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>{label}</p>
-                <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{description}</p>
+          <div className="grid grid-cols-1 gap-8 p-8 sm:p-10 md:grid-cols-[1.1fr_1fr]">
+            {/* Left half — the message */}
+            <div className="md:pr-8" style={{ borderColor: "var(--color-border)" }}>
+              <p
+                className="mb-1 font-mono text-xs uppercase tracking-[0.18em]"
+                style={{ color: "var(--color-accent-ink)" }}
+              >
+                Contact
+              </p>
+              <h2
+                className="mb-4"
+                style={{
+                  fontFamily: "var(--font-hand)",
+                  color: "var(--color-text)",
+                  fontSize: "clamp(2.2rem, 5vw, 3rem)",
+                  lineHeight: 0.95,
+                }}
+              >
+                say hi
+              </h2>
+              <p
+                className="max-w-sm text-base leading-relaxed"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                I&apos;m always open to interesting conversations and new
+                opportunities. Drop me a line — I read everything.
+              </p>
+              <div className="mt-5">
+                <Scrawl arrow="right" rotate={-1.4}>
+                  usually reply within a day
+                </Scrawl>
               </div>
-            </a>
-          ))}
+            </div>
+
+            {/* Right half — the address block */}
+            <div
+              className="flex flex-col justify-end gap-3 pt-14 md:border-l md:pl-8 md:pt-0"
+              style={{ borderColor: "var(--color-border)" }}
+            >
+              {socialLinks.map(({ label, href, Icon, description }) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 pb-2"
+                  style={{ borderBottom: "1px solid var(--color-border)" }}
+                  whileHover={{ x: 4 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                >
+                  <Icon
+                    className="h-5 w-5 shrink-0"
+                    style={{ color: "var(--color-accent)" }}
+                    aria-hidden="true"
+                  />
+                  <span className="text-left">
+                    <span
+                      className="block text-sm font-semibold"
+                      style={{ color: "var(--color-text)" }}
+                    >
+                      {label}
+                    </span>
+                    <span className="block text-xs" style={{ color: "var(--color-text-muted)" }}>
+                      {description}
+                    </span>
+                  </span>
+                </motion.a>
+              ))}
+
+              {/* Ruled address lines, as on a real postcard back */}
+              <div className="mt-2 flex flex-col gap-3" aria-hidden="true">
+                {[0, 1].map((i) => (
+                  <motion.div
+                    key={i}
+                    className="h-px origin-left"
+                    style={{ background: "var(--color-border)" }}
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: EASE }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
