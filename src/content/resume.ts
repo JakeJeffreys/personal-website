@@ -23,58 +23,71 @@ export const companies: Company[] = [
     location: "Denver, CO",
     roles: [
       {
-        title: "Senior Platform Engineer",
+        title: "Senior Software Engineer",
         startDate: "Jan 2024",
         endDate: null,
         description: [
-          "Led backend architecture, API development, and scalable database design for a partner network with millions of daily customers.",
-          "Deployed extensible AWS infrastructure with Terraform, onboarding partners including DoorDash and Instacart.",
-          "Architected an image delivery system via API Gateway, Lambda, S3, and CloudFront serving thousands of partners daily.",
-          "Improved reliability with Datadog, Runscope, and BlazeMeter; participated in 24/7 on-call rotations.",
-          "Won internal Hackathon with an image compression solution that cut data transfer costs by $100,000+ annually.",
-          "Mentored new engineers, accelerating ramp-up and driving adoption of best practices.",
+          "Owned architecture and development of event-driven backend services and RESTful APIs supporting a partner network spanning Walmart, 7-Eleven, DoorDash, and Instacart.",
+          "Designed extensible, Terraform-managed AWS infrastructure enabling rapid onboarding of high-traffic enterprise partners with zero-downtime deployments.",
+          "Architected a CDN-backed image delivery pipeline (API Gateway, S3, CloudFront) serving tens of millions of low-latency product images per day.",
+          "Drove observability improvements through Datadog dashboards, Runscope API test suites, and BlazeMeter load testing — reducing mean time to detection on production incidents.",
+          "Led 24/7 on-call rotations, owning incident response, root cause analysis, and stakeholder communication for a high-traffic production platform.",
+          "Won an internal hackathon building an image resizing and compression service that reduced annual data transfer costs by $100,000+.",
         ],
       },
       {
-        title: "Platform Engineer",
+        title: "Software Engineer",
         startDate: "Jun 2021",
         endDate: "Dec 2023",
         description: [
-          "Developed and launched the Ibotta Performance Network to power Walmart's digital promotion platform.",
-          "Built out AWS serverless infrastructure including Lambda, DynamoDB, S3, SNS, SQS, and API Gateway.",
-          "Led cross-team projects, managing risks and dependencies from inception through release.",
+          "Designed and launched the Ibotta Performance Network — an event-driven promotion platform powering Walmart's digital offers, sustaining peak loads of ~150 events/sec through queue-based asynchronous processing.",
+          "Built the platform's backend services and data layer from scratch on AWS — DynamoDB, SQS/SNS messaging, S3, and API Gateway — to support high-throughput event processing and real-time partner integrations.",
+          "Authored Terraform modules to provision and version-control all infrastructure, enabling repeatable, auditable, and environment-parity deployments.",
+          "Led cross-functional delivery across 3+ engineering teams, owning risk management, dependency mapping, and milestone tracking from design through production release.",
         ],
       },
     ],
-    technologies: ["AWS", "Lambda", "DynamoDB", "S3", "CloudFront", "API Gateway", "SNS", "SQS", "Terraform", "Python", "Node.js", "Datadog"],
+    technologies: [
+      "TypeScript",
+      "Node.js",
+      "AWS",
+      "Lambda",
+      "EC2",
+      "API Gateway",
+      "SQS",
+      "SNS",
+      "EventBridge",
+      "CloudFront",
+      "S3",
+      "DynamoDB",
+      "Terraform",
+      "Datadog",
+    ],
   },
   {
     name: "Xactly",
     location: "Denver, CO",
     roles: [
       {
-        title: "Software Engineer II",
+        title: "Software Engineer",
         startDate: "Nov 2020",
         endDate: "May 2021",
         description: [
-          "Developed new product features giving customers granular control of sales data.",
-          "Integrated UI components into a React application and built supporting backend APIs.",
-          "Implemented feature flagging, A/B testing, and beta testing pipelines using Split.io.",
-          "Coached junior engineers in Git flow, code review, and API best practices.",
+          "Built Node.js backend APIs and React UI components giving enterprise customers granular control over sales compensation data.",
+          "Implemented feature flagging and A/B testing pipelines using Split.io, enabling safe, incremental rollouts of customer-facing features.",
         ],
       },
       {
-        title: "Software Engineer I",
+        title: "Associate Software Engineer",
         startDate: "Nov 2018",
         endDate: "Oct 2020",
         description: [
-          "Migrated backend from Node.js to Java Spring, aligning acquired products with core platform architecture.",
-          "Created CI pipelines in Jenkins to run multi-environment test suites, improving release confidence.",
-          "Delivered REST APIs and performed SQL data migrations to support new functionality and integrations.",
+          "Delivered REST APIs and SQL data migrations to support new product integrations across a multi-tenant SaaS platform.",
+          "Built CI/CD pipelines in Jenkins to run multi-environment test suites, improving release reliability.",
         ],
       },
     ],
-    technologies: ["React", "JavaScript", "Java", "Spring", "REST APIs", "Split.io", "Git", "Jenkins", "SQL"],
+    technologies: ["Node.js", "React", "REST APIs", "SQL", "Split.io", "Jenkins"],
   },
   {
     name: "TrueCar",
@@ -91,42 +104,56 @@ export const companies: Company[] = [
     ],
     technologies: [],
   },
-  {
-    name: "Portland General Electric",
-    location: "Portland, OR",
-    roles: [
-      {
-        title: "Software Engineer, Intern",
-        startDate: "Mar 2016",
-        endDate: "Sep 2016",
-        description: [
-          "Built an on-call scheduling tool as part of the Application Development team.",
-        ],
-      },
-    ],
-    technologies: [],
-  },
 ];
 
+/**
+ * Mirrors the résumé's skill taxonomy.
+ *
+ * Items stay short and product-shaped on purpose: TechStack renders each one as
+ * an icon chip and falls back to a two-letter badge when no icon matches, so
+ * long descriptive phrases would render as a row of identical generic badges.
+ */
 export const skills: Skill[] = [
   {
     category: "Languages",
-    items: ["TypeScript", "JavaScript", "Java", "SQL", "Bash", "Python"],
+    items: ["TypeScript", "Node.js", "Python", "SQL", "Bash", "Terraform"],
   },
   {
     category: "Backend",
-    items: ["Node.js", "Java Spring", "REST APIs", "Docker", "Kubernetes"],
+    items: [
+      "REST APIs",
+      "Event-Driven",
+      "Message Queues",
+      "Distributed Systems",
+      "Service Integrations",
+    ],
   },
   {
-    category: "Infrastructure",
-    items: ["AWS", "Lambda", "DynamoDB", "S3", "CloudFront", "API Gateway", "SNS", "SQS", "Terraform"],
+    category: "Data",
+    items: ["PostgreSQL", "DynamoDB", "S3", "Schema Migrations"],
   },
   {
-    category: "Observability",
-    items: ["Datadog", "Runscope", "BlazeMeter"],
+    category: "Cloud & Infrastructure",
+    items: [
+      "AWS",
+      "Lambda",
+      "EC2",
+      "API Gateway",
+      "SQS",
+      "SNS",
+      "EventBridge",
+      "CloudFront",
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+    ],
+  },
+  {
+    category: "Reliability",
+    items: ["Datadog", "Runscope", "BlazeMeter", "Load Testing", "On-Call"],
   },
   {
     category: "AI & Agents",
-    items: ["Claude Code", "Claude API", "Context Management", "MCP", "Agents", "Skills"],
+    items: ["Claude Code", "Claude API", "MCP", "Agents", "Skills", "Agentic Workflows"],
   },
 ];

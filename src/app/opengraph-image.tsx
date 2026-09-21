@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Jake Jeffreys — Senior Platform Engineer";
+export const alt = "Jake Jeffreys — Senior Software Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -52,10 +52,10 @@ export default function OGImage() {
             Jake Jeffreys
           </div>
           <div style={{ fontSize: "32px", color: "#c2431f" }}>
-            Senior Platform Engineer
+            Senior Software Engineer
           </div>
           <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
-            {["Platform", "Cloud", "Denver, CO"].map((tag) => (
+            {["Backend", "AWS", "Denver, CO"].map((tag) => (
               <div
                 key={tag}
                 style={{

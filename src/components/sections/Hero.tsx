@@ -7,9 +7,9 @@ import ColoradoMap from "@/components/ColoradoMap";
 import { Tape, Scrawl } from "@/components/paper";
 
 const TYPED_PHRASES = [
-  "Senior Platform Engineer",
+  "Senior Software Engineer",
   "Denver, Colorado",
-  "Cloud-native systems at scale",
+  "Distributed systems on AWS",
 ];
 
 const PHRASE_DURATION_MS = 2800;
@@ -106,8 +106,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
           >
-            I build the boring, load-bearing parts — the clusters, pipelines and paved
-            roads that let everyone else ship. Currently doing that at Ibotta.
+            I build the backend behind big partner integrations — event-driven
+            services, REST APIs, and the AWS infrastructure holding them up.
+            Currently doing that at Ibotta.
           </motion.p>
 
           <motion.div

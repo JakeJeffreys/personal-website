@@ -5,6 +5,7 @@ const ICON_MAP: Record<string, string> = {
   TypeScript: "siTypescript",
   JavaScript: "siJavascript",
   SQL: "siPostgresql",
+  PostgreSQL: "siPostgresql",
   Bash: "siGnubash",
   Python: "siPython",
   "Node.js": "siNodedotjs",
@@ -58,6 +59,70 @@ const CUSTOM_ICONS: Record<string, { svg: string; color: string }> = {
   Java: {
     color: "#ED8B00",
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5q1-2 0-3M12 5q1-2 0-3M16 5q1-2 0-3"/><path d="M5 8h14v9a2 2 0 01-2 2H7a2 2 0 01-2-2V8z"/><path d="M19 11h2a2 2 0 010 4h-2"/></svg>`,
+  },
+  EC2: {
+    color: "#FF9900",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>`,
+  },
+  EventBridge: {
+    color: "#FF4F8B",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.2 10.8 16.8 7.2M7.2 13.2l9.6 3.6"/></svg>`,
+  },
+  "CI/CD": {
+    color: "#22A06B",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><polyline points="20 3 20 8 15 8"/><polyline points="9 12 11 14 15 10"/></svg>`,
+  },
+  "Event-Driven": {
+    color: "#E8552B",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 4 14 11 14 10 22 20 10 13 10 13 2"/></svg>`,
+  },
+  "Message Queues": {
+    color: "#8C4FFF",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="4" height="10" rx="1"/><rect x="8" y="7" width="4" height="10" rx="1"/><rect x="14" y="7" width="4" height="10" rx="1"/><polyline points="20 9 22 12 20 15"/></svg>`,
+  },
+  "Distributed Systems": {
+    color: "#4053D6",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><circle cx="4" cy="18" r="2"/><circle cx="20" cy="18" r="2"/><circle cx="12" cy="12" r="2.5"/><path d="M12 6v3.5M10 13.8 5.6 16.6M14 13.8l4.4 2.8"/></svg>`,
+  },
+  "Service Integrations": {
+    color: "#2DA2BB",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7 6 10a4.2 4.2 0 0 0 6 6l3-3"/><path d="M15 17l3-3a4.2 4.2 0 0 0-6-6L9 11"/></svg>`,
+  },
+  "Schema Migrations": {
+    color: "#7AA116",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="6" cy="5" rx="4" ry="2"/><path d="M2 5v6c0 1.1 1.8 2 4 2s4-.9 4-2V5"/><ellipse cx="18" cy="13" rx="4" ry="2"/><path d="M14 13v6c0 1.1 1.8 2 4 2s4-.9 4-2v-6"/><path d="M11 8h5"/><polyline points="14 6 16 8 14 10"/></svg>`,
+  },
+  "Load Testing": {
+    color: "#D45A28",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18a9 9 0 0 1 18 0"/><line x1="12" y1="18" x2="16.5" y2="10.5"/><circle cx="12" cy="18" r="1.2" fill="currentColor"/></svg>`,
+  },
+  "On-Call": {
+    color: "#C2431F",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-6 6v4l-2 3h16l-2-3V9a6 6 0 0 0-6-6z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>`,
+  },
+  Runscope: {
+    color: "#2DA2BB",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/><polyline points="8 11 10.5 13.5 14 9"/></svg>`,
+  },
+  MCP: {
+    color: "#C2431F",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18V9l8 6 8-6v9"/><path d="M4 9l8-3 8 3"/></svg>`,
+  },
+  Agents: {
+    color: "#8C4FFF",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="2"/><path d="M12 5V8M9 13h.01M15 13h.01M9.5 16h5"/><circle cx="12" cy="4" r="1.2"/></svg>`,
+  },
+  Skills: {
+    color: "#22A06B",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2V5z"/><path d="M17 7h3v12H8"/><path d="M7 9h6M7 12h6"/></svg>`,
+  },
+  "Agentic Workflows": {
+    color: "#E8552B",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="5" rx="1"/><rect x="15" y="9" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><path d="M9 5.5h3a2 2 0 0 1 2 2v2M15 11.5h-3a2 2 0 0 0-2 2v3"/></svg>`,
+  },
+  "Split.io": {
+    color: "#4053D6",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4l4 10h8"/><path d="M4 17h4l2-5"/><polyline points="17 4 20 7 17 10"/><polyline points="17 14 20 17 17 20"/></svg>`,
   },
   "REST APIs": {
     color: "#4A90E2",

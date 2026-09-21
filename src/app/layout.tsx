@@ -26,29 +26,29 @@ const caveat = Caveat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jakejeffreys.dev"),
-  title: "Jake Jeffreys — Senior Platform Engineer",
+  title: "Jake Jeffreys — Senior Software Engineer",
   description:
-    "Senior Platform Engineer based in Denver, Colorado. Designing and scaling cloud-native backend systems on AWS.",
-  keywords: ["platform engineer", "software engineer", "AWS", "cloud-native", "Denver", "Colorado"],
+    "Backend software engineer in Denver, Colorado. 8+ years building distributed systems, REST APIs, and event-driven services on AWS.",
+  keywords: ["backend engineer", "software engineer", "AWS", "distributed systems", "event-driven", "TypeScript", "Terraform", "Denver", "Colorado"],
   authors: [{ name: "Jake Jeffreys" }],
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "Jake Jeffreys — Senior Platform Engineer",
+    title: "Jake Jeffreys — Senior Software Engineer",
     description:
-      "Senior Platform Engineer based in Denver, Colorado. Designing and scaling cloud-native backend systems on AWS.",
+      "Backend software engineer in Denver, Colorado. 8+ years building distributed systems, REST APIs, and event-driven services on AWS.",
     url: "https://jakejeffreys.dev",
     siteName: "Jake Jeffreys",
     locale: "en_US",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Jake Jeffreys — Senior Platform Engineer" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Jake Jeffreys — Senior Software Engineer" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jake Jeffreys — Senior Platform Engineer",
+    title: "Jake Jeffreys — Senior Software Engineer",
     description:
-      "Senior Platform Engineer based in Denver, Colorado. Designing and scaling cloud-native backend systems on AWS.",
+      "Backend software engineer in Denver, Colorado. 8+ years building distributed systems, REST APIs, and event-driven services on AWS.",
   },
 };
 

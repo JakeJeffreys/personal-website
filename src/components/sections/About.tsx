@@ -24,20 +24,20 @@ const interests = [
 const stats = [
   { label: "Years of Experience", value: "8+" },
   { label: "Current Location", value: "Denver, CO" },
-  { label: "Current Role", value: "Sr. Platform Engineer" },
+  { label: "Current Role", value: "Sr. Software Engineer" },
   { label: "Current Company", value: "Ibotta" },
 ];
 
 const currently = [
   "Planning a wedding",
-  "Building platform infrastructure at Ibotta",
+  "Building backend services at Ibotta",
   "Trying to keep up with the rate of change in AI tooling",
   "Exploring the Colorado 14ers",
 ];
 
 const BIO = [
-  "I'm a Senior Platform Engineer based in Denver, Colorado with 8+ years of experience designing and scaling cloud-native backend systems. Currently at Ibotta, I lead backend architecture and AWS infrastructure projects that support a partner network serving millions of daily customers — including integrations with DoorDash, Instacart, and Walmart.",
-  "I specialize in AWS serverless architecture, Terraform-based infrastructure, and building systems that are fast, reliable, and easy to operate. I care about the details — whether that's shaving latency off a hot path, building observability into a service from day one, or mentoring engineers to level up their craft. I thrive in environments where engineering quality and product velocity reinforce each other.",
+  "I'm a backend software engineer based in Denver, Colorado with 8+ years designing, building, and operating distributed systems on AWS. At Ibotta I own the architecture of event-driven services and REST APIs behind a partner network spanning Walmart, 7-Eleven, DoorDash, and Instacart — the kind of traffic where a bad deploy is everyone's problem.",
+  "Mostly TypeScript and Node.js, with Terraform underneath everything. I care about the unglamorous parts — queue-based processing that degrades gracefully, observability built in from day one rather than bolted on after the first incident, and infrastructure you can rebuild from source. I've carried the pager for a high-traffic platform long enough to design for the 3am version of myself.",
   "Originally from Portland, Oregon, I moved to Denver in 2018 and haven't looked back. The mountains are a big part of my life — skiing in winter, backpacking and rafting in summer. I'm also into live music, barbecue, and in my free time I enjoy exploring real estate and personal finance, including managing my own Airbnb property.",
 ];
 
