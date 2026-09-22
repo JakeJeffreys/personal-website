@@ -60,6 +60,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased`}>
+        {/*
+          Framer Motion server-renders its `initial` state, so ~90 elements ship
+          with inline opacity:0 and only fade in once JS hydrates. Without this,
+          the whole page reads as blank to anyone with JS disabled or blocked,
+          and to crawlers that don't execute scripts.
+        */}
+        <noscript>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <ThemeProvider>
           <CommandPaletteProvider>
             <CommandPalette />

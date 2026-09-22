@@ -1,4 +1,48 @@
-import * as si from "simple-icons";
+import {
+  siAnthropic,
+  siBlazemeter,
+  siDatadog,
+  siDocker,
+  siGit,
+  siGnubash,
+  siJavascript,
+  siJenkins,
+  siKubernetes,
+  siNodedotjs,
+  siPostgresql,
+  siPython,
+  siReact,
+  siTerraform,
+  siTypescript,
+} from "simple-icons";
+
+/**
+ * Named imports, not `import * as si`.
+ *
+ * The wildcard pulled all ~3,000 simple-icons into the client bundle: lookups
+ * were done dynamically by string key, so the bundler could not prove which
+ * icons were unused and had to keep every one. Importing only what's actually
+ * referenced lets the rest be dropped.
+ */
+type SimpleIcon = { svg: string; hex: string };
+
+const SI: Record<string, SimpleIcon> = {
+  siAnthropic,
+  siBlazemeter,
+  siDatadog,
+  siDocker,
+  siGit,
+  siGnubash,
+  siJavascript,
+  siJenkins,
+  siKubernetes,
+  siNodedotjs,
+  siPostgresql,
+  siPython,
+  siReact,
+  siTerraform,
+  siTypescript,
+};
 
 // Map display name → simple-icons key (siXxx)
 const ICON_MAP: Record<string, string> = {
@@ -9,7 +53,6 @@ const ICON_MAP: Record<string, string> = {
   Bash: "siGnubash",
   Python: "siPython",
   "Node.js": "siNodedotjs",
-  "Java Spring": "siSpring",
   Docker: "siDocker",
   Kubernetes: "siKubernetes",
   Terraform: "siTerraform",
@@ -143,7 +186,7 @@ export function getIconInfo(name: string): IconInfo | null {
   // Fall back to simple-icons
   const key = ICON_MAP[name];
   if (!key) return null;
-  const icon = (si as Record<string, { svg: string; hex: string } | undefined>)[key];
+  const icon = SI[key];
   if (!icon) return null;
   return { svg: icon.svg, color: `#${icon.hex}` };
 }
