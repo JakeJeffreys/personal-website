@@ -7,34 +7,6 @@ import { SectionHeading } from "@/components/paper";
 /** Alternating tilts so the strip reads as photos dropped on a table. */
 const POLAROID_ROTATIONS = [-2.1, 1.6, -1.2, 2.3, -1.8, 1.1];
 
-const PHOTOS = [
-  "SnapInsta.to_288467111_551773773336159_6541681656165698825_n.jpg",
-  "SnapInsta.to_315934497_6176996872328731_3205882519055314683_n.jpg",
-  "SnapInsta.to_316136246_803820907512820_7547955553378746679_n.jpg",
-  "SnapInsta.to_316176411_1340748906667194_9121341017644344103_n.jpg",
-  "SnapInsta.to_331968638_5985902678152523_6161372437014303237_n.jpg",
-  "SnapInsta.to_334247831_554609063316504_1654720872710418676_n.jpg",
-  "SnapInsta.to_361683844_254502767330256_1817587707420264129_n.jpg",
-  "SnapInsta.to_361711683_929255834840822_4294934515868365952_n.jpg",
-  "SnapInsta.to_361936005_823758988958230_5437640975047828622_n.jpg",
-  "SnapInsta.to_365586304_820808439674606_7839705955200385531_n.jpg",
-  "SnapInsta.to_366103749_635522641951983_3073234566103624654_n.jpg",
-  "SnapInsta.to_366128967_313366824584345_2514508730042298897_n.jpg",
-  "SnapInsta.to_404610625_1733242157152236_5237471902122236168_n.jpg",
-  "SnapInsta.to_404937428_1310479396325969_5986930891282447831_n.jpg",
-  "SnapInsta.to_440702483_416913567713589_4102295047882087069_n.jpg",
-  "SnapInsta.to_440873416_1082628222837478_568360752682323766_n.jpg",
-  "SnapInsta.to_454239182_510337511399686_8454128103516387661_n.jpg",
-  "SnapInsta.to_454261870_382012147933746_1852837594399593088_n.jpg",
-  "SnapInsta.to_454283394_1537066967241121_3098031339818542316_n.jpg",
-  "SnapInsta.to_454526393_878435596952584_6491359704232487848_n.jpg",
-  "SnapInsta.to_482763840_18490350109035757_6264162162429828732_n.jpg",
-  "SnapInsta.to_483659772_18490350172035757_3655140051870523368_n.jpg",
-  "SnapInsta.to_605147736_18538144252034172_4329639457973834487_n.jpg",
-  "SnapInsta.to_642573584_17951082921099922_2787738168004842258_n.jpg",
-  "SnapInsta.to_646126333_17951810121095918_2927696457688359033_n.jpg",
-  "SnapInsta.to_649237410_18006495269704623_8997140278942957756_n.jpg",
-];
 
 function fadeUpProps(delay = 0) {
   return {
@@ -45,7 +17,7 @@ function fadeUpProps(delay = 0) {
   };
 }
 
-export default function Instagram() {
+export default function Instagram({ photos }: { photos: string[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const positionRef = useRef(0);
@@ -60,7 +32,7 @@ export default function Instagram() {
   const GAP = 12;
   const ITEM_WIDTH = PHOTO_SIZE + GAP;
   const SPEED = 0.5; // px per frame
-  const TOTAL_WIDTH = PHOTOS.length * ITEM_WIDTH;
+  const TOTAL_WIDTH = photos.length * ITEM_WIDTH;
 
   useEffect(() => {
     const track = trackRef.current;
@@ -153,8 +125,11 @@ export default function Instagram() {
     };
   }, [TOTAL_WIDTH]);
 
+  // Nothing to scroll — don't render an empty marquee.
+  if (photos.length === 0) return null;
+
   // Duplicate photos for seamless loop
-  const loopedPhotos = [...PHOTOS, ...PHOTOS];
+  const loopedPhotos = [...photos, ...photos];
 
   return (
     <section id="instagram" className="py-20 overflow-hidden">

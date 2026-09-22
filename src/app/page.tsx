@@ -6,8 +6,13 @@ import GitHubActivity from "@/components/sections/GitHubActivity";
 import Instagram from "@/components/sections/Instagram";
 import Contact from "@/components/sections/Contact";
 import TechStack from "@/components/sections/TechStack";
+import { getPhotos } from "@/lib/photos";
 
 export default function Home() {
+  // Read at build time so adding or removing a file in public/instagram/
+  // is the whole operation — no list to keep in sync.
+  const photos = getPhotos();
+
   return (
     <>
       <Nav />
@@ -17,7 +22,7 @@ export default function Home() {
         <Experience />
         <TechStack />
         <GitHubActivity />
-        <Instagram />
+        <Instagram photos={photos} />
         <Contact />
       </main>
 
