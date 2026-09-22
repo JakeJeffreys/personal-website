@@ -84,11 +84,11 @@ export default function Contact() {
                 style={{ color: "var(--color-text-muted)" }}
               >
                 I&apos;m always open to interesting conversations and new
-                opportunities. Drop me a line — I read everything.
+                opportunities. Either of these will reach me.
               </p>
               <div className="mt-5">
                 <Scrawl arrow="right" rotate={-1.4}>
-                  usually reply within a day
+                  no bad time to say hi
                 </Scrawl>
               </div>
             </div>

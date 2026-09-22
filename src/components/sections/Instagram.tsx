@@ -155,6 +155,8 @@ export default function Instagram({ photos }: { photos: string[] }) {
 
           <div
             className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
+            role="group"
+            aria-label="Photo feed from Instagram"
             onMouseDown={onMouseDown}
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}

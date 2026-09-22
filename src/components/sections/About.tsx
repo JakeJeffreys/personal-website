@@ -36,8 +36,8 @@ const currently = [
 ];
 
 const BIO = [
-  "I'm a backend software engineer based in Denver, Colorado with 8+ years designing, building, and operating distributed systems on AWS. At Ibotta I own the architecture of event-driven services and REST APIs behind a partner network spanning Walmart, 7-Eleven, DoorDash, and Instacart — the kind of traffic where a bad deploy is everyone's problem.",
-  "Mostly TypeScript and Node.js, with Terraform underneath everything. I care about the unglamorous parts — queue-based processing that degrades gracefully, observability built in from day one rather than bolted on after the first incident, and infrastructure you can rebuild from source. I've carried the pager for a high-traffic platform long enough to design for the 3am version of myself.",
+  "I'm a backend software engineer in Denver with 8+ years building and running distributed systems on AWS. At Ibotta I own the architecture of the event-driven services and REST APIs behind our partner network: Walmart, 7-Eleven, DoorDash, Instacart.",
+  "Mostly TypeScript and Node.js, with Terraform under everything. A lot of the work is unglamorous: queue processing that keeps going when a partner's API doesn't, observability set up before there's an incident rather than after, infrastructure you can rebuild from source. Enough years of on-call will do that to you.",
   "Originally from Portland, Oregon, I moved to Denver in 2018 and haven't looked back. The mountains are a big part of my life — skiing in winter, backpacking and rafting in summer. I'm also into live music, barbecue, and in my free time I enjoy exploring real estate and personal finance, including managing my own Airbnb property.",
 ];
 
@@ -71,7 +71,7 @@ export default function About() {
 
             <div className="mt-2">
               <Scrawl arrow="left" rotate={-1.8}>
-                8 years, still enjoying it
+                ask me about the 14ers
               </Scrawl>
             </div>
           </div>

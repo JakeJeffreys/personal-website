@@ -160,9 +160,17 @@ body > * {
   background: var(--color-text-dim);
 }
 
-/* Focus is always visible, in both themes */
+/*
+  Focus is always visible, in both themes.
+
+  !important is deliberate. Tailwind's `focus:outline-none` compiles to
+  `.focus\:outline-none:focus { outline-style: none }` at specificity (0,2,0),
+  which outranks a bare `:focus-visible` at (0,1,0) — so without this, keyboard
+  focus is silently invisible on every element carrying that utility. A visible
+  focus ring is not something a utility class gets to switch off.
+*/
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent) !important;
   outline-offset: 2px;
 }
 

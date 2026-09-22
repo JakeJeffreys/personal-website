@@ -106,7 +106,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
           >
-            I build the backend behind big partner integrations — event-driven
+            I build the backend behind large partner integrations: event-driven
             services, REST APIs, and the AWS infrastructure holding them up.
             Currently doing that at Ibotta.
           </motion.p>
