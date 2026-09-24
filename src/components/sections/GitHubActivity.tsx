@@ -16,7 +16,14 @@ import {
   Users,
   BookOpen,
 } from "lucide-react";
-import { getGitHubActivity, getGitHubUser, type GitHubEvent } from "@/lib/github";
+import {
+  getGitHubActivity,
+  getGitHubContributions,
+  getGitHubUser,
+  type ContributionCalendar,
+  type ContributionLevel,
+  type GitHubEvent,
+} from "@/lib/github";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -134,107 +141,44 @@ function EventIcon({ type }: { type: string }) {
 // Heatmap
 // ---------------------------------------------------------------------------
 
-/**
- * Lightweight seeded PRNG (mulberry32) — deterministic, fast, no deps.
- */
-function mulberry32(seed: number) {
-  return function () {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
 type HeatLevel = 0 | 1 | 2 | 3;
 
 function heatColor(level: HeatLevel): string {
   return `var(--color-heat-${level})`;
 }
 
+const LEVEL_MAP: Record<ContributionLevel, HeatLevel> = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 3,
+};
+
 interface HeatmapProps {
-  events: GitHubEvent[];
+  calendar: ContributionCalendar;
 }
 
-function ContributionHeatmap({ events }: HeatmapProps) {
-  const WEEKS = 52;
-  const DAYS = 7;
-
-  // Build a date→count map from real events
-  const countByDate = new Map<string, number>();
-  for (const ev of events) {
-    const day = ev.created_at.slice(0, 10); // "YYYY-MM-DD"
-    countByDate.set(day, (countByDate.get(day) ?? 0) + 1);
-  }
-
-  // Determine the most recent event date to know how many real weeks to show
-  const today = new Date();
-  // Align to Sunday
-  const startOfGrid = new Date(today);
-  startOfGrid.setDate(today.getDate() - (WEEKS * DAYS - 1));
-
-  // Find how many days ago the oldest real event is (cap at total grid cells)
-  const oldestEventDate =
-    events.length > 0
-      ? new Date(events[events.length - 1].created_at)
-      : null;
-
-  const totalCells = WEEKS * DAYS;
-  const realDaysCount = oldestEventDate
-    ? Math.min(
-        totalCells,
-        Math.floor((today.getTime() - oldestEventDate.getTime()) / 86400000) + 1
-      )
-    : 0;
-
-  // Build the grid: WEEKS columns, each DAYS rows (col-major, oldest→newest left→right)
-  const grid: HeatLevel[][] = [];
-  const rand = mulberry32(0xdeadbeef);
-
-  for (let w = 0; w < WEEKS; w++) {
-    const col: HeatLevel[] = [];
-    for (let d = 0; d < DAYS; d++) {
-      const cellIndex = w * DAYS + d;
-      const cellDate = new Date(startOfGrid);
-      cellDate.setDate(startOfGrid.getDate() + cellIndex);
-      const dateStr = cellDate.toISOString().slice(0, 10);
-
-      // Future dates: empty
-      if (cellDate > today) {
-        col.push(0);
-        continue;
-      }
-
-      // Real data zone
-      const isInRealZone = cellIndex >= totalCells - realDaysCount;
-      if (isInRealZone) {
-        const count = countByDate.get(dateStr) ?? 0;
-        if (count === 0) col.push(0);
-        else if (count === 1) col.push(1);
-        else if (count <= 3) col.push(2);
-        else col.push(3);
-      } else {
-        // Pseudo-random for older weeks — weighted toward empty/low
-        const r = rand();
-        if (r < 0.55) col.push(0);
-        else if (r < 0.78) col.push(1);
-        else if (r < 0.92) col.push(2);
-        else col.push(3);
-      }
-    }
-    grid.push(col);
-  }
+function ContributionHeatmap({ calendar }: HeatmapProps) {
+  // GitHub returns Sunday-aligned weeks; the first and last may be partial
+  const weeks = calendar.weeks.map((w) => w.contributionDays);
+  const WEEKS = weeks.length;
+  // A full year at phone width shrinks cells to ~4px and the month labels
+  // collide, so below `sm` only the most recent half-year is shown.
+  const MOBILE_WEEKS = 26;
+  const desktopOnly = (w: number) => (w < WEEKS - MOBILE_WEEKS ? "hidden sm:block" : "");
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   // Build month labels: find the week where the month first appears
   const monthLabels: { label: string; weekIndex: number }[] = [];
   let lastMonth = -1;
   for (let w = 0; w < WEEKS; w++) {
-    const cellDate = new Date(startOfGrid);
-    cellDate.setDate(startOfGrid.getDate() + w * DAYS);
-    const m = cellDate.getMonth();
+    const m = Number(weeks[w][0].date.slice(5, 7)) - 1;
     if (m !== lastMonth) {
+      // Labels overflow their one-week column, so when two land too close
+      // (a partial first month), drop the older stub, as GitHub does.
+      const prev = monthLabels[monthLabels.length - 1];
+      if (prev && w - prev.weekIndex < 3) monthLabels.pop();
       monthLabels.push({ label: months[m], weekIndex: w });
       lastMonth = m;
     }
@@ -247,7 +191,7 @@ function ContributionHeatmap({ events }: HeatmapProps) {
         {Array.from({ length: WEEKS }).map((_, w) => {
           const label = monthLabels.find((ml) => ml.weekIndex === w);
           return (
-            <div key={w} className="flex-1 text-[10px] overflow-hidden" style={{ color: "var(--color-text-dim)" }}>
+            <div key={w} className={`flex-1 min-w-0 whitespace-nowrap text-[10px] ${desktopOnly(w)}`} style={{ color: "var(--color-text-dim)" }}>
               {label ? label.label : ""}
             </div>
           );
@@ -272,23 +216,30 @@ function ContributionHeatmap({ events }: HeatmapProps) {
 
         {/* Grid */}
         <div className="flex flex-1" style={{ gap: "2px" }}>
-          {grid.map((col, w) => (
-            <div key={w} className="flex-1 flex flex-col" style={{ gap: "2px" }}>
-              {col.map((level, d) => (
-                <div
-                  key={d}
-                  className="w-full transition-transform hover:scale-125"
-                  style={{
-                    aspectRatio: "1",
-                    background: heatColor(level),
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "1px",
-                  }}
-                  title={`Level ${level}`}
-                />
-              ))}
-            </div>
-          ))}
+          {weeks.map((days, w) => {
+            // Pad partial first week at the top so days line up with their rows
+            const leading = w === 0 ? new Date(days[0].date + "T00:00:00Z").getUTCDay() : 0;
+            return (
+              <div key={w} className={`flex-1 flex-col ${w < WEEKS - MOBILE_WEEKS ? "hidden sm:flex" : "flex"}`} style={{ gap: "2px" }}>
+                {Array.from({ length: leading }).map((_, i) => (
+                  <div key={`pad-${i}`} className="w-full" style={{ aspectRatio: "1" }} />
+                ))}
+                {days.map((day) => (
+                  <div
+                    key={day.date}
+                    className="w-full transition-transform hover:scale-125"
+                    style={{
+                      aspectRatio: "1",
+                      background: heatColor(LEVEL_MAP[day.contributionLevel]),
+                      border: "1px solid var(--color-border)",
+                      borderRadius: "1px",
+                    }}
+                    title={`${day.contributionCount} contribution${day.contributionCount !== 1 ? "s" : ""} on ${day.date}`}
+                  />
+                ))}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -317,9 +268,10 @@ function ContributionHeatmap({ events }: HeatmapProps) {
 // ---------------------------------------------------------------------------
 
 export default async function GitHubActivity() {
-  const [user, events] = await Promise.all([
+  const [user, events, calendar] = await Promise.all([
     getGitHubUser("jakejeffreys"),
     getGitHubActivity("jakejeffreys"),
+    getGitHubContributions("jakejeffreys"),
   ]);
 
   const recentEvents = events.slice(0, 10);
@@ -383,15 +335,17 @@ export default async function GitHubActivity() {
         )}
 
         {/* Heatmap */}
-        <div
-          className="mb-10 border p-4 sm:p-5"
-          style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
-        >
-          <p className="text-xs font-mono mb-4" style={{ color: "var(--color-text-dim)" }}>
-            Contribution activity — past 52 weeks
-          </p>
-          <ContributionHeatmap events={events} />
-        </div>
+        {calendar && (
+          <div
+            className="mb-10 border p-4 sm:p-5"
+            style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+          >
+            <p className="text-xs font-mono mb-4" style={{ color: "var(--color-text-dim)" }}>
+              {calendar.totalContributions.toLocaleString()} contributions in the last year
+            </p>
+            <ContributionHeatmap calendar={calendar} />
+          </div>
+        )}
 
         {/* Recent activity feed */}
         <div>
@@ -459,7 +413,7 @@ export default async function GitHubActivity() {
             href="https://github.com/jakejeffreys"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm hover:opacity-75 transition-opacity font-mono group"
+            className="inline-flex items-center gap-2 py-3 text-sm hover:opacity-75 transition-opacity font-mono group"
             style={{ color: "var(--color-accent-ink)" }}
           >
             View full profile on GitHub

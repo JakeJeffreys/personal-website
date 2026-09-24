@@ -62,16 +62,6 @@ export default function Home() {
             >
               Jake Jeffreys
             </span>
-            {" · "}
-            <a
-              href="https://github.com/jakejeffreys/personal-website"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline decoration-dotted underline-offset-4 transition-colors"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              View source
-            </a>
           </p>
         </div>
       </footer>

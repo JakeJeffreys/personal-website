@@ -167,7 +167,7 @@ export default function Nav() {
 
         {/* Mobile hamburger */}
         <button
-          className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 focus:outline-none md:hidden"
+          className="-mr-2 flex h-11 w-11 flex-col items-center justify-center gap-1.5 focus:outline-none md:hidden"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
@@ -230,6 +230,18 @@ export default function Nav() {
                 </motion.li>
               ))}
             </ul>
+            {/* The header's theme toggle is desktop-only, so it lives here on mobile */}
+            {mounted && (
+              <div className="px-6 pb-5">
+                <button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="border px-4 py-2.5 font-mono text-xs font-semibold focus:outline-none"
+                  style={paperButton}
+                >
+                  {theme === "dark" ? "switch to day" : "switch to night"}
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

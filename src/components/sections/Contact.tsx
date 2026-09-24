@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 import { Scrawl } from "@/components/paper";
 
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
 const socialLinks = [
+  {
+    label: "Email",
+    href: "mailto:njjeffreys@gmail.com",
+    Icon: Mail,
+    description: "njjeffreys@gmail.com",
+  },
   {
     label: "GitHub",
     href: "https://github.com/jakejeffreys",
@@ -84,7 +88,7 @@ export default function Contact() {
                 style={{ color: "var(--color-text-muted)" }}
               >
                 I&apos;m always open to interesting conversations and new
-                opportunities. Either of these will reach me.
+                opportunities. Any of these will reach me.
               </p>
               <div className="mt-5">
                 <Scrawl arrow="right" rotate={-1.4}>
@@ -102,10 +106,11 @@ export default function Contact() {
                 <motion.a
                   key={label}
                   href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 pb-2"
-                  style={{ borderBottom: "1px solid var(--color-border)" }}
+                  {...(href.startsWith("mailto:")
+                    ? {}
+                    : { target: "_blank", rel: "noopener noreferrer" })}
+                  className="group flex items-center gap-3 border-b pb-2 last:border-b-0"
+                  style={{ borderColor: "var(--color-border)" }}
                   whileHover={{ x: 4 }}
                   transition={{ type: "spring", stiffness: 400, damping: 24 }}
                 >
@@ -127,21 +132,6 @@ export default function Contact() {
                   </span>
                 </motion.a>
               ))}
-
-              {/* Ruled address lines, as on a real postcard back */}
-              <div className="mt-2 flex flex-col gap-3" aria-hidden="true">
-                {[0, 1].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="h-px origin-left"
-                    style={{ background: "var(--color-border)" }}
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: EASE }}
-                  />
-                ))}
-              </div>
             </div>
           </div>
         </motion.div>

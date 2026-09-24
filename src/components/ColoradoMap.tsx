@@ -20,7 +20,7 @@ export default function ColoradoMap({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 300 220"
-      className={cn("w-[260px] h-[190px]", className)}
+      className={cn("w-[300px] h-[220px] lg:w-[360px] lg:h-[264px]", className)}
       role="img"
       aria-label="Hand-drawn map of Colorado with Denver marked"
     >

@@ -17,7 +17,9 @@ const NAV_COMMANDS = [
 
 function scrollTo(href: string) {
   const el = document.querySelector(href);
+  // Sections only exist on the home page; from anywhere else (the 404), go there.
   if (el) el.scrollIntoView({ behavior: "smooth" });
+  else window.location.href = `/${href}`;
 }
 
 export default function CommandPalette() {

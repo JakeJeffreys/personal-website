@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/paper";
 
@@ -15,6 +16,36 @@ function fadeUpProps(delay = 0) {
     viewport: { once: true, margin: "-80px" } as const,
     transition: { duration: 0.5, ease: "easeOut" as const, delay },
   };
+}
+
+/**
+ * Lazy photos in a moving strip would otherwise pop in as blank white boxes.
+ * Instead the frame shows unexposed film (surface-2) and the photo develops
+ * in when it arrives. Opacity is an inline style so the layout's <noscript>
+ * rule still reveals it without JS.
+ */
+function DevelopingPhoto({ src, size }: { src: string; size: number }) {
+  const [developed, setDeveloped] = useState(false);
+  return (
+    <div style={{ height: size - 44, background: "var(--color-surface-2)" }}>
+      <Image
+        src={src}
+        alt=""
+        width={size * 2}
+        height={(size - 44) * 2}
+        sizes={`${size}px`}
+        quality={70}
+        draggable={false}
+        onLoad={() => setDeveloped(true)}
+        className="h-full w-full object-cover"
+        style={{
+          opacity: developed ? 1 : 0,
+          filter: developed ? "none" : "sepia(0.6) brightness(1.15)",
+          transition: "opacity 0.8s ease-out, filter 1.4s ease-out",
+        }}
+      />
+    </div>
+  );
 }
 
 export default function Instagram({ photos }: { photos: string[] }) {
@@ -133,12 +164,15 @@ export default function Instagram({ photos }: { photos: string[] }) {
 
   return (
     <section id="instagram" className="py-20 overflow-hidden">
-      <div className="max-w-5xl mx-auto">
-        <SectionHeading
-          title="life outside the terminal"
-          eyebrow="the photo box"
-          variant="taped"
-        />
+      {/* Padding lives here, not on the section, so the marquee stays full-bleed */}
+      <div className="px-6">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeading
+            title="life outside the terminal"
+            eyebrow="the photo box"
+            variant="taped"
+          />
+        </div>
       </div>
 
       <motion.div {...fadeUpProps(0.1)}>
@@ -154,7 +188,9 @@ export default function Instagram({ photos }: { photos: string[] }) {
           />
 
           <div
-            className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
+            // Vertical padding gives the tilted frames, hover lift and shadow room
+            // inside the clip box; the negative margin keeps section spacing as-is.
+            className="-my-6 overflow-hidden py-6 cursor-grab active:cursor-grabbing select-none"
             role="group"
             aria-label="Photo feed from Instagram"
             onMouseDown={onMouseDown}
@@ -188,14 +224,7 @@ export default function Instagram({ photos }: { photos: string[] }) {
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/instagram/${photo}`}
-                    alt=""
-                    draggable={false}
-                    className="h-full w-full object-cover"
-                    style={{ height: PHOTO_SIZE - 44 }}
-                  />
+                  <DevelopingPhoto src={`/instagram/${photo}`} size={PHOTO_SIZE} />
                 </motion.div>
               ))}
             </div>

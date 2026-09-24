@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PaperCard, SectionHeading, Scrawl } from "@/components/paper";
+import { PaperCard, SectionHeading } from "@/components/paper";
 
 const interests = [
   "Skiing",
@@ -36,8 +36,8 @@ const currently = [
 ];
 
 const BIO = [
-  "I'm a backend software engineer in Denver with 8+ years building and running distributed systems on AWS. At Ibotta I own the architecture of the event-driven services and REST APIs behind our partner network: Walmart, 7-Eleven, DoorDash, Instacart.",
-  "Mostly TypeScript and Node.js, with Terraform under everything. A lot of the work is unglamorous: queue processing that keeps going when a partner's API doesn't, observability set up before there's an incident rather than after, infrastructure you can rebuild from source. Enough years of on-call will do that to you.",
+  "I'm a backend software engineer in Denver with 8+ years building and running distributed systems on AWS. At Ibotta I own the architecture of the event-driven services and REST APIs behind our partner network, which includes publishers like Walmart, 7-Eleven, DoorDash, and Instacart.",
+  "A lot of my time goes into the parts that keep things running: queue processing that keeps going when a partner's API doesn't, observability set up before there's an incident rather than after, infrastructure you can rebuild from source. Enough years of on-call will do that to you.",
   "Originally from Portland, Oregon, I moved to Denver in 2018 and haven't looked back. The mountains are a big part of my life — skiing in winter, backpacking and rafting in summer. I'm also into live music, barbecue, and in my free time I enjoy exploring real estate and personal finance, including managing my own Airbnb property.",
 ];
 
@@ -68,12 +68,6 @@ export default function About() {
                 {para}
               </motion.p>
             ))}
-
-            <div className="mt-2">
-              <Scrawl arrow="left" rotate={-1.8}>
-                ask me about the 14ers
-              </Scrawl>
-            </div>
           </div>
 
           {/* Index cards */}
@@ -153,7 +147,7 @@ export default function About() {
               fontSize: "1.4rem",
             }}
           >
-            things I&apos;d rather be doing
+            off the clock
           </p>
           <div className="flex flex-wrap gap-2.5">
             {interests.map((interest, i) => {

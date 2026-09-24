@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/CommandPaletteProvider";
 import CommandPalette from "@/components/CommandPalette";
+import ConsoleGreeting from "@/components/ConsoleGreeting";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -58,8 +59,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased`}>
+    // Font variables go on <html>, not <body>: Tailwind's @theme declares
+    // --font-hand: var(--font-caveat) etc. on :root, and a var() there can only
+    // resolve against variables defined on :root itself.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable}`}
+    >
+      <body className="antialiased">
         {/*
           Framer Motion server-renders its `initial` state, so ~90 elements ship
           with inline opacity:0 and only fade in once JS hydrates. Without this,
@@ -76,6 +84,7 @@ export default function RootLayout({
           </CommandPaletteProvider>
         </ThemeProvider>
         <Analytics />
+        <ConsoleGreeting />
       </body>
     </html>
   );
