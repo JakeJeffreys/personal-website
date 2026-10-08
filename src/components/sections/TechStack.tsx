@@ -63,7 +63,6 @@ export default function TechStack() {
     <section
       id="tech-stack"
       className="px-6 py-24"
-      style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="mx-auto max-w-5xl">
         <SectionHeading title="the toolbox" eyebrow="what I reach for" variant="dashed" />

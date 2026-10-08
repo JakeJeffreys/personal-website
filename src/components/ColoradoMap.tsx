@@ -1,9 +1,21 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+const RIDGES = [
+  "M62 118 l14 -22 14 22",
+  "M86 128 l16 -28 16 28",
+  "M114 112 l13 -20 13 20",
+  "M74 150 l12 -18 12 18",
+  "M104 158 l14 -21 14 21",
+  "M136 140 l12 -18 12 18",
+];
+
+const DRAW = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: { pathLength: 1, opacity: 1 },
+};
 
 /**
  * Hand-drawn Colorado with a pin on Denver.
@@ -17,8 +29,12 @@ const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
  * point.
  */
 export default function ColoradoMap({ className }: { className?: string }) {
+  const reduceMotion = useReducedMotion();
   return (
-    <svg
+    <motion.svg
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.5 }}
       viewBox="0 0 300 220"
       className={cn("w-[300px] h-[220px] lg:w-[360px] lg:h-[264px]", className)}
       role="img"
@@ -31,20 +47,25 @@ export default function ColoradoMap({ className }: { className?: string }) {
         stroke="var(--color-text)"
         strokeWidth="2.2"
         strokeLinejoin="round"
-        initial={{ pathLength: 0 }}
-        whileInView={{ pathLength: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.4, ease: EASE }}
+        variants={{ hidden: { pathLength: 0 }, visible: { pathLength: 1 } }}
+        transition={{ duration: reduceMotion ? 0 : 2.1, delay: reduceMotion ? 0 : 0.3, ease: "easeInOut" }}
       />
 
       {/* Rockies — hatched ridgeline running down the western half */}
       <g stroke="var(--color-border)" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-        <path d="M62 118 l14 -22 14 22" fill="none" />
-        <path d="M86 128 l16 -28 16 28" fill="none" />
-        <path d="M114 112 l13 -20 13 20" fill="none" />
-        <path d="M74 150 l12 -18 12 18" fill="none" />
-        <path d="M104 158 l14 -21 14 21" fill="none" />
-        <path d="M136 140 l12 -18 12 18" fill="none" />
+        {RIDGES.map((d, index) => (
+          <motion.path
+            key={d}
+            d={d}
+            fill="none"
+            variants={DRAW}
+            transition={{
+              duration: reduceMotion ? 0 : 0.6,
+              delay: reduceMotion ? 0 : 0.8 + index * 0.18,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </g>
 
       {/* Pencil grid, very faint */}
@@ -55,10 +76,8 @@ export default function ColoradoMap({ className }: { className?: string }) {
 
       {/* Denver pin */}
       <motion.g
-        initial={{ opacity: 0, y: -10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ type: "spring", stiffness: 300, damping: 16, delay: 1.1 }}
+        variants={{ hidden: { opacity: 0, y: -8 }, visible: { opacity: 1, y: 0 } }}
+        transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 220, damping: 20, delay: 2.4 }}
       >
         <circle cx="182" cy="106" r="12" fill="var(--color-accent-glow)" />
         <circle
@@ -94,6 +113,6 @@ export default function ColoradoMap({ className }: { className?: string }) {
       >
         5,280 FT · 39.74°N 104.99°W
       </text>
-    </svg>
+    </motion.svg>
   );
 }

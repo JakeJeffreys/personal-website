@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PaperCard, SectionHeading } from "@/components/paper";
 
 const interests = [
@@ -29,10 +29,10 @@ const stats = [
 ];
 
 const currently = [
-  "Planning a wedding",
-  "Building backend services at Ibotta",
-  "Trying to keep up with the rate of change in AI tooling",
-  "Exploring the Colorado 14ers",
+  { label: "Building", text: "Backend services at Ibotta" },
+  { label: "Learning", text: "Keeping up with the rate of change in AI tooling" },
+  { label: "Planning", text: "A wedding" },
+  { label: "Exploring", text: "The Colorado 14ers" },
 ];
 
 const BIO = [
@@ -47,6 +47,7 @@ const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const STICKER_ROTATIONS = [-2.2, 1.4, -0.8, 2.1, -1.6, 0.9, -2.6, 1.8];
 
 export default function About() {
+  const reduceMotion = useReducedMotion();
   return (
     <section id="about" className="relative px-6 py-24">
       <div className="relative mx-auto max-w-5xl">
@@ -104,26 +105,29 @@ export default function About() {
             </PaperCard>
 
             <PaperCard tilt="b" delay={0.15} className="p-6">
-              <p
-                className="mb-4 font-mono text-xs font-semibold uppercase tracking-widest"
-                style={{ color: "var(--color-accent-ink)" }}
-              >
-                Currently
-              </p>
-              <ul className="space-y-2">
+              <div className="mb-5 border-b pb-4">
+                <div className="mb-2 flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-widest">
+                  <span style={{ color: "var(--color-accent-ink)" }}>Currently</span>
+                  <time dateTime="2026-10-07" style={{ color: "var(--color-text-dim)" }}>Oct 2026</time>
+                </div>
+                <h3 className="text-3xl leading-none" style={{ fontFamily: "var(--font-hand)" }}>
+                  release notes, life edition
+                </h3>
+              </div>
+              <ul className="space-y-4">
                 {currently.map((item) => (
                   <li
-                    key={item}
-                    className="flex items-start gap-2 text-sm"
+                    key={item.label}
+                    className="grid grid-cols-[5rem_1fr] items-baseline gap-3 text-sm"
                     style={{ color: "var(--color-text-muted)" }}
                   >
-                    {/* Hand-drawn dash rather than a perfect dot */}
                     <span
-                      className="mt-2.5 block h-px w-2.5 shrink-0"
-                      style={{ background: "var(--color-accent)" }}
-                      aria-hidden="true"
-                    />
-                    {item}
+                      className="font-mono text-[10px] uppercase tracking-wide"
+                      style={{ color: "var(--color-accent-ink)" }}
+                    >
+                      {item.label}
+                    </span>
+                    <span className="leading-relaxed">{item.text}</span>
                   </li>
                 ))}
               </ul>
@@ -168,16 +172,17 @@ export default function About() {
                     borderRadius: "999px",
                     boxShadow: "var(--shadow-paper)",
                   }}
-                  initial={{ opacity: 0, y: -10, rotate: 0 }}
-                  whileInView={{ opacity: 1, y: 0, rotate: rot }}
+                  initial={reduceMotion ? false : { opacity: 0, y: -14, scale: 1.08, rotate: rot * -2 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1, rotate: reduceMotion ? 0 : rot }}
                   viewport={{ once: true }}
                   transition={{
                     type: "spring",
                     stiffness: 300,
                     damping: 16,
-                    delay: i * 0.03,
+                    delay: reduceMotion ? 0 : i * 0.045,
+                    ...(reduceMotion ? { duration: 0 } : {}),
                   }}
-                  whileHover={{
+                  whileHover={reduceMotion ? undefined : {
                     y: -4,
                     rotate: rot * -1.4,
                     boxShadow: "var(--shadow-paper-lift)",

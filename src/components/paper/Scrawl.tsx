@@ -1,9 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 /**
  * A margin annotation in the author's hand.
@@ -23,6 +21,7 @@ export default function Scrawl({
   className?: string;
   children: React.ReactNode;
 }) {
+  const reduceMotion = useReducedMotion();
   const Arrow = (
     <motion.svg
       width="46"
@@ -39,10 +38,10 @@ export default function Scrawl({
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
-        initial={{ pathLength: 0, opacity: 0 }}
+        initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
         whileInView={{ pathLength: 1, opacity: 1 }}
         viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.6, ease: EASE }}
+        transition={{ duration: reduceMotion ? 0 : 0.95, ease: "easeInOut" }}
       />
     </motion.svg>
   );

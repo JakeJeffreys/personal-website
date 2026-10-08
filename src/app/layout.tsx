@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   keywords: ["backend engineer", "software engineer", "AWS", "distributed systems", "event-driven", "TypeScript", "Terraform", "Denver", "Colorado"],
   authors: [{ name: "Jake Jeffreys" }],
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.svg?v=paper-jj-small",
   },
   openGraph: {
     title: "Jake Jeffreys — Senior Software Engineer",

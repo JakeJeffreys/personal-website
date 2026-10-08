@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { SectionHeading } from "@/components/paper";
 
 /** Alternating tilts so the strip reads as photos dropped on a table. */
@@ -49,6 +49,7 @@ function DevelopingPhoto({ src, size }: { src: string; size: number }) {
 }
 
 export default function Instagram({ photos }: { photos: string[] }) {
+  const reduceMotion = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const positionRef = useRef(0);
@@ -75,7 +76,7 @@ export default function Instagram({ photos }: { photos: string[] }) {
       const dt = now - lastTime;
       lastTime = now;
 
-      if (!isDraggingRef.current && !paused) {
+      if (!isDraggingRef.current && !paused && !reduceMotion) {
         positionRef.current += SPEED * (dt / 16.67);
         if (positionRef.current >= TOTAL_WIDTH) {
           positionRef.current -= TOTAL_WIDTH;
@@ -90,7 +91,7 @@ export default function Instagram({ photos }: { photos: string[] }) {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [paused, TOTAL_WIDTH]);
+  }, [paused, TOTAL_WIDTH, reduceMotion]);
 
   // Mouse drag
   const onMouseDown = (e: React.MouseEvent) => {
@@ -175,7 +176,7 @@ export default function Instagram({ photos }: { photos: string[] }) {
         </div>
       </div>
 
-      <motion.div {...fadeUpProps(0.1)}>
+      <motion.div {...(reduceMotion ? {} : fadeUpProps(0.1))}>
         {/* Fade masks on edges */}
         <div className="relative">
           <div
@@ -215,14 +216,25 @@ export default function Instagram({ photos }: { photos: string[] }) {
                     border: "1px solid var(--color-border)",
                     borderRadius: "var(--radius-card)",
                     boxShadow: "var(--shadow-paper)",
-                    transform: `rotate(${POLAROID_ROTATIONS[i % POLAROID_ROTATIONS.length]}deg)`,
+
                   }}
-                  whileHover={{
+                  initial={reduceMotion ? false : {
+                    opacity: 0,
+                    y: 18,
+                    rotate: POLAROID_ROTATIONS[i % POLAROID_ROTATIONS.length] * -2,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                    rotate: reduceMotion ? 0 : POLAROID_ROTATIONS[i % POLAROID_ROTATIONS.length],
+                  }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  whileHover={reduceMotion ? undefined : {
                     rotate: 0,
                     y: -6,
                     boxShadow: "var(--shadow-paper-lift)",
                   }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 220, damping: 22 }}
                 >
                   <DevelopingPhoto src={`/instagram/${photo}`} size={PHOTO_SIZE} />
                 </motion.div>

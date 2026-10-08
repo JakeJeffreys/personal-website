@@ -35,7 +35,6 @@ export default function Hero() {
     <section
       id="hero"
       className="relative flex min-h-[88vh] flex-col items-center justify-center overflow-hidden py-20"
-      style={{ backgroundColor: "var(--color-background)" }}
     >
       {/* Faint ruled lines, like a legal pad under the content */}
       <div

@@ -277,7 +277,7 @@ export default async function GitHubActivity() {
   const recentEvents = events.slice(0, 10);
 
   return (
-    <section id="github" className="py-20 px-6" style={{ background: "var(--color-surface)" }}>
+    <section id="github" className="py-20 px-6">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <SectionHeading title="what I've been building" eyebrow="github" variant="torn" />

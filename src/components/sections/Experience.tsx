@@ -7,12 +7,8 @@ import { SectionHeading } from "@/components/paper";
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 /**
- * Experience is deliberately the sober section.
- *
- * No handwriting, no tilt, no stickers, no peel-on-hover. This is the part a
- * recruiter reads, and it has to scan like a printed CV on the same paper
- * stock. The playfulness in every other section is what earns this one its
- * restraint — don't add it back here.
+ * Company entries stay restrained so the work history scans like a printed
+ * CV on the same paper stock.
  */
 function CompanyItem({ company, index }: { company: Company; index: number }) {
   const isCurrent = company.roles[0].endDate === null;
@@ -153,7 +149,6 @@ export default function Experience() {
     <section
       id="experience"
       className="relative px-6 py-24"
-      style={{ background: "var(--color-surface-2)" }}
     >
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading title="experience" eyebrow="the résumé bit" variant="dashed" />

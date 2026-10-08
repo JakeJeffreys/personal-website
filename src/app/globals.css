@@ -137,6 +137,22 @@ body > * {
   z-index: 2;
 }
 
+/* Quiet paper backgrounds leave the playful details to the content. */
+.paper-page {
+  background: linear-gradient(
+    to bottom,
+    var(--color-background) 12%,
+    var(--color-surface-2) 32%,
+    var(--color-background) 52%,
+    var(--color-surface) 68%,
+    var(--color-background) 86%
+  );
+}
+
+.paper-page > section {
+  scroll-margin-top: 5rem;
+}
+
 /* Highlighter swipe rather than an inverted block */
 ::selection {
   background-color: var(--color-accent-glow);

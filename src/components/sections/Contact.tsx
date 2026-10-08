@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 import { Scrawl } from "@/components/paper";
 
@@ -31,6 +31,7 @@ const socialLinks = [
  * postcard reads as one object.
  */
 export default function Contact() {
+  const reduceMotion = useReducedMotion();
   return (
     <section id="contact" className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
@@ -48,7 +49,11 @@ export default function Contact() {
           transition={{ type: "spring", stiffness: 240, damping: 20 }}
         >
           {/* Stamp */}
-          <div
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, scale: 1.35, rotate: 12 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: reduceMotion ? 0 : -5 }}
+            viewport={{ once: true, amount: 0.8 }}
+            transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 340, damping: 22, delay: 0.25 }}
             className="absolute right-5 top-5 flex h-16 w-14 flex-col items-center justify-center"
             style={{
               border: "2px dashed var(--color-border)",
@@ -61,7 +66,7 @@ export default function Contact() {
             <span className="mt-1 font-mono text-[8px] uppercase tracking-wider">
               Denver
             </span>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 gap-8 p-8 sm:p-10 md:grid-cols-[1.1fr_1fr]">
             {/* Left half — the message */}
