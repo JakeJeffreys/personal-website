@@ -1,0 +1,42 @@
+name: Feature request
+description: Something for the build agent to make. Add the `build` label when it's ready.
+title: "[feature] "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What should exist when this is done, and why.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checkable statements. The review agent judges the PR against these.
+      placeholder: |
+        - [ ] Visiting /lab/dice shows a button that rolls 2d6
+        - [ ] Works at 390px wide
+    validations:
+      required: true
+  - type: input
+    id: pages
+    attributes:
+      label: Pages affected
+      placeholder: "/lab/dice (new), /lab"
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Lab or core
+      description: Lab experiments live under /lab and merge on looser rules. Core is the homepage, résumé, nav, and global styles.
+      options:
+        - lab
+        - core
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Links, references, screenshots, anything else.
