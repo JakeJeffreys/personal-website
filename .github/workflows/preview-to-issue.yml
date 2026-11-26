@@ -1,0 +1,47 @@
+name: Preview to issue
+
+# Vercel posts the preview URL on the PR; this mirrors it onto the issue the PR implements,
+# so the issue (what Jake files from a phone) always links to the latest preview.
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
+jobs:
+  comment:
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'Preview'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: preview-to-issue-${{ github.event.deployment.sha }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SHA: ${{ github.event.deployment.sha }}
+      URL: ${{ github.event.deployment_status.environment_url }}
+    steps:
+      - name: Comment preview URL on linked issues
+        run: |
+          prs=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[] | select(.state == "open") | .number')
+          for pr in $prs; do
+            issues=$(gh pr view "$pr" --repo "$REPO" --json body --jq '.body' \
+              | grep -oiE '\b(implements|refs)[[:space:]]+#[0-9]+' | grep -oE '[0-9]+$' | sort -u || true)
+            for issue in $issues; do
+              marker="<!-- preview-url pr-$pr -->"
+              body=$(printf '%s\n🔍 Preview for #%s is ready: %s\n\n<sub>Updated for %s. Vercel previews require a Vercel login.</sub>\n' \
+                "$marker" "$pr" "$URL" "${SHA:0:7}")
+              id=$(gh api "repos/$REPO/issues/$issue/comments" --paginate \
+                --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+              if [ -n "$id" ]; then
+                gh api -X PATCH "repos/$REPO/issues/comments/$id" -f body="$body" > /dev/null
+              else
+                gh issue comment "$issue" --repo "$REPO" --body "$body"
+              fi
+              echo "Commented on #$issue for PR #$pr"
+            done
+          done
