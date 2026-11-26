@@ -38,3 +38,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .superpowers/
+
+# ci artifacts
+/screenshots/
+/lighthouse/
+/.lighthouseci/
+/test-results/
+/playwright-report/
