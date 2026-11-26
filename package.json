@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test --project=mobile --project=desktop",
+    "screenshots": "playwright test --project=screenshots"
   },
   "dependencies": {
     "@radix-ui/react-navigation-menu": "^1.2.5",
@@ -26,6 +29,9 @@
     "tailwind-merge": "^3.2.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@lhci/cli": "^0.16.1",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
