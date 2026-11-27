@@ -99,11 +99,12 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           # CI on agent PRs is started by the build agent's pushes
           allowed_bots: claude[bot]
+          # The action splits --allowedTools on every comma, even inside Bash(...), so rules must not contain one.
           claude_args: >-
             --model ${{ env.REVIEW_MODEL }}
             --max-turns 30
             --permission-mode default
-            --allowedTools "Read(/${{ runner.temp }}/ci-report/**),Bash(gh pr view ${{ steps.ctx.outputs.pr }} --json title,body),Bash(gh pr diff ${{ steps.ctx.outputs.pr }}),Bash(gh issue view ${{ steps.ctx.outputs.issue }} --json title,body),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
+            --allowedTools "Read(/${{ runner.temp }}/ci-report/**),Bash(gh pr view ${{ steps.ctx.outputs.pr }} --json body),Bash(gh pr diff ${{ steps.ctx.outputs.pr }}),Bash(gh issue view ${{ steps.ctx.outputs.issue }} --json body),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
             --disallowedTools "Edit,Write,NotebookEdit,Bash(git commit:*),Bash(git push:*),Bash(git add:*)"
             --json-schema '{"type":"object","additionalProperties":false,"required":["verdict","summary","criteria","findings"],"properties":{"verdict":{"type":"string","enum":["approve","request_changes"]},"summary":{"type":"string"},"criteria":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["criterion","met","evidence"],"properties":{"criterion":{"type":"string"},"met":{"type":"boolean"},"evidence":{"type":"string"}}}},"findings":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["severity","where","comment"],"properties":{"severity":{"type":"string","enum":["blocking","nit"]},"where":{"type":"string"},"comment":{"type":"string"}}}}}}'
           prompt: |
@@ -113,8 +114,8 @@ jobs:
             already passed, so don't re-check what CI covers. Judge what CI can't.
 
             Gather:
-            - The issue and its acceptance criteria: `gh issue view ${{ steps.ctx.outputs.issue }} --json title,body`
-            - The PR description: `gh pr view ${{ steps.ctx.outputs.pr }} --json title,body`
+            - The issue and its acceptance criteria: `gh issue view ${{ steps.ctx.outputs.issue }} --json body`
+            - The PR description: `gh pr view ${{ steps.ctx.outputs.pr }} --json body`
             - The change: `git diff origin/main...HEAD` (read full files with Read where you need context)
             - CLAUDE.md, the rules the change must follow
             - Screenshots at 390px and 1280px, and Lighthouse scores, under ${{ runner.temp }}/ci-report/
