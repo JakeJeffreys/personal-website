@@ -149,7 +149,10 @@ jobs:
             exit 0
           fi
           printf '%s' "$RESULT" > "$RUNNER_TEMP/review.json"
-          verdict=$(node scripts/ci/review-body.mjs "$RUNNER_TEMP/review.json" "$SHA" 2>&1 >"$RUNNER_TEMP/review.md" | tail -1)
+          # The workspace is the PR's code; take the formatter from this workflow's own commit instead.
+          git show "$GITHUB_SHA:scripts/ci/review-body.mjs" > "$RUNNER_TEMP/review-body.mjs"
+          node "$RUNNER_TEMP/review-body.mjs" "$RUNNER_TEMP/review.json" "$SHA" > "$RUNNER_TEMP/review.md" 2> "$RUNNER_TEMP/verdict.txt"
+          verdict=$(tail -1 "$RUNNER_TEMP/verdict.txt")
           flag=$([ "$verdict" = approve ] && echo --approve || echo --request-changes)
           # Approving needs "Allow GitHub Actions to create and approve pull requests"; fall back to a comment review.
           gh pr review "$PR" --repo "$GITHUB_REPOSITORY" "$flag" --body-file "$RUNNER_TEMP/review.md" \
