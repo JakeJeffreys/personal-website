@@ -7,4 +7,11 @@ export type Experiment = {
 };
 
 // Newest first. Each slug has a page at src/app/lab/<slug>/page.tsx.
-export const experiments: Experiment[] = [];
+export const experiments: Experiment[] = [
+  {
+    slug: "dice",
+    title: "Dice",
+    blurb: "Roll one to six paper dice and see the total.",
+    added: "2026-11-27",
+  },
+];
