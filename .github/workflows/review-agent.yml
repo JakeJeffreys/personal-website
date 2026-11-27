@@ -132,9 +132,16 @@ jobs:
                next to the paper style.
             4. Real bugs: logic errors, unhandled states, things that will break in a browser.
 
-            Approve only when every criterion is met and there are no blocking findings. Style preferences and small
-            polish are nits and don't block. Keep the summary to two or three sentences, and evidence and comments
-            to one line each: Jake reads this on a phone.
+            Severity is not a judgment call:
+            - Blocking: anything that makes an acceptance criterion false in any case, edge cases included (a criterion
+              that holds "most of the time" is not met). Also any CLAUDE.md violation, accessibility failure, or bug a
+              visitor could hit.
+            - Nit: style preferences, polish, and suggestions where the behavior is already correct.
+            If you find a blocking issue that touches a criterion, mark that criterion not met and cite the finding.
+            Never list the same problem as a nit in one place and a pass in another.
+
+            Approve only when every criterion is met and there are no blocking findings. Keep the summary to two or
+            three sentences, and evidence and comments to one line each: Jake reads this on a phone.
 
       - name: Post the review
         if: steps.ctx.outputs.issue && steps.review.outputs.structured_output
