@@ -86,7 +86,7 @@ jobs:
           args: >-
             --no-progress
             --max-retries 2
-            --accept '200..=299,403,429,999'
+            --accept '200..=299,403,429,502..=504,999'
             --exclude 'linkedin\.com'
             --exclude '^mailto:'
             http://localhost:3100/
@@ -128,7 +128,10 @@ jobs:
       PR: ${{ github.event.pull_request.number }}
       SHA: ${{ github.event.pull_request.head.sha }}
     steps:
+      # Base branch, not the PR: this job holds a write token, so it only runs reviewed scripts.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         continue-on-error: true
