@@ -54,13 +54,14 @@ export default function DiceRoller() {
   const [values, setValues] = useState<number[]>([]);
   const [rolling, setRolling] = useState(false);
   const [message, setMessage] = useState("");
-  const timers = useRef<{ tick?: ReturnType<typeof setInterval>; end?: ReturnType<typeof setTimeout> }>({});
+  const timers = useRef<{ tick?: ReturnType<typeof setInterval>; end?: ReturnType<typeof setTimeout>; say?: ReturnType<typeof setTimeout> }>({});
 
   useEffect(() => {
     const t = timers.current;
     return () => {
       clearInterval(t.tick);
       clearTimeout(t.end);
+      clearTimeout(t.say);
     };
   }, []);
 
@@ -71,8 +72,13 @@ export default function DiceRoller() {
       setValues(final);
       setRolling(false);
       const sum = final.reduce((a, b) => a + b, 0);
-      setMessage(`Rolled ${count} ${count === 1 ? "die" : "dice"}: ${final.join(", ")}. Total ${sum}.`);
+      // Set after a beat so an identical result still changes the live region and is re-announced.
+      timers.current.say = setTimeout(
+        () => setMessage(`Rolled ${count} ${count === 1 ? "die" : "dice"}: ${final.join(", ")}. Total ${sum}.`),
+        100,
+      );
     };
+    clearTimeout(timers.current.say);
     setMessage("");
     if (reduce) {
       finish();
