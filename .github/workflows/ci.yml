@@ -106,9 +106,9 @@ jobs:
           ROUTES: ${{ steps.changed.outputs.routes }}
         run: |
           args=()
-          for r in $(printf '%s\n' / /lab ${ROUTES//,/ } | sort -u); do
+          while read -r r; do
             args+=("--collect.url=http://localhost:$PORT$r")
-          done
+          done < <({ printf '%s\n' / /lab; tr ',' '\n' <<< "$ROUTES"; } | grep . | sort -u)
           ./node_modules/.bin/lhci collect "${args[@]}"
           ./node_modules/.bin/lhci upload
           node scripts/ci/lighthouse-summary.mjs

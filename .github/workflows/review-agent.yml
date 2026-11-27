@@ -88,7 +88,7 @@ jobs:
         run: |
           gh run download "${{ steps.ctx.outputs.run_id }}" --repo "$GITHUB_REPOSITORY" \
             --name ci-report --dir "$RUNNER_TEMP/ci-report" || echo "No ci-report artifact."
-          ls -R "$RUNNER_TEMP/ci-report" 2>/dev/null | head -20 || true
+          find "$RUNNER_TEMP/ci-report" -type f 2>/dev/null | head -20 || true
 
       - name: Review agent
         id: review
