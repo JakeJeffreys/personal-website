@@ -1,0 +1,60 @@
+# When may a PR merge without Jake? Evaluated by scripts/ci/merge-policy.mjs (via the Merge gate workflow)
+# after the review agent posts. The copy on main is always the one used, so a PR can't loosen its own rules.
+
+# true: only label PRs would-merge / needs-jake and explain why. Jake merges by hand.
+# false: PRs that pass get GitHub's native auto-merge (squash).
+observe: true
+
+# Every PR, every zone: CI green, the review agent approved the current commit, not a draft.
+# Any of these files means needs-jake, no matter what else the PR does.
+never_auto_merge:
+  - ".github/**"
+  - merge-policy.yml
+  - CLAUDE.md
+  - "scripts/ci/**"
+  - "tests/**"
+  - package.json
+  - bun.lock
+  - next.config.ts
+  - vercel.json
+  - eslint.config.mjs
+  - playwright.config.ts
+  - lighthouserc.json
+  - postcss.config.mjs
+  - tsconfig.json
+
+# Lighthouse categories compared against the latest main build. A drop larger than the zone's
+# tolerance (in points, 0-100) is a regression. Pages new in this PR only face CI's absolute thresholds.
+lighthouse_categories: [performance, accessibility, seo, best-practices]
+
+# Each changed file lands in the first zone whose paths match, otherwise `default`.
+# A PR gets the strictest settings of every zone it touches.
+zones:
+  - name: lab
+    paths: ["src/app/lab/**"]
+    max_lines: 600
+    lighthouse_tolerance: 5
+
+  - name: personal
+    # Facts about Jake: always a human read.
+    paths:
+      - "src/content/**"
+      - src/components/sections/About.tsx
+      - src/components/sections/Experience.tsx
+      - public/resume.pdf
+    auto_merge: false
+
+  - name: global
+    # Every visitor sees these: homepage, layout, styles, nav, design primitives.
+    paths:
+      - src/app/page.tsx
+      - src/app/layout.tsx
+      - src/app/globals.css
+      - src/components/Nav.tsx
+      - "src/components/paper/**"
+    max_lines: 150
+    lighthouse_tolerance: 2
+
+default:
+  max_lines: 400
+  lighthouse_tolerance: 3
