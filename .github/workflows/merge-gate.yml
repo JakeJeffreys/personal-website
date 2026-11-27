@@ -28,12 +28,14 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       PR: ${{ inputs.pr }}
-      WORK: ${{ runner.temp }}/merge
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Collect PR context
-        run: bash scripts/ci/merge-context.sh "$PR" "$WORK"
+        run: |
+          # The runner context isn't available in job-level env, so set the work dir here.
+          echo "WORK=$RUNNER_TEMP/merge" >> "$GITHUB_ENV"
+          bash scripts/ci/merge-context.sh "$PR" "$RUNNER_TEMP/merge"
 
       - name: Evaluate merge-policy.yml
         id: policy
