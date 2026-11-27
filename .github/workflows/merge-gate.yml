@@ -1,0 +1,66 @@
+name: Merge gate
+
+# Applies merge-policy.yml to one PR. The review agent dispatches this after posting a review;
+# Jake can also run it by hand: gh workflow run merge-gate.yml -f pr=<n>
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: PR number
+        required: true
+
+permissions: {}
+
+jobs:
+  evaluate:
+    # Policy and scripts must come from main, never from a PR's branch.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: merge-gate-${{ inputs.pr }}
+      cancel-in-progress: true
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ inputs.pr }}
+      WORK: ${{ runner.temp }}/merge
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Collect PR context
+        run: bash scripts/ci/merge-context.sh "$PR" "$WORK"
+
+      - name: Evaluate merge-policy.yml
+        id: policy
+        run: |
+          yq -o=json merge-policy.yml > "$WORK/policy.json"
+          node scripts/ci/merge-policy.mjs "$WORK/policy.json" "$WORK/context.json" "$WORK/comment.md" > "$WORK/result.json"
+          cat "$WORK/result.json"
+          echo "decision=$(jq -r .decision "$WORK/result.json")" >> "$GITHUB_OUTPUT"
+          echo "observe=$(jq -r .observe "$WORK/result.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Label, comment, and merge if allowed
+        env:
+          DECISION: ${{ steps.policy.outputs.decision }}
+          OBSERVE: ${{ steps.policy.outputs.observe }}
+        run: |
+          if [ "$DECISION" = merge ]; then add=would-merge; drop=needs-jake; else add=needs-jake; drop=would-merge; fi
+          gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" -f "labels[]=$add" > /dev/null
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$PR/labels/$drop" > /dev/null 2>&1 || true
+
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.body | startswith("<!-- merge-policy -->")) | .id' | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F "body=@$WORK/comment.md" > /dev/null
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -F "body=@$WORK/comment.md" > /dev/null
+          fi
+
+          if [ "$DECISION" = merge ] && [ "$OBSERVE" = false ]; then
+            gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --auto --squash
+          fi

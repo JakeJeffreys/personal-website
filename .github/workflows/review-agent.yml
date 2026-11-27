@@ -31,7 +31,8 @@ jobs:
       group: review-${{ github.event.workflow_run.head_branch || inputs.pr }}
       cancel-in-progress: true
     permissions:
-      actions: read
+      # write only to dispatch the merge gate
+      actions: write
       contents: read
       issues: read
       pull-requests: write
@@ -50,8 +51,8 @@ jobs:
           if [ -n "$INPUT_PR" ]; then
             pr="$INPUT_PR"
             sha=$(gh pr view "$pr" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)
-            run_id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow CI --commit "$sha" --status success \
-              --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+            run_id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow CI --commit "$sha" --limit 20 \
+              --json databaseId,conclusion --jq '[.[] | select(.conclusion == "success")][0].databaseId // empty')
           else
             pr=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$RUN_BRANCH" --state open \
               --json number,headRefOid --jq ".[] | select(.headRefOid == \"$RUN_SHA\") | .number")
@@ -144,6 +145,7 @@ jobs:
             three sentences, and evidence and comments to one line each: Jake reads this on a phone.
 
       - name: Post the review
+        id: post
         if: steps.ctx.outputs.issue && steps.review.outputs.structured_output
         env:
           RESULT: ${{ steps.review.outputs.structured_output }}
@@ -165,3 +167,8 @@ jobs:
           gh pr review "$PR" --repo "$GITHUB_REPOSITORY" "$flag" --body-file "$RUNNER_TEMP/review.md" \
             || gh pr review "$PR" --repo "$GITHUB_REPOSITORY" --comment --body-file "$RUNNER_TEMP/review.md"
           echo "Posted: $verdict"
+          echo "posted=true" >> "$GITHUB_OUTPUT"
+
+      - name: Hand off to the merge gate
+        if: steps.post.outputs.posted
+        run: gh workflow run merge-gate.yml --repo "$GITHUB_REPOSITORY" --ref main -f pr="${{ steps.ctx.outputs.pr }}"
