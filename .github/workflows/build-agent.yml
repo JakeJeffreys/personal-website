@@ -60,6 +60,7 @@ jobs:
       - run: bun install --frozen-lockfile
 
       - name: Build agent
+        id: agent
         uses: anthropics/claude-code-action@4411a9e9b0283becf4b924f7bce360fd7756c78c # v1
         env:
           CLAUDE_BRANCH: ${{ env.BRANCH }}
@@ -95,6 +96,8 @@ jobs:
 
       - name: Report back on the issue
         if: always()
+        env:
+          EXEC_FILE: ${{ steps.agent.outputs.execution_file }}
         run: |
           pr=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -n "$pr" ]; then
@@ -104,8 +107,9 @@ jobs:
             fi
             gh issue comment "$ISSUE" --body "✅ Opened #$pr. CI and the preview will report on it. Comment \`/revise <instructions>\` on the PR to redirect."
           else
-            gh issue edit "$ISSUE" --add-label needs-jake
-            gh issue comment "$ISSUE" --body "🛑 The build agent didn't open a PR. Its explanation is in the [run log]($RUN_URL)."
+            said=$(jq -r '[.[] | select(.type == "result")][-1].result // empty' "$EXEC_FILE" 2>/dev/null | head -c 1500 | sed 's/^/> /' || true)
+            gh api "repos/$GITHUB_REPOSITORY/issues/$ISSUE/labels" -f "labels[]=needs-jake" > /dev/null
+            gh issue comment "$ISSUE" --body "$(printf '🛑 The build agent didn'"'"'t open a PR. [Run](%s)\n\n%s' "$RUN_URL" "${said:-No explanation came back; see the run log.}")"
           fi
 
   revise:
@@ -150,15 +154,23 @@ jobs:
         with:
           bun-version: 1.3.10
 
-      - run: bun install --frozen-lockfile
+      - name: Install dependencies
+        id: before
+        run: |
+          bun install --frozen-lockfile
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Build agent (revise)
+        id: agent
         uses: anthropics/claude-code-action@4411a9e9b0283becf4b924f7bce360fd7756c78c # v1
         env:
           CLAUDE_BRANCH: ${{ steps.pr.outputs.branch }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # The PR's author is the Claude App, which the action can't confirm has write access, so by default it
+          # blocks running the checkout's code. Safe to lift: this job only runs on agent/* branches in this repo.
+          restrict_untrusted_prs: "false"
           claude_args: >-
             --model ${{ env.BUILD_MODEL }}
             --max-turns 40
@@ -184,7 +196,18 @@ jobs:
 
       - name: Report back on the PR
         if: always()
-        run: gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "Revision run finished (${{ job.status }}). [Run]($RUN_URL)"
+        env:
+          BEFORE: ${{ steps.before.outputs.sha }}
+          EXEC_FILE: ${{ steps.agent.outputs.execution_file }}
+        run: |
+          after=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)
+          if [ -n "$BEFORE" ] && [ "$after" != "$BEFORE" ]; then
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "✅ Pushed ${after:0:7}. CI and the review agent will take it from here. [Run]($RUN_URL)"
+          else
+            said=$(jq -r '[.[] | select(.type == "result")][-1].result // empty' "$EXEC_FILE" 2>/dev/null | head -c 1500 | sed 's/^/> /' || true)
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" \
+              --body "$(printf '🛑 Revision run pushed nothing. [Run](%s)\n\n%s' "$RUN_URL" "${said:-No explanation came back; see the run log.}")"
+          fi
 
   fixup:
     if: >-
@@ -223,7 +246,7 @@ jobs:
             --jq '[.[] | select(.body | startswith("<!-- agent-fixup -->"))] | length')
           echo "pr=$pr" >> "$GITHUB_OUTPUT"
           if [ "$attempts" -ge "$MAX_FIXUPS" ]; then
-            gh pr edit "$pr" --repo "$GITHUB_REPOSITORY" --add-label needs-jake
+            gh api "repos/$GITHUB_REPOSITORY/issues/$pr/labels" -f "labels[]=needs-jake" > /dev/null
             gh pr comment "$pr" --repo "$GITHUB_REPOSITORY" \
               --body "🛑 CI still failing after $MAX_FIXUPS fix-up attempts. Labelled \`needs-jake\`."
             exit 0
@@ -247,6 +270,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build agent (fix CI)
+        id: agent
         if: steps.gate.outputs.attempt
         uses: anthropics/claude-code-action@4411a9e9b0283becf4b924f7bce360fd7756c78c # v1
         env:
@@ -256,6 +280,8 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           # CI on agent PRs is started by Claude's own pushes
           allowed_bots: claude[bot]
+          # Same as revise: the Claude App authored the PR; this job only runs on agent/* branches in this repo.
+          restrict_untrusted_prs: "false"
           claude_args: >-
             --model ${{ env.BUILD_MODEL }}
             --max-turns 40
@@ -273,3 +299,18 @@ jobs:
             3. Run `bun run lint`, `bun run typecheck`, `bun run build`, then `bun run test` until all four pass.
             4. Commit, then push with exactly: git push origin ${{ env.BRANCH }}
             If the failure isn't caused by this PR (a flaky external site, say), don't commit; explain in your final message.
+
+      - name: Report back on the PR
+        if: always() && steps.gate.outputs.attempt
+        env:
+          PR: ${{ steps.gate.outputs.pr }}
+          EXEC_FILE: ${{ steps.agent.outputs.execution_file }}
+        run: |
+          after=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)
+          if [ "$after" != "$HEAD_SHA" ]; then
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "✅ Fix-up pushed ${after:0:7}; CI is re-running."
+          else
+            said=$(jq -r '[.[] | select(.type == "result")][-1].result // empty' "$EXEC_FILE" 2>/dev/null | head -c 1500 | sed 's/^/> /' || true)
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" \
+              --body "$(printf '🛑 Fix-up pushed nothing.\n\n%s' "${said:-No explanation came back; see the run log.}")"
+          fi
