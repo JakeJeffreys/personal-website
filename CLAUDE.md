@@ -22,9 +22,9 @@ CI (`.github/workflows/ci.yml`) runs all of the above plus Lighthouse (`lighthou
 
 - `src/app/page.tsx`: homepage, a stack of sections from `src/components/sections/`
 - `src/app/layout.tsx`: root layout, fonts, metadata, theme and command palette providers
-- `src/app/globals.css`: theme tokens (`--paper-*` mapped to `--color-*` in `@theme`) and global styles
+- `src/app/globals.css`: theme tokens (`--theme-*` mapped to `--color-*` in `@theme`) and global styles
 - `src/app/lab/`: experiments. `experiments.ts` is the registry; each experiment is `src/app/lab/<slug>/page.tsx`
-- `src/components/paper/`: design primitives (`PaperCard`, `Tape`, `Scrawl`, `SectionHeading`)
+- `src/components/ui/`: design primitives (`Card`, `SectionHeading`, `Label`)
 - `src/content/resume.ts`: jobs and skills data
 - `src/lib/`: GitHub API helpers, photo feed, icons, `cn()`
 
@@ -41,14 +41,16 @@ The sitemap picks experiments up from the registry, so a lab change touches noth
 
 **Core** is everything else: homepage sections, résumé/about content, nav, global layout and styles. Keep core diffs as small as the issue allows.
 
-## Design system ("analog lo-fi" paper)
+## Design system (modern, restrained)
 
-- Colors come from tokens only: `var(--color-surface)`, `var(--color-text-muted)`, etc. No hex values in components. Both themes (`html.dark`) must stay readable.
-- `--color-surface` is lighter than `--color-background`: cards are card stock on a desk. Depth is a hard offset shadow (`--shadow-paper`), never blur or glow.
-- `--color-accent` fails contrast below 18px; small accent text uses `--color-accent-ink`.
-- Caveat (`var(--font-hand)`) is for headings and annotations only, never body copy.
-- Reuse the paper primitives before inventing new card or heading styles.
-- Animations respect `useReducedMotion()`. In Framer Motion variants, type cubic-bezier easings as tuples: `[0.22, 1, 0.36, 1] as [number, number, number, number]`.
+Calm and precise, like a well-made developer tool's docs or dashboard. Not a hacker movie: no neon, glitch effects, terminal cosplay, matrix rain, heavy gradients, glow, or 3D.
+
+- **Color**: dark-first (dark is the default theme, `html.dark`), with a light theme behind the existing toggle. A neutral graphite/zinc palette plus one accent, used sparingly for links, focus, and the one thing per view that matters. Colors come from tokens only: `var(--color-surface)`, `var(--color-text-muted)`, etc. No hex values in components. Both themes must pass AA contrast; if the accent fails below 18px, small accent text uses `--color-accent-ink`.
+- **Tokens**: raw values live in `globals.css` as `--theme-*` and map to `--color-*` in `@theme`. Every token is declared in `:root` and `html.dark` only redefines it. `--color-surface` sits one step off `--color-background`, and `--color-border` separates them.
+- **Type**: Geist Sans (`font-sans`) for all text and headings. Geist Mono (`font-mono`) for labels, metadata, nav, dates, tags, and small technical details. No other faces; Caveat and `--font-hand` are gone.
+- **Surfaces**: flat cards with a 1px `--color-border` border and a small radius (`--radius-card`, about 6–8px). No shadows beyond a barely visible one on overlays (palette, menus). At most a faint background texture (fine grid or dots) at low opacity. No tilt, tape, scrawl, torn edges, paper grain, or hard offset shadows.
+- **Primitives** live in `src/components/ui/`: `Card` (replaces `PaperCard`), `SectionHeading` (plain heading with an optional mono eyebrow label, no tilt or tape), and `Label` (small mono metadata/tag text). `Tape` and `Scrawl` have no replacement. Reuse these before inventing new card or heading styles.
+- **Motion**: short and subtle, fades and small slides (≤ 8px), 250ms or less. Animations respect `useReducedMotion()`. In Framer Motion variants, type cubic-bezier easings as tuples: `[0.22, 1, 0.36, 1] as [number, number, number, number]`.
 - Layouts work at 390px wide with no horizontal scroll.
 
 ## Rules for agents
