@@ -108,11 +108,12 @@ export default function DiceRoller() {
                 name="dice-count"
                 value={n}
                 checked={count === n}
+                disabled={rolling}
                 onChange={() => setCount(n)}
                 className="peer sr-only"
               />
               <span
-                className="flex h-11 w-11 cursor-pointer items-center justify-center font-mono peer-checked:font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
+                className="flex h-11 w-11 cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-60items-center justify-center font-mono peer-checked:font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
                 style={{
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius-card)",
@@ -131,8 +132,8 @@ export default function DiceRoller() {
       <button
         type="button"
         onClick={roll}
-        disabled={rolling}
-        className="min-h-11 px-6 font-mono text-sm uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-60"
+        aria-disabled={rolling}
+        className="min-h-11 px-6 font-mono text-sm uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
         style={{
           backgroundColor: "var(--color-text)",
           color: "var(--color-surface)",
