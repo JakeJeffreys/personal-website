@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/CommandPaletteProvider";
 import CommandPalette from "@/components/CommandPalette";
+import Nav from "@/components/Nav";
+import SiteFooter from "@/components/SiteFooter";
 import ConsoleGreeting from "@/components/ConsoleGreeting";
 import "./globals.css";
 
@@ -80,7 +82,9 @@ export default function RootLayout({
         <ThemeProvider>
           <CommandPaletteProvider>
             <CommandPalette />
+            <Nav />
             {children}
+            <SiteFooter />
           </CommandPaletteProvider>
         </ThemeProvider>
         <Analytics />

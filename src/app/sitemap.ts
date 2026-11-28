@@ -15,6 +15,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.5,
     },
+    {
+      url: "https://jakejeffreys.dev/work",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://jakejeffreys.dev/about",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     ...experiments.map((exp) => ({
       url: `https://jakejeffreys.dev/lab/${exp.slug}`,
       lastModified: new Date(exp.added),
