@@ -1,0 +1,104 @@
+name: Production check
+
+# After Vercel finishes a production deploy: wait for the merged PR's pages to be served, run the smoke tests
+# against the live site, then comment the live URLs on the issue the PR implemented and close it.
+# On failure, flag the PR and issue and point at the rollback. No deploy credentials involved.
+on:
+  deployment_status:
+
+permissions: {}
+
+env:
+  SITE: https://jakejeffreys.dev
+
+jobs:
+  verify:
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: production-check-${{ github.event.deployment.sha }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SHA: ${{ github.event.deployment.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.deployment.sha }}
+          fetch-depth: 2
+
+      - name: Find the merged PR, its issue, and its pages
+        id: ctx
+        run: |
+          pr=$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA/pulls" \
+            --jq '[.[] | select(.merged_at != null)][0].number // empty')
+          issue=""
+          if [ -n "$pr" ]; then
+            issue=$(gh pr view "$pr" --repo "$GITHUB_REPOSITORY" --json body --jq .body \
+              | grep -oiE '\bimplements[[:space:]]+#[0-9]+' | grep -oE '[0-9]+$' | head -1 || true)
+          fi
+          # First parent is main before the merge, so this is exactly what the PR changed.
+          routes=$(node scripts/ci/changed-routes.mjs "$SHA^1")
+          {
+            echo "pr=$pr"
+            echo "issue=$issue"
+            echo "routes=${routes:-/}"
+          } >> "$GITHUB_OUTPUT"
+          echo "PR: ${pr:-none}, issue: ${issue:-none}, pages: ${routes:-/}"
+
+      - name: Wait for the pages to be served
+        env:
+          ROUTES: ${{ steps.ctx.outputs.routes }}
+        run: |
+          while read -r r; do
+            for _ in $(seq 1 30); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE$r")
+              [ "$code" = 200 ] && { echo "$r: 200"; continue 2; }
+              sleep 10
+            done
+            echo "$SITE$r still returns $code after 5 minutes"
+            exit 1
+          done < <(tr ',' '\n' <<< "$ROUTES" | grep .)
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.10
+
+      - run: bun install --frozen-lockfile
+
+      - name: Smoke tests against production
+        env:
+          BASE_URL: ${{ env.SITE }}
+        run: bun run test
+
+      - name: Close the loop
+        if: always()
+        env:
+          STATUS: ${{ job.status }}
+          PR: ${{ steps.ctx.outputs.pr }}
+          ISSUE: ${{ steps.ctx.outputs.issue }}
+          ROUTES: ${{ steps.ctx.outputs.routes }}
+        run: |
+          links=$(tr ',' '\n' <<< "$ROUTES" | grep . | sed "s|.*|- $SITE&|")
+          if [ "$STATUS" = success ]; then
+            [ -n "$PR" ] && gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "🚀 Live and smoke-tested on production. [Run]($RUN_URL)"
+            if [ -n "$ISSUE" ] && [ "$(gh issue view "$ISSUE" --repo "$GITHUB_REPOSITORY" --json state --jq .state)" = OPEN ]; then
+              gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" \
+                --body "$(printf '🚀 Shipped in #%s and smoke-tested on production:\n\n%s' "$PR" "$links")"
+              gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY" --reason completed
+            fi
+          else
+            body=$(printf '🛑 Production check failed for %s. [Run](%s)\n\nRoll back: Vercel Instant Rollback is fastest. To revert on main too: `gh workflow run rollback.yml -f pr=%s`' "${SHA:0:7}" "$RUN_URL" "${PR:-<pr>}")
+            printf '%s\n' "$PR" "$ISSUE" | grep . | while read -r n; do
+              gh api "repos/$GITHUB_REPOSITORY/issues/$n/labels" -f "labels[]=needs-jake" > /dev/null
+              gh api "repos/$GITHUB_REPOSITORY/issues/$n/comments" -f body="$body" > /dev/null
+            done
+          fi

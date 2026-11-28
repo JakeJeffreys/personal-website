@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # The Rollback workflow's PRs come from GITHUB_TOKEN, which doesn't trigger pull_request; it dispatches CI instead.
+  workflow_dispatch:
 
 permissions:
   contents: read
