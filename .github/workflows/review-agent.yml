@@ -17,6 +17,8 @@ permissions: {}
 
 env:
   REVIEW_MODEL: claude-opus-5-5
+  # Requested changes go straight back to the build agent this many times per PR, then to Jake.
+  MAX_AUTO_REVISIONS: 2
 
 jobs:
   review:
@@ -169,7 +171,21 @@ jobs:
             || gh pr review "$PR" --repo "$GITHUB_REPOSITORY" --comment --body-file "$RUNNER_TEMP/review.md"
           echo "Posted: $verdict"
           echo "posted=true" >> "$GITHUB_OUTPUT"
+          echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
 
-      - name: Hand off to the merge gate
+      - name: Hand off to the build agent or the merge gate
         if: steps.post.outputs.posted
-        run: gh workflow run merge-gate.yml --repo "$GITHUB_REPOSITORY" --ref main -f pr="${{ steps.ctx.outputs.pr }}"
+        env:
+          PR: ${{ steps.ctx.outputs.pr }}
+          VERDICT: ${{ steps.post.outputs.verdict }}
+        run: |
+          if [ "$VERDICT" = request_changes ]; then
+            done=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+              --jq '[.[] | select(.body | startswith("<!-- agent-autorevise -->"))] | length')
+            if [ "$done" -lt "$MAX_AUTO_REVISIONS" ]; then
+              gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$(printf '<!-- agent-autorevise -->\n🔁 Sending the blocking findings back to the build agent (auto-revision %s of %s).' "$((done + 1))" "$MAX_AUTO_REVISIONS")" > /dev/null
+              gh workflow run build-agent.yml --repo "$GITHUB_REPOSITORY" --ref main -f pr="$PR"
+              exit 0
+            fi
+          fi
+          gh workflow run merge-gate.yml --repo "$GITHUB_REPOSITORY" --ref main -f pr="$PR"
