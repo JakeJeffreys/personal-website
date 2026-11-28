@@ -113,7 +113,7 @@ export default function DiceRoller() {
                 className="peer sr-only"
               />
               <span
-                className="flex h-11 w-11 cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-60items-center justify-center font-mono peer-checked:font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
+                className="flex h-11 w-11 cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-60 items-center justify-center font-mono peer-checked:font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2"
                 style={{
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius-card)",
