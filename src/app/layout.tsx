@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/CommandPaletteProvider";
 import CommandPalette from "@/components/CommandPalette";
+import { MotionProvider } from "@/components/MotionProvider";
 import Nav from "@/components/Nav";
 import SiteFooter from "@/components/SiteFooter";
 import ConsoleGreeting from "@/components/ConsoleGreeting";
@@ -80,12 +81,14 @@ export default function RootLayout({
           <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
         <ThemeProvider>
-          <CommandPaletteProvider>
-            <CommandPalette />
-            <Nav />
-            {children}
-            <SiteFooter />
-          </CommandPaletteProvider>
+          <MotionProvider>
+            <CommandPaletteProvider>
+              <CommandPalette />
+              <Nav />
+              {children}
+              <SiteFooter />
+            </CommandPaletteProvider>
+          </MotionProvider>
         </ThemeProvider>
         <Analytics />
         <ConsoleGreeting />
