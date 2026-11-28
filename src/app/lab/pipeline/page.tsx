@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PaperCard, SectionHeading } from "@/components/paper";
+import { Card, SectionHeading } from "@/components/ui";
 import PipelineDiagram from "./PipelineDiagram";
 import { example, loops, why, zones } from "./stages";
 
@@ -10,20 +10,20 @@ export const metadata: Metadata = {
 };
 
 const muted = { color: "var(--color-text-muted)" };
-const hand = { fontFamily: "var(--font-hand)", color: "var(--color-text)" };
+const heading = { color: "var(--color-text)" };
 
 export default function PipelinePage() {
   return (
-    <main className="paper-page min-h-screen px-6 py-24">
+    <main className="min-h-screen px-6 py-24">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/lab"
-          className="mb-10 inline-block font-mono text-xs uppercase tracking-[0.18em] underline-offset-4 hover:underline"
+          className="mb-10 inline-block font-mono text-xs uppercase tracking-[0.14em] underline-offset-4 hover:underline"
           style={{ color: "var(--color-accent-ink)" }}
         >
           ← the lab
         </Link>
-        <SectionHeading title="the agent pipeline" eyebrow="experiment" variant="taped" />
+        <SectionHeading title="The agent pipeline" eyebrow="experiment" as="h1" />
 
         <p className="mb-12 text-base leading-7" style={muted}>
           I file an issue from my phone. A build agent writes the change, CI gates check it, a second agent reviews it, a
@@ -34,19 +34,19 @@ export default function PipelinePage() {
         <PipelineDiagram />
 
         <section aria-labelledby="loops" className="mt-20">
-          <h2 id="loops" className="mb-2 text-3xl" style={hand}>
-            three loops
+          <h2 id="loops" className="mb-2 text-2xl font-semibold tracking-tight" style={heading}>
+            Three loops
           </h2>
           <p className="mb-6 text-sm leading-6" style={muted}>
             Work can circle back. The two automatic loops have a limit, and running out of tries ends at the
             needs-jake label. The /revise loop only runs when I comment, so I am the limit.
           </p>
           <ul className="grid gap-6">
-            {loops.map((loop, i) => (
+            {loops.map((loop) => (
               <li key={loop.id}>
-                <PaperCard tilt={i % 2 ? "b" : "a"} lift={false}>
+                <Card>
                   <div className="p-5">
-                    <h3 className="text-2xl" style={hand}>
+                    <h3 className="text-lg font-semibold tracking-tight" style={heading}>
                       {loop.title}
                     </h3>
                     <p className="mt-1 font-mono text-xs" style={{ color: "var(--color-accent-ink)" }}>
@@ -59,15 +59,15 @@ export default function PipelinePage() {
                       {loop.end}
                     </p>
                   </div>
-                </PaperCard>
+                </Card>
               </li>
             ))}
           </ul>
         </section>
 
         <section aria-labelledby="zones" className="mt-20">
-          <h2 id="zones" className="mb-2 text-3xl" style={hand}>
-            what the merge gate checks
+          <h2 id="zones" className="mb-2 text-2xl font-semibold tracking-tight" style={heading}>
+            What the merge gate checks
           </h2>
           <p className="mb-6 text-sm leading-6" style={muted}>
             A PR gets the strictest rules of every zone it touches.
@@ -85,8 +85,8 @@ export default function PipelinePage() {
         </section>
 
         <section aria-labelledby="why" className="mt-20">
-          <h2 id="why" className="mb-4 text-3xl" style={hand}>
-            why bother
+          <h2 id="why" className="mb-4 text-2xl font-semibold tracking-tight" style={heading}>
+            Why bother
           </h2>
           {why.map((p) => (
             <p key={p} className="mb-3 text-base leading-7" style={muted}>
@@ -96,8 +96,8 @@ export default function PipelinePage() {
         </section>
 
         <section aria-labelledby="example" className="mt-20">
-          <h2 id="example" className="mb-4 text-3xl" style={hand}>
-            a real run: the dice roller
+          <h2 id="example" className="mb-4 text-2xl font-semibold tracking-tight" style={heading}>
+            A real run: the dice roller
           </h2>
           <ol className="space-y-3">
             {example.map((e) => (

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { PaperCard, SectionHeading } from "@/components/paper";
+import { Card, Label, SectionHeading } from "@/components/ui";
 
 const interests = [
   "Skiing",
@@ -43,157 +43,90 @@ const BIO = [
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
-/** Rotations for the sticker tags — irregular on purpose, cycled by index. */
-const STICKER_ROTATIONS = [-2.2, 1.4, -0.8, 2.1, -1.6, 0.9, -2.6, 1.8];
-
 export default function About() {
   const reduceMotion = useReducedMotion();
   return (
     <section id="about" className="relative px-6 py-24">
       <div className="relative mx-auto max-w-5xl">
-        <SectionHeading title="about me" eyebrow="who's this" variant="taped" />
+        <SectionHeading title="About me" eyebrow="who's this" as="h1" />
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Bio */}
           <div className="flex flex-col gap-5">
             {BIO.map((para, i) => (
               <motion.p
                 key={i}
                 className="text-base leading-7"
                 style={{ color: "var(--color-text-muted)" }}
-                initial={{ opacity: 0, y: 18 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.55, delay: i * 0.1, ease: EASE }}
+                transition={{ duration: 0.25, delay: i * 0.05, ease: EASE }}
               >
                 {para}
               </motion.p>
             ))}
           </div>
 
-          {/* Index cards */}
           <div className="flex flex-col gap-6">
-            <PaperCard tilt="a" delay={0.05} className="p-6">
-              <p
-                className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest"
-                style={{ color: "var(--color-accent-ink)" }}
-              >
-                Quick Stats
-              </p>
-              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Card className="p-6">
+              <Label tone="accent" className="mb-5 block uppercase tracking-widest">
+                Quick stats
+              </Label>
+              <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {stats.map((stat) => (
                   <div
                     key={stat.label}
                     className="p-4"
-                    style={{
-                      background: "var(--color-surface-2)",
-                      borderRadius: "var(--radius-card)",
-                    }}
+                    style={{ background: "var(--color-surface-2)", borderRadius: "var(--radius-card)" }}
                   >
                     <dt className="mb-1 text-xs" style={{ color: "var(--color-text-dim)" }}>
                       {stat.label}
                     </dt>
-                    <dd
-                      className="text-sm font-semibold"
-                      style={{ color: "var(--color-text)" }}
-                    >
+                    <dd className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>
                       {stat.value}
                     </dd>
                   </div>
                 ))}
               </dl>
-            </PaperCard>
+            </Card>
 
-            <PaperCard tilt="b" delay={0.15} className="p-6">
-              <div className="mb-5 border-b pb-4">
-                <div className="mb-2 flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-widest">
-                  <span style={{ color: "var(--color-accent-ink)" }}>Currently</span>
-                  <time dateTime="2026-10-07" style={{ color: "var(--color-text-dim)" }}>Oct 2026</time>
-                </div>
-                <h3 className="text-3xl leading-none" style={{ fontFamily: "var(--font-hand)" }}>
-                  release notes, life edition
-                </h3>
+            <Card className="p-6">
+              <div className="mb-5 flex items-center justify-between gap-3 border-b pb-4">
+                <h2 className="text-lg font-semibold tracking-tight">Currently</h2>
+                <time dateTime="2026-10-07">
+                  <Label tone="dim">Oct 2026</Label>
+                </time>
               </div>
               <ul className="space-y-4">
                 {currently.map((item) => (
                   <li
                     key={item.label}
-                    className="grid grid-cols-[5rem_1fr] items-baseline gap-3 text-sm"
+                    className="grid grid-cols-[5.5rem_1fr] items-baseline gap-3 text-sm"
                     style={{ color: "var(--color-text-muted)" }}
                   >
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-wide"
-                      style={{ color: "var(--color-accent-ink)" }}
-                    >
+                    <Label tone="accent" className="uppercase">
                       {item.label}
-                    </span>
+                    </Label>
                     <span className="leading-relaxed">{item.text}</span>
                   </li>
                 ))}
               </ul>
-            </PaperCard>
+            </Card>
           </div>
         </div>
 
-        {/* Sticker tags */}
-        <motion.div
-          className="mt-14"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, ease: EASE }}
-        >
-          <p
-            className="mb-5"
-            style={{
-              fontFamily: "var(--font-hand)",
-              color: "var(--color-text-dim)",
-              fontSize: "1.4rem",
-            }}
-          >
-            off the clock
-          </p>
-          <div className="flex flex-wrap gap-2.5">
-            {interests.map((interest, i) => {
-              const rot = STICKER_ROTATIONS[i % STICKER_ROTATIONS.length];
-              const highlighted = i % 4 === 1;
-              return (
-                <motion.span
-                  key={interest}
-                  className="paper-tilt inline-block px-3.5 py-1.5 font-mono text-xs"
-                  style={{
-                    backgroundColor: highlighted
-                      ? "var(--color-accent)"
-                      : "var(--color-surface)",
-                    color: highlighted ? "var(--color-surface)" : "var(--color-text-muted)",
-                    border: `1px solid ${
-                      highlighted ? "var(--color-accent)" : "var(--color-border)"
-                    }`,
-                    borderRadius: "999px",
-                    boxShadow: "var(--shadow-paper)",
-                  }}
-                  initial={reduceMotion ? false : { opacity: 0, y: -14, scale: 1.08, rotate: rot * -2 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1, rotate: reduceMotion ? 0 : rot }}
-                  viewport={{ once: true }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 16,
-                    delay: reduceMotion ? 0 : i * 0.045,
-                    ...(reduceMotion ? { duration: 0 } : {}),
-                  }}
-                  whileHover={reduceMotion ? undefined : {
-                    y: -4,
-                    rotate: rot * -1.4,
-                    boxShadow: "var(--shadow-paper-lift)",
-                  }}
-                >
+        <div className="mt-14">
+          <h2 className="mb-5 text-lg font-semibold tracking-tight">Off the clock</h2>
+          <ul className="flex flex-wrap gap-2">
+            {interests.map((interest) => (
+              <li key={interest}>
+                <Label tag className="px-3 py-1.5">
                   {interest}
-                </motion.span>
-              );
-            })}
-          </div>
-        </motion.div>
+                </Label>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

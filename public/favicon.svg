@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <title>Jake Jeffreys</title>
   <style>
-    .paper { fill: #fbf7ef; stroke: #c3b7a4; }
-    .ink { stroke: #c2431f; }
+    .bg { fill: #ffffff; stroke: #d4d4d8; }
+    .mark { stroke: #1d4ed8; }
     @media (prefers-color-scheme: dark) {
-      .paper { fill: #262019; stroke: #94897a; }
-      .ink { stroke: #f2733f; }
+      .bg { fill: #131316; stroke: #2e2e34; }
+      .mark { stroke: #60a5fa; }
     }
   </style>
-  <path class="paper" d="M3 3Q16 1.5 29 3L28 29Q15 30 3 28Z" stroke-width="1" stroke-linejoin="round"/>
-  <g class="ink" transform="translate(3.2 3.2) scale(0.8)" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+  <rect class="bg" x="1.5" y="1.5" width="29" height="29" rx="6" stroke-width="1"/>
+  <g class="mark" transform="translate(3.2 3.2) scale(0.8)" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
     <path d="M7 8.5 14 8M12 8.2 11.7 20.5Q11.5 25 7.9 24.2 5.8 23.8 6.1 21.5"/>
     <path d="M18 8 25 7.5M23 7.7 22.6 20Q22.4 24.5 18.8 23.7 16.7 23.3 17 21"/>
   </g>

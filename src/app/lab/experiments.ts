@@ -17,7 +17,7 @@ export const experiments: Experiment[] = [
   {
     slug: "dice",
     title: "Dice",
-    blurb: "Roll one to six paper dice and see the total.",
+    blurb: "Roll one to six dice and see the total.",
     added: "2026-11-27",
   },
 ];

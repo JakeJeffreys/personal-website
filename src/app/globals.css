@@ -1,93 +1,83 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: var(--paper-background);
-  --color-surface: var(--paper-surface);
-  --color-surface-2: var(--paper-surface-2);
-  --color-border: var(--paper-border);
-  --color-accent: var(--paper-accent);
-  --color-accent-ink: var(--paper-accent-ink);
-  --color-accent-muted: var(--paper-accent-muted);
-  --color-accent-glow: var(--paper-accent-glow);
-  --color-text: var(--paper-text);
-  --color-text-muted: var(--paper-text-muted);
-  --color-text-dim: var(--paper-text-dim);
+  --color-background: var(--theme-background);
+  --color-surface: var(--theme-surface);
+  --color-surface-2: var(--theme-surface-2);
+  --color-border: var(--theme-border);
+  --color-accent: var(--theme-accent);
+  --color-accent-ink: var(--theme-accent-ink);
+  --color-accent-muted: var(--theme-accent-muted);
+  --color-accent-glow: var(--theme-accent-glow);
+  --color-text: var(--theme-text);
+  --color-text-muted: var(--theme-text-muted);
+  --color-text-dim: var(--theme-text-dim);
+  --color-heat-0: var(--theme-heat-0);
+  --color-heat-1: var(--theme-heat-1);
+  --color-heat-2: var(--theme-heat-2);
+  --color-heat-3: var(--theme-heat-3);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-hand: var(--font-caveat);
 }
 
 /*
-  Paper — the default theme.
-
-  Note the inversion versus the previous design: --color-surface is now LIGHTER
-  than --color-background. A card is card stock lying on a desk, so depth comes
-  from a hard offset shadow, never a blur.
-
-  Every token is declared here first. html.dark below only ever REDEFINES these
-  values, never introduces new ones — a token defined solely in the dark branch
-  is the classic unreadable-theme bug.
+  Every token is declared here first. html.dark below only REDEFINES these
+  values, never introduces new ones. Dark is the default theme (ThemeProvider).
+  Neutral zinc palette plus one blue accent.
 */
 :root {
-  --paper-background: #efe8db;
-  --paper-surface: #fbf7ef;
-  --paper-surface-2: #e4daca;
-  --paper-border: #c3b7a4;
+  --theme-background: #f4f4f5;
+  --theme-surface: #ffffff;
+  --theme-surface-2: #e8e8ea;
+  --theme-border: #d4d4d8;
 
-  /* Marker orange is ~3.4:1 on paper: fine for graphics and type >=18px,
-     but it FAILS WCAG AA below that. Use --color-accent-ink for small text. */
-  --paper-accent: #e8552b;
-  --paper-accent-ink: #c2431f;
-  --paper-accent-muted: #c2431f;
-  --paper-accent-glow: rgba(232, 85, 43, 0.14);
+  /* Accent is ~4.9:1 on white, so small accent text uses --color-accent-ink. */
+  --theme-accent: #2563eb;
+  --theme-accent-ink: #1d4ed8;
+  --theme-accent-muted: #1d4ed8;
+  --theme-accent-glow: rgba(37, 99, 235, 0.14);
 
-  --paper-text: #2a2622;
-  --paper-text-muted: #554c43;
-  --paper-text-dim: #6b6157;
+  --theme-text: #18181b;
+  --theme-text-muted: #52525b;
+  --theme-text-dim: #63636b;
 
-  /* Contribution heatmap — ink soaking into paper, not glowing pixels */
-  --color-heat-0: #ddd3c2;
-  --color-heat-1: #f0b694;
-  --color-heat-2: #e8552b;
-  --color-heat-3: #a8330f;
+  /* Contribution heatmap */
+  --theme-heat-0: #e4e4e7;
+  --theme-heat-1: #bfdbfe;
+  --theme-heat-2: #60a5fa;
+  --theme-heat-3: #1d4ed8;
 
-  /* Structural */
-  --radius-card: 2px;
-  --shadow-paper: 2px 3px 0 rgba(42, 38, 34, 0.12);
-  --shadow-paper-lift: 4px 6px 0 rgba(42, 38, 34, 0.14);
-  --tilt-a: -0.7deg;
-  --tilt-b: 1.1deg;
-  --tilt-c: -1.4deg;
-
-  --grain-opacity: 0.42;
+  --radius-card: 6px;
+  /* Overlays only (palette, menus); barely visible */
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --scrim: rgba(24, 24, 27, 0.5);
+  --texture-opacity: 0.5;
 }
 
-/* Night paper — dark kraft stock, bone ink, same marker orange pushed brighter */
 html.dark {
-  --paper-background: #1c1815;
-  --paper-surface: #262019;
-  --paper-surface-2: #322a21;
-  --paper-border: #453a2d;
+  --theme-background: #09090b;
+  --theme-surface: #131316;
+  --theme-surface-2: #1f1f23;
+  --theme-border: #2e2e34;
 
-  --paper-accent: #f2733f;
-  --paper-accent-ink: #f2733f;
-  --paper-accent-muted: #d45a28;
-  --paper-accent-glow: rgba(242, 115, 63, 0.16);
+  --theme-accent: #60a5fa;
+  --theme-accent-ink: #60a5fa;
+  --theme-accent-muted: #60a5fa;
+  --theme-accent-glow: rgba(96, 165, 250, 0.16);
 
-  --paper-text: #ede4d4;
-  --paper-text-muted: #c8bba6;
-  --paper-text-dim: #94897a;
+  --theme-text: #fafafa;
+  --theme-text-muted: #b4b4bd;
+  --theme-text-dim: #9a9aa4;
 
-  --color-heat-0: #322a21;
-  --color-heat-1: #6e3a1e;
-  --color-heat-2: #c2521f;
-  --color-heat-3: #f2733f;
+  --theme-heat-0: #1f1f23;
+  --theme-heat-1: #1e3a8a;
+  --theme-heat-2: #2563eb;
+  --theme-heat-3: #60a5fa;
 
-  --shadow-paper: 2px 3px 0 rgba(0, 0, 0, 0.35);
-  --shadow-paper-lift: 4px 6px 0 rgba(0, 0, 0, 0.4);
-
-  --grain-opacity: 0.3;
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --scrim: rgba(0, 0, 0, 0.6);
+  --texture-opacity: 0.35;
 }
 
 * {
@@ -105,62 +95,37 @@ body {
   font-family: var(--font-sans);
 }
 
-/*
-  Paper grain. Three offset radial-gradient layers at differing sizes so the
-  pattern never visibly tiles. No image asset, no network request, one fixed
-  compositing layer.
-*/
+/* Faint dot grid, fixed behind the content */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: var(--grain-opacity);
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(42, 38, 34, 0.1) 0.6px, transparent 0.7px),
-    radial-gradient(circle at 70% 65%, rgba(42, 38, 34, 0.09) 0.6px, transparent 0.7px),
-    radial-gradient(circle at 45% 85%, rgba(42, 38, 34, 0.08) 0.6px, transparent 0.7px);
-  background-size: 7px 7px, 11px 11px, 9px 9px;
+  opacity: var(--texture-opacity);
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, #000, transparent 85%);
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
 }
 
-html.dark body::before {
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(237, 228, 212, 0.07) 0.6px, transparent 0.7px),
-    radial-gradient(circle at 70% 65%, rgba(237, 228, 212, 0.06) 0.6px, transparent 0.7px),
-    radial-gradient(circle at 45% 85%, rgba(237, 228, 212, 0.05) 0.6px, transparent 0.7px);
-}
-
-/* Content sits above the grain */
+/* Content sits above the texture */
 body > * {
   position: relative;
   z-index: 2;
 }
 
-/* Quiet paper backgrounds leave the playful details to the content. */
-.paper-page {
-  background: linear-gradient(
-    to bottom,
-    var(--color-background) 12%,
-    var(--color-surface-2) 32%,
-    var(--color-background) 52%,
-    var(--color-surface) 68%,
-    var(--color-background) 86%
-  );
-}
-
-.paper-page > section {
+.site-page > section {
   scroll-margin-top: 5rem;
 }
 
-/* Highlighter swipe rather than an inverted block */
 ::selection {
   background-color: var(--color-accent-glow);
   color: var(--color-text);
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -169,7 +134,7 @@ body > * {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
-  border-radius: 0;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -179,21 +144,14 @@ body > * {
 /*
   Focus is always visible, in both themes.
 
-  !important is deliberate. Tailwind's `focus:outline-none` compiles to
-  `.focus\:outline-none:focus { outline-style: none }` at specificity (0,2,0),
-  which outranks a bare `:focus-visible` at (0,1,0) — so without this, keyboard
-  focus is silently invisible on every element carrying that utility. A visible
-  focus ring is not something a utility class gets to switch off.
+  !important is deliberate: Tailwind's `focus:outline-none` has higher
+  specificity than a bare `:focus-visible` and would otherwise hide the ring.
 */
 :focus-visible {
   outline: 2px solid var(--color-accent) !important;
   outline-offset: 2px;
 }
 
-/*
-  Reduced motion kills the physical behaviour — tilt, drop, peel, draw-in —
-  rather than merely shortening it.
-*/
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -206,8 +164,11 @@ body > * {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
 
-  .paper-tilt {
-    transform: none !important;
-  }
+[cmdk-group-heading] {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
 }
