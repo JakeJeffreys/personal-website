@@ -1,30 +1,23 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import { useTheme } from "next-themes";
 import { useCommandPalette } from "./CommandPaletteProvider";
 import { useKonamiCode, triggerKonamiEffect } from "@/hooks/useKonamiCode";
 
 const NAV_COMMANDS = [
-  { label: "Go to About", href: "#about" },
-  { label: "Go to Experience", href: "#experience" },
-  { label: "Go to Tech Stack", href: "#tech-stack" },
-  { label: "Go to GitHub Activity", href: "#github" },
-  { label: "Go to Photo Feed", href: "#instagram" },
-  { label: "Go to Contact", href: "#contact" },
+  { label: "Go to Home", href: "/" },
+  { label: "Go to Lab", href: "/lab" },
+  { label: "Go to Work", href: "/work" },
+  { label: "Go to About", href: "/about" },
 ];
-
-function scrollTo(href: string) {
-  const el = document.querySelector(href);
-  // Sections only exist on the home page; from anywhere else (the 404), go there.
-  if (el) el.scrollIntoView({ behavior: "smooth" });
-  else window.location.href = `/${href}`;
-}
 
 export default function CommandPalette() {
   const { open, setOpen } = useCommandPalette();
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
 
   // Listen for physical Konami sequence (↑↑↓↓←→←→BA)
   useKonamiCode(triggerKonamiEffect);
@@ -49,10 +42,10 @@ export default function CommandPalette() {
       setTheme(theme === "dark" ? "light" : "dark");
     } else if (value === "konami") {
       setTimeout(triggerKonamiEffect, 150);
-    } else if (value.startsWith("#")) {
-      setTimeout(() => scrollTo(value), 100);
+    } else if (value.startsWith("/")) {
+      router.push(value);
     }
-  }, [setOpen, theme, setTheme]);
+  }, [setOpen, theme, setTheme, router]);
 
   if (!open) return null;
 

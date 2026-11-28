@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useCommandPalette } from "./CommandPaletteProvider";
 
 const NAV_LINKS = [
-  { label: "about", href: "#about" },
-  { label: "experience", href: "#experience" },
-  { label: "stack", href: "#tech-stack" },
-  { label: "github", href: "#github" },
-  { label: "photos", href: "#instagram" },
-  { label: "contact", href: "#contact" },
+  { label: "home", href: "/" },
+  { label: "lab", href: "/lab" },
+  { label: "work", href: "/work" },
+  { label: "about", href: "/about" },
 ];
+
+const MotionLink = motion.create(Link);
 
 /** Shared paper-button styling for the ⌘K and theme controls. */
 const paperButton: React.CSSProperties = {
@@ -42,13 +44,10 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
-    setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const pathname = usePathname();
+  // /lab stays current on /lab/<slug>
+  const isCurrent = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <motion.header
@@ -64,34 +63,35 @@ export default function Nav() {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Signature */}
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group flex items-baseline gap-2 focus:outline-none"
-          aria-label="Scroll to top"
+        <Link
+          href="/"
+          className="group flex items-baseline gap-2 focus-visible:outline-2 focus-visible:outline-offset-4"
+          aria-label="Jake Jeffreys, home"
         >
           <span
             className="transition-opacity duration-200 group-hover:opacity-70"
             style={{
               fontFamily: "var(--font-hand)",
-              color: "var(--color-accent)",
+              color: "var(--color-accent-ink)",
               fontSize: "1.75rem",
               lineHeight: 1,
             }}
           >
             jake jeffreys
           </span>
-        </button>
+        </Link>
 
         {/* Desktop links */}
         <ul className="hidden items-center gap-7 md:flex">
           {NAV_LINKS.map((link, i) => (
             <li key={link.href}>
-              <motion.button
-                onClick={() => handleNavClick(link.href)}
-                className="group relative focus:outline-none"
+              <MotionLink
+                href={link.href}
+                aria-current={isCurrent(link.href) ? "page" : undefined}
+                className="group relative focus-visible:outline-2 focus-visible:outline-offset-4"
                 style={{
                   fontFamily: "var(--font-hand)",
-                  color: "var(--color-text-muted)",
+                  color: isCurrent(link.href) ? "var(--color-accent-ink)" : "var(--color-text-muted)",
                   fontSize: "1.35rem",
                   lineHeight: 1.1,
                 }}
@@ -103,7 +103,7 @@ export default function Nav() {
                 {link.label}
                 {/* Hand-drawn underline, drawn on hover */}
                 <svg
-                  className="absolute -bottom-1 left-0 w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                  className={`absolute -bottom-1 left-0 w-full transition-opacity duration-200 group-hover:opacity-100 ${isCurrent(link.href) ? "opacity-100" : "opacity-0"}`}
                   height="4"
                   viewBox="0 0 60 4"
                   preserveAspectRatio="none"
@@ -117,7 +117,7 @@ export default function Nav() {
                     strokeLinecap="round"
                   />
                 </svg>
-              </motion.button>
+              </MotionLink>
             </li>
           ))}
         </ul>
@@ -216,17 +216,19 @@ export default function Nav() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.3 }}
                 >
-                  <button
-                    onClick={() => handleNavClick(link.href)}
-                    className="w-full py-1 text-left focus:outline-none"
+                  <Link
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={isCurrent(link.href) ? "page" : undefined}
+                    className={`block w-full py-1 text-left underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 ${isCurrent(link.href) ? "underline decoration-2" : ""}`}
                     style={{
                       fontFamily: "var(--font-hand)",
-                      color: "var(--color-text-muted)",
+                      color: isCurrent(link.href) ? "var(--color-accent-ink)" : "var(--color-text-muted)",
                       fontSize: "1.5rem",
                     }}
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 </motion.li>
               ))}
             </ul>
