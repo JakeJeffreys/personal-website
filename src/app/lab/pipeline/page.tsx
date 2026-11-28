@@ -38,8 +38,8 @@ export default function PipelinePage() {
             three loops
           </h2>
           <p className="mb-6 text-sm leading-6" style={muted}>
-            Work can circle back, but never forever. Each loop has a limit, and running out of tries ends at the
-            needs-jake label.
+            Work can circle back. The two automatic loops have a limit, and running out of tries ends at the
+            needs-jake label. The /revise loop only runs when I comment, so I am the limit.
           </p>
           <ul className="grid gap-6">
             {loops.map((loop, i) => (
