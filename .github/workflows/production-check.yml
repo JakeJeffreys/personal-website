@@ -96,7 +96,8 @@ jobs:
               gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY" --reason completed
             fi
           else
-            body=$(printf '🛑 Production check failed for %s. [Run](%s)\n\nRoll back: Vercel Instant Rollback is fastest. To revert on main too: `gh workflow run rollback.yml -f pr=%s`' "${SHA:0:7}" "$RUN_URL" "${PR:-<pr>}")
+            rollback="\`gh workflow run rollback.yml -f pr=${PR:-<pr>}\`"
+            body=$(printf '🛑 Production check failed for %s. [Run](%s)\n\nRoll back: Vercel Instant Rollback is fastest. To revert on main too: %s' "${SHA:0:7}" "$RUN_URL" "$rollback")
             printf '%s\n' "$PR" "$ISSUE" | grep . | while read -r n; do
               gh api "repos/$GITHUB_REPOSITORY/issues/$n/labels" -f "labels[]=needs-jake" > /dev/null
               gh api "repos/$GITHUB_REPOSITORY/issues/$n/comments" -f body="$body" > /dev/null
