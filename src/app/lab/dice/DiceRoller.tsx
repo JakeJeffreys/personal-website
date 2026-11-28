@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PaperCard } from "@/components/paper";
+import { Card } from "@/components/ui";
 
 const COUNTS = [1, 2, 3, 4, 5, 6];
 const ROLL_MS = 600;
@@ -27,12 +27,11 @@ function Die({ value, rolling }: { value: number; rolling: boolean }) {
       className="grid h-16 w-16 grid-cols-3 grid-rows-3 p-2 sm:h-20 sm:w-20"
       style={{
         backgroundColor: "var(--color-surface)",
-        border: "2px solid var(--color-text)",
+        border: "1px solid var(--color-border)",
         borderRadius: "var(--radius-card)",
-        boxShadow: "var(--shadow-paper)",
       }}
-      animate={rolling ? { rotate: [0, -12, 10, -6, 0], y: [0, -8, 0] } : { rotate: 0, y: 0 }}
-      transition={{ duration: 0.3, repeat: rolling ? Infinity : 0 }}
+      animate={rolling ? { y: [0, -6, 0] } : { y: 0 }}
+      transition={{ duration: 0.2, repeat: rolling ? Infinity : 0 }}
     >
       {Array.from({ length: 9 }, (_, i) => (
         <span key={i} className="flex items-center justify-center" aria-hidden="true">
@@ -95,7 +94,7 @@ export default function DiceRoller() {
   const total = values.reduce((a, b) => a + b, 0);
 
   return (
-    <PaperCard lift={false} tilt="none" className="p-6">
+    <Card className="p-6">
       <fieldset className="mb-6">
         <legend className="mb-3 text-sm" style={{ color: "var(--color-text-muted)" }}>
           How many dice?
@@ -138,7 +137,6 @@ export default function DiceRoller() {
           backgroundColor: "var(--color-text)",
           color: "var(--color-surface)",
           borderRadius: "var(--radius-card)",
-          boxShadow: "var(--shadow-paper)",
           outlineColor: "var(--color-accent-ink)",
         }}
       >
@@ -151,16 +149,13 @@ export default function DiceRoller() {
         ))}
       </div>
 
-      <p
-        className="mt-6 min-h-10"
-        style={{ fontFamily: "var(--font-hand)", fontSize: "2rem", color: "var(--color-text)" }}
-      >
+      <p className="mt-6 min-h-10 font-mono text-2xl" style={{ color: "var(--color-text)" }}>
         {values.length > 0 && !rolling ? `Total: ${total}` : ""}
       </p>
 
       <p role="status" aria-live="polite" className="sr-only">
         {message}
       </p>
-    </PaperCard>
+    </Card>
   );
 }

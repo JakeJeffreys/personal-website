@@ -3,36 +3,31 @@
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { SectionHeading } from "@/components/paper";
-
-/** Alternating tilts so the strip reads as photos dropped on a table. */
-const POLAROID_ROTATIONS = [-2.1, 1.6, -1.2, 2.3, -1.8, 1.1];
-
+import { SectionHeading } from "@/components/ui";
 
 function fadeUpProps(delay = 0) {
   return {
-    initial: { opacity: 0, y: 24 },
+    initial: { opacity: 0, y: 8 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-80px" } as const,
-    transition: { duration: 0.5, ease: "easeOut" as const, delay },
+    transition: { duration: 0.25, ease: "easeOut" as const, delay },
   };
 }
 
 /**
- * Lazy photos in a moving strip would otherwise pop in as blank white boxes.
- * Instead the frame shows unexposed film (surface-2) and the photo develops
- * in when it arrives. Opacity is an inline style so the layout's <noscript>
- * rule still reveals it without JS.
+ * Lazy photos in a moving strip would otherwise pop in as blank boxes.
+ * The frame shows surface-2 and the photo fades in when it arrives. Opacity is
+ * an inline style so the layout's <noscript> rule still reveals it without JS.
  */
-function DevelopingPhoto({ src, size }: { src: string; size: number }) {
+function FadeInPhoto({ src, size }: { src: string; size: number }) {
   const [developed, setDeveloped] = useState(false);
   return (
-    <div style={{ height: size - 44, background: "var(--color-surface-2)" }}>
+    <div style={{ height: size - 18, background: "var(--color-surface-2)" }}>
       <Image
         src={src}
         alt=""
         width={size * 2}
-        height={(size - 44) * 2}
+        height={(size - 18) * 2}
         sizes={`${size}px`}
         quality={70}
         draggable={false}
@@ -40,8 +35,7 @@ function DevelopingPhoto({ src, size }: { src: string; size: number }) {
         className="h-full w-full object-cover"
         style={{
           opacity: developed ? 1 : 0,
-          filter: developed ? "none" : "sepia(0.6) brightness(1.15)",
-          transition: "opacity 0.8s ease-out, filter 1.4s ease-out",
+          transition: "opacity 0.25s ease-out",
         }}
       />
     </div>
@@ -169,9 +163,8 @@ export default function Instagram({ photos }: { photos: string[] }) {
       <div className="px-6">
         <div className="max-w-5xl mx-auto">
           <SectionHeading
-            title="life outside the terminal"
-            eyebrow="the photo box"
-            variant="taped"
+            title="Life outside the terminal"
+            eyebrow="photos"
           />
         </div>
       </div>
@@ -189,9 +182,7 @@ export default function Instagram({ photos }: { photos: string[] }) {
           />
 
           <div
-            // Vertical padding gives the tilted frames, hover lift and shadow room
-            // inside the clip box; the negative margin keeps section spacing as-is.
-            className="-my-6 overflow-hidden py-6 cursor-grab active:cursor-grabbing select-none"
+            className="overflow-hidden cursor-grab active:cursor-grabbing select-none"
             role="group"
             aria-label="Photo feed from Instagram"
             onMouseDown={onMouseDown}
@@ -205,39 +196,19 @@ export default function Instagram({ photos }: { photos: string[] }) {
               style={{ gap: `${GAP}px`, width: `${loopedPhotos.length * ITEM_WIDTH}px` }}
             >
               {loopedPhotos.map((photo, i) => (
-                <motion.div
+                <div
                   key={i}
-                  className="paper-tilt flex-shrink-0"
+                  className="flex-shrink-0"
                   style={{
                     width: PHOTO_SIZE,
-                    // Polaroid: even frame with a deep chin below the image
-                    padding: "10px 10px 34px",
+                    padding: "8px",
                     background: "var(--color-surface)",
                     border: "1px solid var(--color-border)",
                     borderRadius: "var(--radius-card)",
-                    boxShadow: "var(--shadow-paper)",
-
                   }}
-                  initial={reduceMotion ? false : {
-                    opacity: 0,
-                    y: 18,
-                    rotate: POLAROID_ROTATIONS[i % POLAROID_ROTATIONS.length] * -2,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                    rotate: reduceMotion ? 0 : POLAROID_ROTATIONS[i % POLAROID_ROTATIONS.length],
-                  }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  whileHover={reduceMotion ? undefined : {
-                    rotate: 0,
-                    y: -6,
-                    boxShadow: "var(--shadow-paper-lift)",
-                  }}
-                  transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 220, damping: 22 }}
                 >
-                  <DevelopingPhoto src={`/instagram/${photo}`} size={PHOTO_SIZE} />
-                </motion.div>
+                  <FadeInPhoto src={`/instagram/${photo}`} size={PHOTO_SIZE} />
+                </div>
               ))}
             </div>
           </div>

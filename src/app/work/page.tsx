@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function WorkPage() {
   return (
-    <main className="paper-page pt-16">
+    <main className="site-page pt-16">
       <Experience />
       <TechStack />
       <GitHubActivity />

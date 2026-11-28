@@ -3,108 +3,57 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-const RIDGES = [
-  "M62 118 l14 -22 14 22",
-  "M86 128 l16 -28 16 28",
-  "M114 112 l13 -20 13 20",
-  "M74 150 l12 -18 12 18",
-  "M104 158 l14 -21 14 21",
-  "M136 140 l12 -18 12 18",
-];
-
-const DRAW = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: { pathLength: 1, opacity: 1 },
-};
-
-/**
- * Hand-drawn Colorado with a pin on Denver.
- *
- * Replaces the React Three Fiber globe, which cost six dependencies and a large
- * client bundle to render one decorative element that fought the paper
- * direction. This is inline SVG: no dependencies, no WebGL context, themes for
- * free via CSS custom properties.
- *
- * The state outline is deliberately not a perfect rectangle — the wobble is the
- * point.
- */
+/** Colorado outline with a pin on Denver. Inline SVG, themed via CSS custom properties. */
 export default function ColoradoMap({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion();
+  const fade = { duration: reduceMotion ? 0 : 0.25 };
   return (
     <motion.svg
       initial={reduceMotion ? false : "hidden"}
       whileInView="visible"
       viewport={{ once: true, amount: 0.5 }}
       viewBox="0 0 300 220"
-      className={cn("w-[300px] h-[220px] lg:w-[360px] lg:h-[264px]", className)}
+      className={cn("h-[220px] w-[300px] lg:h-[264px] lg:w-[360px]", className)}
       role="img"
-      aria-label="Hand-drawn map of Colorado with Denver marked"
+      aria-label="Map of Colorado with Denver marked"
     >
-      {/* State outline — drawn with a slightly unsteady hand */}
-      <motion.path
-        d="M22 34 Q 80 30, 148 31 T 278 35 Q 280 90, 279 140 T 276 190 Q 210 193, 148 191 T 24 188 Q 21 130, 22 82 Z"
+      <motion.rect
+        x="22"
+        y="34"
+        width="256"
+        height="156"
+        rx="4"
         fill="var(--color-surface)"
-        stroke="var(--color-text)"
-        strokeWidth="2.2"
-        strokeLinejoin="round"
-        variants={{ hidden: { pathLength: 0 }, visible: { pathLength: 1 } }}
-        transition={{ duration: reduceMotion ? 0 : 2.1, delay: reduceMotion ? 0 : 0.3, ease: "easeInOut" }}
+        stroke="var(--color-border)"
+        strokeWidth="1.5"
+        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+        transition={fade}
       />
 
-      {/* Rockies — hatched ridgeline running down the western half */}
-      <g stroke="var(--color-border)" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-        {RIDGES.map((d, index) => (
-          <motion.path
-            key={d}
-            d={d}
-            fill="none"
-            variants={DRAW}
-            transition={{
-              duration: reduceMotion ? 0 : 0.6,
-              delay: reduceMotion ? 0 : 0.8 + index * 0.18,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </g>
-
-      {/* Pencil grid, very faint */}
-      <g stroke="var(--color-border)" strokeWidth="0.5" opacity="0.4" aria-hidden="true">
-        <path d="M22 111 H 278" />
-        <path d="M150 31 V 191" />
+      {/* Faint crosshair grid */}
+      <g stroke="var(--color-border)" strokeWidth="1" aria-hidden="true">
+        <path d="M22 112 H 278" strokeDasharray="2 4" />
+        <path d="M150 34 V 190" strokeDasharray="2 4" />
       </g>
 
       {/* Denver pin */}
       <motion.g
-        variants={{ hidden: { opacity: 0, y: -8 }, visible: { opacity: 1, y: 0 } }}
-        transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 220, damping: 20, delay: 2.4 }}
+        variants={{ hidden: { opacity: 0, y: -6 }, visible: { opacity: 1, y: 0 } }}
+        transition={{ ...fade, delay: reduceMotion ? 0 : 0.1 }}
       >
         <circle cx="182" cy="106" r="12" fill="var(--color-accent-glow)" />
-        <circle
-          cx="182"
-          cy="106"
-          r="5"
-          fill="var(--color-accent)"
-          stroke="var(--color-surface)"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M182 106 L 214 76"
-          stroke="var(--color-accent)"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
+        <circle cx="182" cy="106" r="5" fill="var(--color-accent)" stroke="var(--color-surface)" strokeWidth="1.5" />
+        <path d="M182 106 L 210 78" stroke="var(--color-accent)" strokeWidth="1" strokeLinecap="round" />
         <text
-          x="218"
-          y="72"
-          style={{ fontFamily: "var(--font-hand)", fontSize: "20px" }}
-          fill="var(--color-accent)"
+          x="214"
+          y="76"
+          style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}
+          fill="var(--color-accent-ink)"
         >
-          denver
+          Denver
         </text>
       </motion.g>
 
-      {/* Scale note, in the vernacular of an actual map */}
       <text
         x="24"
         y="208"

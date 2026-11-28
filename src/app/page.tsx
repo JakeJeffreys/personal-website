@@ -4,7 +4,7 @@ import Explore from "@/components/sections/Explore";
 
 export default function Home() {
   return (
-    <main className="paper-page">
+    <main className="site-page">
       <Hero />
       <FeaturedLab />
       <Explore />

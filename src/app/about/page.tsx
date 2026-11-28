@@ -16,7 +16,7 @@ export default function AboutPage() {
   const photos = getPhotos();
 
   return (
-    <main className="paper-page pt-16">
+    <main className="site-page pt-16">
       <About />
       <Instagram photos={photos} />
     </main>

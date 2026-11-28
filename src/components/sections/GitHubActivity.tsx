@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SectionHeading } from "@/components/paper";
+import { SectionHeading } from "@/components/ui";
 import Link from "next/link";
 import {
   GitCommit,
@@ -280,7 +280,7 @@ export default async function GitHubActivity() {
     <section id="github" className="py-20 px-6">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
-        <SectionHeading title="what I've been building" eyebrow="github" variant="torn" />
+        <SectionHeading title="What I've been building" eyebrow="github" />
 
         {/* User stats */}
         {user && (
@@ -290,7 +290,6 @@ export default async function GitHubActivity() {
               background: "var(--color-surface)",
               borderColor: "var(--color-border)",
               borderRadius: "var(--radius-card)",
-              boxShadow: "var(--shadow-paper)",
             }}
           >
             <Image
@@ -299,7 +298,7 @@ export default async function GitHubActivity() {
               width={52}
               height={52}
               className="shrink-0 rounded-full"
-              style={{ boxShadow: "0 0 0 2px var(--color-accent)" }}
+              style={{ boxShadow: "0 0 0 1px var(--color-border)" }}
             />
             <div className="flex flex-col min-w-0">
               <span className="font-semibold text-base leading-tight truncate" style={{ color: "var(--color-text)" }}>
@@ -338,7 +337,11 @@ export default async function GitHubActivity() {
         {calendar && (
           <div
             className="mb-10 border p-4 sm:p-5"
-            style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}
+            style={{
+              background: "var(--color-surface)",
+              borderColor: "var(--color-border)",
+              borderRadius: "var(--radius-card)",
+            }}
           >
             <p className="text-xs font-mono mb-4" style={{ color: "var(--color-text-dim)" }}>
               {calendar.totalContributions.toLocaleString()} contributions in the last year

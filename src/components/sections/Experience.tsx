@@ -2,24 +2,20 @@
 
 import { motion } from "framer-motion";
 import { companies, type Company } from "@/content/resume";
-import { SectionHeading } from "@/components/paper";
+import { Label, SectionHeading } from "@/components/ui";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
-/**
- * Company entries stay restrained so the work history scans like a printed
- * CV on the same paper stock.
- */
 function CompanyItem({ company, index }: { company: Company; index: number }) {
   const isCurrent = company.roles[0].endDate === null;
 
   return (
     <motion.div
       className="relative flex gap-4 sm:gap-6"
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: EASE }}
+      transition={{ duration: 0.25, delay: Math.min(index, 3) * 0.04, ease: EASE }}
     >
       {/* Timeline marker */}
       <div className="relative flex flex-col items-center">
@@ -52,7 +48,6 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
           background: "var(--color-surface)",
           borderColor: "var(--color-border)",
           borderRadius: "var(--radius-card)",
-          boxShadow: "var(--shadow-paper)",
           borderLeftWidth: isCurrent ? "3px" : "1px",
           borderLeftColor: isCurrent ? "var(--color-accent)" : "var(--color-border)",
         }}
@@ -87,17 +82,9 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
                     {role.title}
                   </h3>
                   {role.endDate === null && (
-                    <span
-                      className="px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider"
-                      style={{
-                        background: "var(--color-accent-glow)",
-                        color: "var(--color-accent-ink)",
-                        border: "1px solid var(--color-accent)",
-                        borderRadius: "var(--radius-card)",
-                      }}
-                    >
+                    <Label tone="accent" tag className="uppercase">
                       Current
-                    </span>
+                    </Label>
                   )}
                 </div>
                 <p
@@ -125,18 +112,9 @@ function CompanyItem({ company, index }: { company: Company; index: number }) {
 
         <div className="flex flex-wrap gap-1.5">
           {company.technologies.map((tech) => (
-            <span
-              key={tech}
-              className="px-2.5 py-1 font-mono text-xs font-medium"
-              style={{
-                background: "var(--color-surface-2)",
-                color: "var(--color-text-muted)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-card)",
-              }}
-            >
+            <Label key={tech} tag>
               {tech}
-            </span>
+            </Label>
           ))}
         </div>
       </div>
@@ -151,9 +129,9 @@ export default function Experience() {
       className="relative px-6 py-24"
     >
       <div className="relative mx-auto max-w-5xl">
-        <SectionHeading title="experience" eyebrow="the résumé bit" variant="dashed" />
+        <SectionHeading title="Experience" eyebrow="résumé" />
 
-        {/* Notebook margin rule behind the timeline */}
+        {/* Timeline rule */}
         <div className="relative">
           <div
             className="absolute bottom-0 left-[5px] top-0 w-px"

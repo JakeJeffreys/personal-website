@@ -17,9 +17,9 @@ function Arrow() {
   return (
     <svg width="20" height="28" viewBox="0 0 20 28" fill="none" aria-hidden="true" className="mx-auto block">
       <path
-        d="M10 1C8 8 12 14 10 24M10 24L5 18M10 24L15 18"
-        stroke="var(--color-accent)"
-        strokeWidth="1.8"
+        d="M10 2V24M10 24L5 19M10 24L15 19"
+        stroke="var(--color-border)"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -48,7 +48,6 @@ export default function PipelineDiagram() {
                   backgroundColor: "var(--color-surface)",
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius-card)",
-                  boxShadow: "var(--shadow-paper)",
                 }}
               >
                 <h3>
@@ -68,8 +67,8 @@ export default function PipelineDiagram() {
                     </span>
                     <span className="flex-1">
                       <span
-                        className="block"
-                        style={{ fontFamily: "var(--font-hand)", fontSize: "1.7rem", lineHeight: 1.1, color: "var(--color-text)" }}
+                        className="block text-base font-semibold tracking-tight"
+                        style={{ color: "var(--color-text)" }}
                       >
                         {stage.title}
                       </span>
@@ -94,12 +93,12 @@ export default function PipelineDiagram() {
                       initial={reduceMotion ? false : { height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={reduceMotion ? { opacity: 0, transition: { duration: 0 } } : { height: 0, opacity: 0 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.3, ease: EASE }}
+                      transition={{ duration: reduceMotion ? 0 : 0.2, ease: EASE }}
                       className="overflow-hidden"
                     >
                       <dl
                         className="space-y-3 px-4 pb-4 text-sm leading-6"
-                        style={{ borderTop: "1px dashed var(--color-border)", paddingTop: "0.75rem" }}
+                        style={{ borderTop: "1px solid var(--color-border)", paddingTop: "0.75rem" }}
                       >
                         <Row term="Triggered by" body={stage.trigger} />
                         <Row term="Run by" body={stage.runner} />

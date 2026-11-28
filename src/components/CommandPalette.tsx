@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import { useTheme } from "next-themes";
 import { useCommandPalette } from "./CommandPaletteProvider";
-import { useKonamiCode, triggerKonamiEffect } from "@/hooks/useKonamiCode";
 
 const NAV_COMMANDS = [
   { label: "Go to Home", href: "/" },
@@ -14,13 +13,13 @@ const NAV_COMMANDS = [
   { label: "Go to About", href: "/about" },
 ];
 
+const itemClass =
+  "flex cursor-pointer items-center gap-3 rounded-[var(--radius-card)] px-3 py-2 font-mono text-sm text-[var(--color-text-muted)] data-[selected=true]:bg-[var(--color-surface-2)] data-[selected=true]:text-[var(--color-text)]";
+
 export default function CommandPalette() {
   const { open, setOpen } = useCommandPalette();
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-
-  // Listen for physical Konami sequence (↑↑↓↓←→←→BA)
-  useKonamiCode(triggerKonamiEffect);
 
   // Open on ⌘K / Ctrl+K
   useEffect(() => {
@@ -40,8 +39,6 @@ export default function CommandPalette() {
       window.open("/resume.pdf", "_blank");
     } else if (value === "theme") {
       setTheme(theme === "dark" ? "light" : "dark");
-    } else if (value === "konami") {
-      setTimeout(triggerKonamiEffect, 150);
     } else if (value.startsWith("/")) {
       router.push(value);
     }
@@ -52,7 +49,7 @@ export default function CommandPalette() {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]"
-      style={{ backgroundColor: "rgba(42, 38, 34, 0.55)" }}
+      style={{ backgroundColor: "var(--scrim)" }}
       onClick={() => setOpen(false)}
     >
       <div
@@ -61,103 +58,66 @@ export default function CommandPalette() {
           backgroundColor: "var(--color-surface)",
           borderColor: "var(--color-border)",
           borderRadius: "var(--radius-card)",
-          boxShadow: "var(--shadow-paper-lift)",
+          boxShadow: "var(--shadow-overlay)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <Command className="w-full" label="Command palette">
-          {/* Search input */}
           <div
-            className="flex items-center gap-3 px-4 py-3 border-b"
+            className="flex items-center gap-3 border-b px-4 py-3"
             style={{ borderColor: "var(--color-border)" }}
           >
-            <span style={{ color: "var(--color-accent)" }} className="font-mono text-lg">⌘</span>
+            <span style={{ color: "var(--color-accent-ink)" }} className="font-mono text-lg" aria-hidden="true">⌘</span>
             <Command.Input
               autoFocus
               placeholder="Type a command or search..."
-              className="flex-1 bg-transparent outline-none text-sm font-mono"
+              className="flex-1 bg-transparent font-mono text-sm outline-none"
               style={{ color: "var(--color-text)" }}
             />
             <kbd
-              className="border px-1.5 py-0.5 font-mono text-xs"
+              className="rounded-[var(--radius-card)] border px-1.5 py-0.5 font-mono text-xs"
               style={{ color: "var(--color-text-dim)", borderColor: "var(--color-border)" }}
             >
               ESC
             </kbd>
           </div>
 
-          <Command.List className="max-h-80 overflow-y-auto">
-            <Command.Empty className="py-8 text-center text-sm font-mono" style={{ color: "var(--color-text-dim)" }}>
+          <Command.List className="max-h-80 overflow-y-auto p-2">
+            <Command.Empty className="py-8 text-center font-mono text-sm" style={{ color: "var(--color-text-dim)" }}>
               No results found.
             </Command.Empty>
 
-            {/* Navigation */}
-            <Command.Group
-              heading="Navigation"
-              className="px-2 pt-2"
-            >
+            <Command.Group heading="Navigation">
               {NAV_COMMANDS.map((cmd) => (
-                <Command.Item
-                  key={cmd.href}
-                  value={cmd.href}
-                  onSelect={handleSelect}
-                  className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
-                  style={{ color: "var(--color-text-muted)" }}
-                >
-                  <span style={{ color: "var(--color-accent-ink)" }}>↓</span>
+                <Command.Item key={cmd.href} value={cmd.href} onSelect={handleSelect} className={itemClass}>
+                  <span style={{ color: "var(--color-accent-ink)" }} aria-hidden="true">→</span>
                   {cmd.label}
                 </Command.Item>
               ))}
             </Command.Group>
 
-            {/* Actions */}
-            <Command.Group heading="Actions" className="px-2 pt-2">
-              <Command.Item
-                value="resume"
-                onSelect={handleSelect}
-                className="flex items-center justify-between px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
-                style={{ color: "var(--color-text-muted)" }}
-              >
+            <Command.Group heading="Actions">
+              <Command.Item value="resume" onSelect={handleSelect} className={`${itemClass} justify-between`}>
                 <div className="flex items-center gap-3">
-                  <span style={{ color: "var(--color-accent-ink)" }}>↓</span>
+                  <span style={{ color: "var(--color-accent-ink)" }} aria-hidden="true">→</span>
                   Open Resume
                 </div>
                 <span
-                  className="border px-1.5 py-0.5 font-mono text-xs"
+                  className="rounded-[var(--radius-card)] border px-1.5 py-0.5 font-mono text-xs"
                   style={{ borderColor: "var(--color-border)", color: "var(--color-text-dim)" }}
                 >
                   PDF
                 </span>
               </Command.Item>
-              <Command.Item
-                value="theme"
-                onSelect={handleSelect}
-                className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                <span style={{ color: "var(--color-accent-ink)" }}>↓</span>
+              <Command.Item value="theme" onSelect={handleSelect} className={itemClass}>
+                <span style={{ color: "var(--color-accent-ink)" }} aria-hidden="true">→</span>
                 Toggle Dark / Light Mode
-              </Command.Item>
-            </Command.Group>
-
-            {/* Easter Eggs */}
-            <Command.Group heading="Easter Eggs" className="px-2 pt-2 pb-2">
-              <Command.Item
-                value="konami"
-                onSelect={handleSelect}
-                className="flex items-center gap-3 px-3 py-2 text-sm font-mono cursor-pointer data-[selected=true]:bg-[var(--color-surface)]"
-                style={{ color: "var(--color-text-dim)" }}
-              >
-                <span style={{ color: "#f59e0b" }}>★</span>
-                <span>konami</span>
-                <span className="text-xs" style={{ color: "var(--color-text-dim)" }}>— you know what to do</span>
               </Command.Item>
             </Command.Group>
           </Command.List>
 
-          {/* Footer */}
           <div
-            className="flex items-center gap-4 px-4 py-2.5 border-t text-xs font-mono"
+            className="flex items-center gap-4 border-t px-4 py-2.5 font-mono text-xs"
             style={{ borderColor: "var(--color-border)", color: "var(--color-text-dim)" }}
           >
             <span><kbd className="mr-1">↑↓</kbd>navigate</span>

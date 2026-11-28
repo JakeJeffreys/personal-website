@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Caveat } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CommandPaletteProvider } from "@/components/CommandPaletteProvider";
@@ -20,14 +20,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Display/annotation face. Never used for body copy — see the design spec.
-const caveat = Caveat({
-  variable: "--font-caveat",
-  subsets: ["latin"],
-  weight: ["500", "700"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://jakejeffreys.dev"),
   title: "Jake Jeffreys — Senior Software Engineer",
@@ -36,7 +28,7 @@ export const metadata: Metadata = {
   keywords: ["backend engineer", "software engineer", "AWS", "distributed systems", "event-driven", "TypeScript", "Terraform", "Denver", "Colorado"],
   authors: [{ name: "Jake Jeffreys" }],
   icons: {
-    icon: "/favicon.svg?v=paper-jj-small",
+    icon: "/favicon.svg?v=modern",
   },
   openGraph: {
     title: "Jake Jeffreys — Senior Software Engineer",
@@ -63,12 +55,12 @@ export default function RootLayout({
 }>) {
   return (
     // Font variables go on <html>, not <body>: Tailwind's @theme declares
-    // --font-hand: var(--font-caveat) etc. on :root, and a var() there can only
+    // --font-sans: var(--font-geist-sans) etc. on :root, and a var() there can only
     // resolve against variables defined on :root itself.
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="antialiased">
         {/*
