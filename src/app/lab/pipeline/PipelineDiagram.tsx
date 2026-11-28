@@ -44,7 +44,6 @@ export default function PipelineDiagram() {
           return (
             <li key={stage.id}>
               <div
-                className="overflow-hidden"
                 style={{
                   backgroundColor: "var(--color-surface)",
                   border: "1px solid var(--color-border)",
@@ -56,7 +55,7 @@ export default function PipelineDiagram() {
                   <button
                     type="button"
                     aria-expanded={open}
-                    aria-controls={panelId}
+                    aria-controls={open ? panelId : undefined}
                     onClick={() => setOpenId(open ? null : stage.id)}
                     className="flex w-full items-start gap-4 p-4 text-left"
                   >
