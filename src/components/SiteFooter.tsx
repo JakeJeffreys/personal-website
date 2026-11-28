@@ -51,12 +51,12 @@ export default function SiteFooter() {
             </li>
           ))}
         </ul>
-        <p style={{ color: "var(--color-text-dim)" }}>
+        <p style={{ color: "var(--color-text-muted)" }}>
           Drawn &amp; built by{" "}
           <span
             style={{
               fontFamily: "var(--font-hand)",
-              color: "var(--color-accent)",
+              color: "var(--color-accent-ink)",
               fontSize: "1.3rem",
             }}
           >

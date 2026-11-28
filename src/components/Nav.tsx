@@ -72,7 +72,7 @@ export default function Nav() {
             className="transition-opacity duration-200 group-hover:opacity-70"
             style={{
               fontFamily: "var(--font-hand)",
-              color: "var(--color-accent)",
+              color: "var(--color-accent-ink)",
               fontSize: "1.75rem",
               lineHeight: 1,
             }}
@@ -220,7 +220,7 @@ export default function Nav() {
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
                     aria-current={isCurrent(link.href) ? "page" : undefined}
-                    className="block w-full py-1 text-left focus-visible:outline-2 focus-visible:outline-offset-4"
+                    className={`block w-full py-1 text-left underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 ${isCurrent(link.href) ? "underline decoration-2" : ""}`}
                     style={{
                       fontFamily: "var(--font-hand)",
                       color: isCurrent(link.href) ? "var(--color-accent-ink)" : "var(--color-text-muted)",

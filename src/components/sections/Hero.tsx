@@ -141,7 +141,7 @@ export default function Hero() {
               href="/lab"
               className={linkButton}
               style={{
-                backgroundColor: "var(--color-accent)",
+                backgroundColor: "var(--color-accent-ink)",
                 color: "var(--color-surface)",
                 borderRadius: "var(--radius-card)",
                 boxShadow: "var(--shadow-paper)",
