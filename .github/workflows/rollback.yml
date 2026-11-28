@@ -1,0 +1,53 @@
+name: Rollback
+
+# Reverts a merged PR on main through a normal PR: gh workflow run rollback.yml -f pr=<n>
+# For an immediate fix, Vercel's Instant Rollback is faster; this then makes main match.
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Merged PR to revert
+        required: true
+
+permissions: {}
+
+jobs:
+  revert:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      # write to dispatch CI on the revert branch
+      actions: write
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ inputs.pr }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Open a revert PR
+        run: |
+          merge=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json state,mergeCommit \
+            --jq 'select(.state == "MERGED") | .mergeCommit.oid')
+          if [ -z "$merge" ]; then
+            echo "PR #$PR isn't merged; nothing to revert."
+            exit 1
+          fi
+          branch="revert/pr-$PR"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          if [ "$(git cat-file -p "$merge" | grep -c '^parent')" -gt 1 ]; then
+            git revert --no-edit -m 1 "$merge"
+          else
+            git revert --no-edit "$merge"
+          fi
+          git push origin "$branch"
+          gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$branch" --title "Revert #$PR" \
+            --body "Reverts #$PR (merge ${merge:0:7}). Opened by the Rollback workflow."
+          # PRs opened with GITHUB_TOKEN don't trigger pull_request workflows, so start CI for the required check.
+          gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
